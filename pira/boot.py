@@ -151,6 +151,7 @@ class Boot(object):
         rtc_time = self.get_time()
         system_time = datetime.datetime.now()
 
+
         if rtc_time > system_time:
             #write RTC to system
             print("Writing RTC to system time")
@@ -201,6 +202,15 @@ class Boot(object):
         # Enter main loop.
         print("Starting processing loop.")
         while True:
+
+            self.pirasmart.set_on_time(1200)
+            time.sleep(0.1)
+            self.pirasmart.set_off_time(60*60*4)
+            time.sleep(0.1)
+            self.pirasmart.set_reboot_time(120)
+            time.sleep(0.1)
+            self.pirasmart.set_wakeup_time(60)
+
             self._update_charging()
             # Get latest values from pira smart
             self.pirasmart.read()
@@ -231,14 +241,14 @@ class Boot(object):
                 print("Error while saving state.")
                 traceback.print_exc()
 
-            if self.shutdown:
-                # Perform shutdown when requested. This will either request the Resin
-                # supervisor to shut down and block forever or the shutdown request will
-                # be ignored and we will continue processing.
-                self.shutdown = False
-                self._perform_shutdown()
+            #if self.shutdown:
+            # Perform shutdown when requested. This will either request the Resin
+            # supervisor to shut down and block forever or the shutdown request will
+            # be ignored and we will continue processing.
+            self.shutdown = False
+            self._perform_shutdown()
 
-            time.sleep(float(os.environ.get('LOOP_DELAY', "30")))
+            time.sleep(float(os.environ.get('LOOP_DELAY', "10")))
 
     def _update_charging(self):
         """Update charging status."""
@@ -266,7 +276,12 @@ class Boot(object):
 
     def get_pira_on_timer(self):
         """Update pira on timer """
-        timer_pira = self.pirasmart.pira_on_timer
+        timer_pira = self.pirasmart.pira_on_timer_get
+        return timer_pira
+
+    def get_pira_on_timer_set(self):
+        """Update pira on timer setting """
+        timer_pira = self.pirasmart.pira_on_timer_set
         return timer_pira
 
     @property
@@ -343,6 +358,8 @@ class Boot(object):
                 print("Error while running shutdown in module '{}'.".format(name))
                 traceback.print_exc()
 
+        return
+
         # Shut down devices.
         try:
             if self._wifi:
@@ -376,6 +393,8 @@ class Boot(object):
         if self.shutdown_strategy == 'shutdown':
             # Turn off the pira status pin then shutdown
             print('Shutting down as scheduled with shutdown.')
+            self.pirasmart.set_reboot_time(3)
+
             self.pigpio.write(devices.GPIO_PIRA_STATUS_PIN, gpio.LOW)
             if RESIN_ENABLED:
                 subprocess.call(["/usr/src/app/scripts/resin-shutdown.sh"])

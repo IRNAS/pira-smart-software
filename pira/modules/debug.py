@@ -14,6 +14,7 @@ class Module(object):
         print('BQ2429x  : status - PG_STAT   : ' + str(self._boot.sensor_bq.get_status(bq2429x.PG_STAT)))
         print('Pira     : status - voltage   : ' + str(self._boot.get_voltage()) + ' V')
         print('Pira     : status - rtc time  : {}'.format(self._boot.get_time()))
+        print('Pira     : status - on timer s: {} s'.format(self._boot.get_pira_on_timer_set()))
         print('Pira     : status - on timer  : {} s'.format(self._boot.get_pira_on_timer()))
         print('Charging : {}'.format(self._boot.is_charging))
         print('Debug    : {}'.format(self._boot.is_debug_enabled))

@@ -28,7 +28,7 @@ class Module(object):
             # Static schedule.
             schedule_start = self._parse_time(os.environ.get('SCHEDULE_START', '00:01'))
             schedule_end = self._parse_time(os.environ.get('SCHEDULE_END', '23:59'))
-            schedule_t_off = self._parse_duration(os.environ.get('SCHEDULE_T_OFF', '55'))  # Time in minutes.
+            schedule_t_off = self._parse_duration(os.environ.get('SCHEDULE_T_OFF', '1'))  # Time in minutes.
             schedule_t_on = self._parse_duration(os.environ.get('SCHEDULE_T_ON', '1'))  # Time in minutes.
 
         if not schedule_start or not schedule_end or schedule_t_off is None or schedule_t_on is None:
@@ -100,7 +100,7 @@ class Module(object):
             self._boot.shutdown = True
 
         # Check pira on timer is about to expire
-        if self._boot.get_pira_on_timer() < 60:
+        if self._boot.get_pira_on_timer() < 0 and not self._boot.get_pira_on_timer() == None :
             print("Scheduler: Pira timer about to expire, sleep.")
             self._boot.shutdown = True
             #here we could reset it as well
@@ -111,32 +111,38 @@ class Module(object):
             return
 
         # Check voltage to configure boot interval
-        voltage = self.get_voltage()
+        voltage = self._boot.get_voltage()
 
         if not voltage > os.environ.get('POWER_THRESHOLD_HALF', '0'):
             # Lower voltage then half threshold, doubling the sleep length
-            self._off_duration = self._off_duration * 2
+            off_duration = self._off_duration * 2
             print("Low voltage warning, doubling sleep duration")
         elif not voltage > os.environ.get('POWER_THRESHOLD_QUART', '0'):
             # Less voltage then quarter threshold, quadrupling the sleep length
-            self._off_duration = self._off_duration * 4
+            off_duration = self._off_duration * 4
             print("Low voltage warning, quadrupling sleep duration")
         else:
             # Sufficient power, continue as planned
-            pass
+            off_duration = self._off_duration
 
-        current_time = self.datetime.datetime.now()
+
+        current_time = datetime.datetime.now()
         wakeup_time = None
 
-        if current_time==None:
-            return
+        #print("Schedule start {} end {} current {}.".format(self._schedule_start,self._schedule_end,current_time))
 
-        if self._schedule_end >= self._schedule_start and current_time.time() > self._schedule_start and current_time.time() < self._schedule_end:
-            wakeup_time = (current_time + self._off_duration).time()
-        elif self._schedule_end < self._schedule_start and ((current_time.time() < self._schedule_start and current_time.time() < self._schedule_end) or (current_time.time() >= self._schedule_start and current_time.time() >= self._schedule_end)):
-            wakeup_time = (current_time + self._off_duration).time()
-        else:
-            wakeup_time = self._schedule_start
+        if self._schedule_end >= self._schedule_start:
+            wakeup_time = current_time + off_duration
+            #print("END > START: wakeup {}.".format(wakeup_time))
+        elif self._schedule_end > self._schedule_start:
+            if (current_time.time() >= self._schedule_end) and (current_time.time() < self._schedule_start):
+                wakeup_time = current_time + datetime.combine(current_time, self._schedule_start)
+                #print("Sleep period: wakeup {}.".format(wakeup_time))
+            else:
+                wakeup_time = current_time + off_duration
+                #print("START > END: wakeup {}.".format(wakeup_time))
 
-        print("Scheduling next wakeup at {}.".format(wakeup_time.isoformat()))
-        #self._boot.rtc.alarm1_time = wakeup_time
+        wakeup_in_seconds = datetime.timedelta.total_seconds(wakeup_time - current_time)
+
+        print("Scheduling next wakeup at {} / in {} seconds.".format(wakeup_time.isoformat(),wakeup_in_seconds))
+        self._boot.pirasmart.set_wakeup_time(wakeup_in_seconds)
