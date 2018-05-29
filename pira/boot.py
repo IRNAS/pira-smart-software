@@ -358,8 +358,6 @@ class Boot(object):
                 print("Error while running shutdown in module '{}'.".format(name))
                 traceback.print_exc()
 
-        return
-
         # Shut down devices.
         try:
             if self._wifi:
@@ -393,8 +391,7 @@ class Boot(object):
         if self.shutdown_strategy == 'shutdown':
             # Turn off the pira status pin then shutdown
             print('Shutting down as scheduled with shutdown.')
-            self.pirasmart.set_reboot_time(3)
-
+            self.pirasmart.set_reboot_time(30)
             self.pigpio.write(devices.GPIO_PIRA_STATUS_PIN, gpio.LOW)
             if RESIN_ENABLED:
                 subprocess.call(["/usr/src/app/scripts/resin-shutdown.sh"])
@@ -403,6 +400,7 @@ class Boot(object):
         else:
             # Turn off the pira status pin then reboot
             print('Shutting down as scheduled with reboot.')
+            self.pirasmart.set_reboot_time(120)
             self.pigpio.write(devices.GPIO_PIRA_STATUS_PIN, gpio.LOW)
 
             if RESIN_ENABLED:
