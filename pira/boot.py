@@ -18,7 +18,7 @@ try:
 except ImportError:
     RESIN_ENABLED = False
 
-from .hardware import devices, bq2429x, pirasmartuart
+from .hardware import devices, pirasmartuart
 from .state import State
 from .log import Log
 from .const import LOG_SYSTEM, LOG_DEVICE_VOLTAGE, LOG_DEVICE_TEMPERATURE
@@ -75,7 +75,6 @@ class Boot(object):
     def setup_devices(self):
         """Initialize device drivers."""
         print("Initializing device drivers...")
-        self.sensor_bq = bq2429x.BQ2429x()
         self.pirasmart = pirasmartuart.PIRASMARTUART(devices.PIRASMART_UART)
 
     def setup_wifi(self):
@@ -113,23 +112,6 @@ class Boot(object):
         self.log.insert(LOG_SYSTEM, 'boot')
 
         self._update_charging()
-        # Disable charge timer, configure pre-charge. THIS IS IMPORTANT
-        # Bit 7 EN_TERM 1 Enabled
-        # Bit 6 Reserved 0
-        #I2C Watchdog Timer Setting - MUST be disabled with 00, otherwise resets
-        #Bit 5 WATCHDOG[1] 0
-        #Bit 4 WATCHDOG[0] 0
-        #Charging Safety Timer Enable - MUST be disabled if device is on permanently
-        #Bit 3 EN_TIMER 0
-        #Bit 2 CHG_TIMER[1] R/W 1
-        #Bit 1 CHG_TIMER[0] R/W 0
-        #Bit 0 Reserved R/W 0
-
-        self.sensor_bq.set_charge_termination(10000010)
-
-        # Precharge must be higher then self-consumption, in multi-cell can be 2A
-        # Termination must be lower then self-consumption
-        self.sensor_bq.set_ter_prech_current(1111, 0001)
 
         # TODO: Monitor status pin from BT
         #self.pigpio.callback(
@@ -211,7 +193,6 @@ class Boot(object):
             time.sleep(0.1)
             self.pirasmart.set_wakeup_time(60)
 
-            self._update_charging()
             # Get latest values from pira smart
             self.pirasmart.read()
             # Shutdown hold is reset in every loop
@@ -252,12 +233,8 @@ class Boot(object):
 
     def _update_charging(self):
         """Update charging status."""
-        not_charging = (
-            self.sensor_bq.get_status(bq2429x.VBUS_STAT) == 'No input' and
-            self.sensor_bq.get_status(bq2429x.CHRG_STAT) == 'Not charging' and
-            self.sensor_bq.get_status(bq2429x.PG_STAT) == 'Not good power'
-        )
-        self._charging_status.append(not not_charging)
+        # TODO
+        self._charging_status.append(False)
 
     def get_voltage(self):
         """Update voltage """
