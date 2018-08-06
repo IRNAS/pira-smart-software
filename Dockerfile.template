@@ -6,21 +6,11 @@ ENV INITSYSTEM on
 # Set the working directory.
 WORKDIR /usr/src/app
 
-# Install system package dependencies.
 RUN apt-get update && \
-    apt-get upgrade && \
     apt-get install -yq --no-install-recommends \
         i2c-tools python-smbus pigpio libfreetype6-dev libjpeg-dev build-essential \
-        wget \
-	unzip \
-	libtool \
-	pkg-config \
-	autoconf \
-	automake \
-	net-tools \
-	can-utils \
-	make \ 
-	dnsmasq && \
+	wget unzip libtool pkg-config autoconf automake net-tools can-utils make \
+        dnsmasq wireless-tools indent && \
     apt-get clean && rm -rf /var/lib/apt/lists/*
 
 # Install resin-wifi-connect.
