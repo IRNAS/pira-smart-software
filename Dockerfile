@@ -1,4 +1,7 @@
-FROM resin/%%RESIN_MACHINE_NAME%%-python:latest
+# when using resin.io use this
+#FROM resin/%%RESIN_MACHINE_NAME%%-python:latest
+
+FROM resin/pirasmart-python:latest
 
 # Switch on systemd init system in container.
 ENV INITSYSTEM on
@@ -25,7 +28,7 @@ ENV READTHEDOCS True
 
 # Install python package dependencies.
 COPY ./requirements.txt /requirements.txt
-RUN pip install --extra-index-url=https://www.piwheels.org/simple -r /requirements.txt
+RUN pip install -r /requirements.txt
 
 # Copy everything into the container.
 COPY . ./
