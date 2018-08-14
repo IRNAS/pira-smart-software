@@ -24,20 +24,26 @@ class Module(object):
         self._boot = boot
         self._last_time = 0
         self._enabled = False
-        
-        self.M2X_KEY = os.environ.get('M2X_KEY','') # get m2x device key
-        self.M2X_DEVICE_ID = os.environ.get('M2X_DEVICE_ID','') # get m2x device id
+
+        self.M2X_KEY = os.environ.get('M2X_KEY',None) # get m2x device key
+        self.M2X_KEY = os.environ.get('M2X_DEVICE_ID',None) # get m2x device id
         self.M2X_NAME = os.environ.get('M2X_NAME', 'DEMO_PI') # get m2x device name (default demo_pi)
+
+        # Check if nodewatcher push is correctly configured
+        if self.M2X_KEY is None or self.M2X_KEY is None:
+            print("M2X integration not configured, skipping")
+            self._enabled = False
+            return
 
         # connect to the client
         self._client = M2XClient(key=self.M2X_KEY)
-        
+
         # create device object
         self._device = self._client.device(self.M2X_DEVICE_ID)
-        
-        #DEBUG 
+
+        #DEBUG
         #print(self._device.data)
-            
+
         # all good to go
         self._enabled = True
 
@@ -48,7 +54,7 @@ class Module(object):
         return datetime.now()
 
     def upload_data(self, data, time):
-        """ 
+        """
         Uploads data at the certain time (can be the past or future
         """
         print("Updating data to M2X @ {}".format(datetime.now()))
