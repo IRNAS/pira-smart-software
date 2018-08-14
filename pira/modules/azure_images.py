@@ -30,18 +30,23 @@ class Module(object):
         """
         self._boot = boot
         self._enabled = False
-        
-        self.ACCOUNT_NAME = os.environ.get('AZURE_ACCOUNT_NAME', '')                    # get azure account name from env var
-        self.ACCOUNT_KEY = os.environ.get('AZURE_ACCOUNT_KEY','')                       # get azure account key from env var
+
+        self.ACCOUNT_NAME = os.environ.get('AZURE_ACCOUNT_NAME', None)                    # get azure account name from env var
+        self.ACCOUNT_KEY = os.environ.get('AZURE_ACCOUNT_KEY', None)                       # get azure account key from env var
         self.container_name = os.environ.get('AZURE_CONTAINER_NAME', 'ImageExample')    # get container name, default is ImageExample
 
-        # DEBUG
+        # Check if azure push is correctly configured
+        if self.ACCOUNT_NAME is None or self.ACCOUNT_KEY is None:
+            print("Azure integration not configured, skipping")
+            self._enabled = False
+            return
+
         #print(self.ACCOUNT_NAME)
         #print(self.ACCOUNT_KEY)
         #print(self.container_name)
 
         try:
-            
+
             # create object for the servise
             self.block_blob_service = BlockBlobService(account_name=self.ACCOUNT_NAME, account_key=self.ACCOUNT_KEY)
 
@@ -68,20 +73,20 @@ class Module(object):
         except Exception as e:
             print("Something went wrong when creating container, error: {}".format(e))
             return
-    
+
     def upload_via_path(self,_path):
         """
         It uploads the file to the self.container_name via _path
         """
-        
+
         try:
             # splitting the path and filename
             path, filename = os.path.split(_path)
-            
+
             # checking if it is valid (will give exception if not valid)
             file = open(_path, 'r')
             file.close()
-  
+
             # debug
             print("Uplading to storage file: {} {}".format(_path, filename))
 
@@ -105,7 +110,7 @@ class Module(object):
                 print("Something went wrong on delete!")
                 return
             print("Deleted: {}".format(_container_name))
-        
+
         except Exception as e:
             print("AZURE ERROR: {}".format(e))
 
@@ -116,16 +121,16 @@ class Module(object):
         print("AZURE process | Inited: {}".format(self._enabled))
         if self._enabled is False:
             return
-        
+
         try:
-            #self.create_container() 
+            #self.create_container()
             #self.upload_via_path(full_path_to_file)
             #time.sleep(60)
             #self.delete_via_container(self.container_name)
             pass
         except Exception as e:
             print("AZURE ERROR: {}".format(e))
-       
+
 
     def shutdown(self, modules):
         """
