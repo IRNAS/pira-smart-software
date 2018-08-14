@@ -65,7 +65,12 @@ class PIRASMARTUART(object):
             #print "Preamble: " + x[0:2] + "Data: " + x[2:-1].encode('hex') + " Line: " + str(x.startswith(preamble))
             #' '.join(map(lambda x:x.encode('hex'),x))
             #struct.unpack('<h', unhexlify(s1))[0]
-            value = float(struct.unpack('>L', x[2:6])[0])
+            try:
+                value = float(struct.unpack('>L', x[2:6])[0])
+            except:
+                print("Error, read the following: " + str(x[2:6]))
+                time.sleep(1)
+
             if x.startswith(str('t:')):
                 self.pira_time = float(value)
                 print "Pira time: " + str(self.pira_time)
