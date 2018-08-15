@@ -42,8 +42,8 @@ class Boot(object):
         'pira.modules.m2x_plat',
         'pira.modules.can',
         'pira.modules.azure_images',
-    
-            
+
+
     ]
 
     def __init__(self):
@@ -186,17 +186,18 @@ class Boot(object):
 
         self.log.insert(LOG_SYSTEM, 'main_loop')
 
+        #configure pira smart parameters / overrides BT settings
+        self.pirasmart.set_on_time(1200)
+        time.sleep(0.1)
+        self.pirasmart.set_off_time(60*60*4)
+        time.sleep(0.1)
+        self.pirasmart.set_reboot_time(120)
+        time.sleep(0.1)
+        self.pirasmart.set_wakeup_time(60)
+
         # Enter main loop.
         print("Starting processing loop.")
         while True:
-
-            self.pirasmart.set_on_time(1200)
-            time.sleep(0.1)
-            self.pirasmart.set_off_time(60*60*4)
-            time.sleep(0.1)
-            self.pirasmart.set_reboot_time(120)
-            time.sleep(0.1)
-            self.pirasmart.set_wakeup_time(60)
 
             # Get latest values from pira smart
             self.pirasmart.read()
@@ -342,7 +343,7 @@ class Boot(object):
 
         # Shut down devices.
         try:
-            if self._wifi:
+            if self.is_wifi_enabled and self._wifi:
                 self._wifi.kill()
         except:
             print("Error while shutting down devices.")
