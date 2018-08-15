@@ -118,8 +118,8 @@ class Module(object):
         """
         Process for the azure module
         """
-        print("AZURE process | Inited: {}".format(self._enabled))
         if self._enabled is False:
+            print("WARNING: Azure is not correctly configured, skipping.")
             return
 
         try:
