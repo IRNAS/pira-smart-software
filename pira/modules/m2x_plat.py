@@ -25,8 +25,9 @@ class Module(object):
         self._last_time = 0
         self._enabled = False
 
+        # get these values under API Keys 
         self.M2X_KEY = os.environ.get('M2X_KEY',None) # get m2x device key
-        self.M2X_KEY = os.environ.get('M2X_DEVICE_ID',None) # get m2x device id
+        self.M2X_DEVICE_ID = os.environ.get('M2X_DEVICE_ID',None) # get m2x device id
         self.M2X_NAME = os.environ.get('M2X_NAME', 'DEMO_PI') # get m2x device name (default demo_pi)
 
         # Check if nodewatcher push is correctly configured
@@ -72,9 +73,8 @@ class Module(object):
         if not self._enabled:
             print("WARNING: M2X is not correctly configured, skipping.")
             return
-        print("M2X Process")
-        #print("M2X Process | Inited: {}".format(self._enabled))
-        #self.upload_data(120, self.get_timestamp())
+        print("M2X Process | Inited: {}".format(self._enabled))
+     #   self.upload_data(120, self.get_timestamp())
     def shutdown(self, modules):
         """ Shutdown """
         pass

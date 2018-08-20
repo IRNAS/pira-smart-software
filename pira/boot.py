@@ -31,17 +31,17 @@ class Boot(object):
         'pira.modules.scheduler',
         # Sensor modules.
         # 'pira.modules.ultrasonic',
-        # pira.modules.camera',
+        #'pira.modules.camera',
         # Reporting modules should come after all sensor modules, so they can get
         # the latest values.
-        'pira.modules.lora',
+        #'pira.modules.lora',
         # 'pira.modules.rockblock',
         # 'pira.modules.nodewatcher',
         'pira.modules.debug',
-        # 'pira.modules.webserver',
-        'pira.modules.m2x_plat',
+        #'pira.modules.webserver',
+        #'pira.modules.m2x_plat',
         'pira.modules.can',
-        'pira.modules.azure_images',
+        #'pira.modules.azure_images',
 
 
     ]
@@ -217,7 +217,7 @@ class Boot(object):
                     traceback.print_exc()
 
             # Check if battery voltage is below threshold and shutdown
-            if ((self.get_voltage() is not None) and (self.get_voltage() <= float(os.environ.get('SHUTDOWN_VOLTAGE', '2.6')))):
+            if ((self.get_voltage() is not None) and (self.get_voltage() <= float(os.environ.get('SHUTDOWN_VOLTAGE', '1.5')))):
                 print("Voltage is under the threshold, need to shutdown.")
                 self.shutdown = True
 
@@ -233,9 +233,9 @@ class Boot(object):
             # supervisor to shut down and block forever or the shutdown request will
             # be ignored and we will continue processing.
             self.shutdown = False
-            self._perform_shutdown()
+            #self._perform_shutdown()
 
-            time.sleep(float(os.environ.get('LOOP_DELAY', "10")))
+            #time.sleep(float(os.environ.get('LOOP_DELAY', "10")))
 
     def _update_charging(self):
         """Update charging status."""
