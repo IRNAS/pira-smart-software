@@ -18,10 +18,15 @@ import time
 import sys
 from datetime import datetime
 
+from os import listdir
+from os.path import isfile, join
+
 from azure.storage.blob import BlockBlobService, PublicAccess
 
 # a dummy file to upload
 full_path_to_file = "/usr/src/app/docs/logo-irnas.png"
+images_path = "/data/camera/"
+
 
 class Module(object):
     def __init__(self, boot):
@@ -31,9 +36,13 @@ class Module(object):
         self._boot = boot
         self._enabled = False
 
+        self._new_files = []
+        self._old_files = []
+
         self.ACCOUNT_NAME = os.environ.get('AZURE_ACCOUNT_NAME', None)                    # get azure account name from env var
         self.ACCOUNT_KEY = os.environ.get('AZURE_ACCOUNT_KEY', None)                       # get azure account key from env var
         self.container_name = os.environ.get('AZURE_CONTAINER_NAME', 'ImageExample')    # get container name, default is ImageExample
+        self._azure_delete = os.environ.get("AZURE_DELETE_IMAGES", 'off')
 
         # Check if azure push is correctly configured
         if self.ACCOUNT_NAME is None or self.ACCOUNT_KEY is None:
@@ -63,6 +72,15 @@ class Module(object):
         except Exception as e:
             print("AZURE ERROR: {}".format(e))
             self._enabled = False
+
+        if self._azure_delete is "on":
+            for the_file in os.listdir(images_path):
+                file_path = os.path.join(images_path, the_file)
+                try:
+                    if os.path.isfile(file_path):
+                        os.unlink(file_path)
+                except Exception as e:
+                    print(e)
 
     def create_container(self):
         """
@@ -123,11 +141,15 @@ class Module(object):
             return
 
         try:
-            #self.create_container()
-            #self.upload_via_path(full_path_to_file)
-            #time.sleep(60)
-            #self.delete_via_container(self.container_name)
-            pass
+            self._new_files = [f for f in listdir(images_path) if isfile(join(images_path, f))]
+           
+            difference = list(set(self._new_files) - set(self._old_files))
+            print(difference)
+            for item in difference:
+                full_path_item = join(images_path, item)
+                self.upload_via_path(full_path_item)
+            self._old_files = self._new_files
+          
         except Exception as e:
             print("AZURE ERROR: {}".format(e))
 
@@ -136,5 +158,5 @@ class Module(object):
         """
         Shutdown (can delete the container if needed)
         """
-        #self.delete_via_container(self.container_name)
+        self.delete_via_container(self.container_name)
         pass

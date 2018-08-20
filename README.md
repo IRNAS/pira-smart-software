@@ -79,6 +79,7 @@ The following environment variables can be used to configure the firmware:
   * `CAMERA_MIN_LIGHT_LEVEL` (default `0.0`, minimum required for video to start recording)
   * `CAMERA_FAIL_SHUTDOWN` (default `0`), can camera shutdown the device for example if not enough light, set to `1` to enable
   * `CAMERA_SNAPSHOT_INTERVAL` (default `off`, duration in minutes to be configured)
+  * `CAMERA_AZURE` (default off), take screenshot on every process 
 * Rockblock
   * `ROCKBLOCK_REPORT_INTERVAL` (default `24`)
   * `ROCKBLOCK_RETRIES` (default `2`)
@@ -103,12 +104,13 @@ The following environment variables can be used to configure the firmware:
   * `AZURE_ACCOUNT_NAME` (must have) is the name 
   * `AZURE_ACCOUNT_KEY` (must have) is the account key
   * `AZURE_CONTAINER_NAME` (default ImageExample) is the container name in the blob
+  * `AZURE_DELETE_IMAGES` (default off) if set (on) it will delete past files in the /data/camera/ folder
 
  ### Using without Resin.io
  To use on a standard Raspbian Lite image complete the following steps:
   * Install Raspbian Lite
-  * Install all required packages with `apt-get` and 'pip', see `Dockerfile.template` and `requirements.txt` for what is needed, possibly some other packages are required as well
-  * Create the /data folder by running `sudo mkdir /data/`
+  * Install git and clone this repo
+  * Execute /scripts/raspbian_install.sh (with sudo) and follow the instructions at the end
   * Configure environmental variables by adding them to the end of `/etc/environment` file, for example `SLEEP_WHEN_CHARGING="1"`
   * Run the start script by (-E is required to read environment variables correctly):
   ```

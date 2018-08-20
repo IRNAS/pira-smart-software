@@ -16,6 +16,7 @@ import can
 
 
 class MCP2515():
+    
     def __init__(self):
         """
         Inits MCP2515 at a baudrate and sets up the bus and the link

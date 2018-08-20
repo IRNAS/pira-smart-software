@@ -7,8 +7,6 @@ import os
 import numpy as np
 import picamera
 import picamera.array
-from ..hardware import bq2429x
-
 # Image storage location.
 CAMERA_STORAGE_PATH = '/data/camera'
 
@@ -24,6 +22,7 @@ class Module(object):
         self.camera_shutdown = os.environ.get('CAMERA_SHUTDOWN', '0')
         self.video_duration = os.environ.get('CAMERA_VIDEO_DURATION', 'until-sleep')
         self.snapshot_interval_conf = os.environ.get('SNAPSHOT_INTERVAL', 'off')
+        self.integrate_azure=os.environ.get('CAMERA_AZURE', 'off')
 
         try:
             self.video_duration_min = datetime.timedelta(minutes=int(self.video_duration))
@@ -117,6 +116,10 @@ class Module(object):
         self._recording_start = now
 
     def process(self, modules):
+        if self.integrate_azure is "on" and self._camera:
+            print(self._snapshot())
+            return
+
         # This runs if camera is initialized
         if self._camera:
             now = datetime.datetime.now()
@@ -170,9 +173,8 @@ class Module(object):
             now = datetime.datetime.now()
             self._last_snapshot = now
 
-            self._camera.capture(
-                os.path.join(
-                    CAMERA_STORAGE_PATH,
+            self._new_path = os.path.join(
+                 CAMERA_STORAGE_PATH,
                     'snapshot-{year}-{month:02d}-{day:02d}--{hour:02d}-{minute:02d}-{second:02d}--{light:.2f}-{voltage:.3f}V-{temperature:.2f}C.jpg'.format(
                         year=now.year,
                         month=now.month,
@@ -181,14 +183,22 @@ class Module(object):
                         minute=now.minute,
                         second=now.second,
                         light=self.light_level,
-                        voltage=float(self._boot.sensor_mcp.get_voltage()),
-                        #temperature=float(self._boot.rtc.temperature),
+                        voltage=0,
+                        temperature=0,
                     )
-                ),
+
+            )
+
+            self._camera.capture(
+                self._new_path,
                 format='jpeg'
             )
             print("Snapshot taken at light level:", self.light_level)
+            if self.integrate_azure is "on":
+                return self._new_path
+
             return True
+            
         else:
             return False
 
