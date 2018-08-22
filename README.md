@@ -114,7 +114,7 @@ The following environment variables can be used to configure the firmware:
   * Configure environmental variables by adding them to the end of `/etc/environment` file, for example `SLEEP_WHEN_CHARGING="1"`
   * Run the start script by (-E is required to read environment variables correctly):
   ```
-  cd PiRA-zero-firmware
+  cd pira-zero-software
   sudo -E ./start.sh
   ```
  ### Using it with Resin.io Local Mode
