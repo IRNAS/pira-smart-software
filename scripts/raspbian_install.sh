@@ -10,18 +10,19 @@ sudo apt install vim -y
 # pira
 sudo apt install python-pip -y
 sudo apt install i2c-tools -y
-sudo apt install python-smbus -y 
-sudo apt install pigpio -y 
-sudo apt install libfreetype6-dev -y 
+sudo apt install python-smbus -y
+sudo apt install pigpio -y
+sudo apt install python-pigpio -y
+sudo apt install libfreetype6-dev -y
 sudo apt install libjpeg-dev -y
-sudo apt install build-essential -y 
+sudo apt install build-essential -y
 sudo apt install wget -y
 sudo apt install unzip -y
 sudo apt install libtool -y
 sudo apt install pkg-config -y
-sudo apt install autoconf -y 
+sudo apt install autoconf -y
 sudo apt install automake -y
-sudo apt install net-tools +y
+sudo apt install net-tools -y
 sudo apt install can-utils -y
 sudo apt install make -y
 sudo apt install dnsmasq -y
@@ -36,6 +37,7 @@ rm -rf /var/lib/apt/lists/*
 
 #pira python
 sudo pip install --extra-index-url=https://www.piwheels.org/simple -r ../requirements.txt
+sudo pip install pyserial
 
 #creating data folder
 echo "Creating /data/"
