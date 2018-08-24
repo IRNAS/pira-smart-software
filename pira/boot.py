@@ -29,9 +29,11 @@ class Boot(object):
     # Modules that should be loaded.
     enabled_modules = [
         'pira.modules.scheduler',
+
         # Sensor modules.
         # 'pira.modules.ultrasonic',
         #'pira.modules.camera',
+
         # Reporting modules should come after all sensor modules, so they can get
         # the latest values.
         #'pira.modules.lora',
@@ -40,9 +42,8 @@ class Boot(object):
         'pira.modules.debug',
         #'pira.modules.webserver',
         #'pira.modules.m2x_plat',
-        'pira.modules.can',
+        #'pira.modules.can',
         #'pira.modules.azure_images',
-
 
     ]
 
