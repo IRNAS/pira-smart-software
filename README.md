@@ -54,7 +54,7 @@ The following environment variables can be used to configure the firmware:
   * `WIFI_SSID` (default `pira-01`), on non-resin ONLY for now
   * `WIFI_PASSWORD` (default `pirapira`), on non-resin ONLY for now
   * `DEBUG_ENABLE_MODE` (default `none`), read from given pin, can be `gpio:5` where number can be any BCM pin to turn on debug
-  * `MODULES` a comma separated list of modules to load, the following is a list of all modules currently available `pira.modules.scheduler,pira.modules.ultrasonic,pira.modules.camera,pira.modules.lora,pira.modules.rockblock,pira.modules.debug,pira.modules.webserver`, delete the ones you do not wish to use.
+  * `MODULES` a comma separated list of modules to load, the following is a list of all modules currently available `pira.modules.scheduler,pira.modules.ultrasonic,pira.modules.camera,pira.modules.lora,pira.modules.rockblock,pira.modules.nodewatcher,pira.modules.debug,pira.modules.webserver,pira.modules.m2x_plat,pira.modules.can,pira.modules.azure_images`, delete the ones you do not wish to use.
   * `SHUTDOWN_VOLTAGE` (default `2.6`V) to configure when the system should shutdown. At 2.6V hardware shutdown will occur, suggested value is 2.3-3V. When this is triggered, the device will wake up next based on the configured interval, unless the battery voltage continues to fall under the hardware limit, then it will boot again when it charges. Note this shutdown will be aborted if in debug mode.
   * `LATITUDE` (default `0`) to define location, used for sunrise/sunset calculation
   * `LONGITUDE` (default `0`) to define location
