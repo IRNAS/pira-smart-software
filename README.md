@@ -1,5 +1,5 @@
-# PiRA-zero-firmware
-Firmware for PiRa Smart board implementing hardware interface functions.
+# PiRA-smart-software
+Software for PiRa Smart board implementing hardware interface functions.
 
 www.irnas.eu
 
@@ -62,12 +62,12 @@ The following environment variables can be used to configure the firmware:
   * `SCHEDULE_MONTHLY` (default `0`), disabled - static schedule is used, enabled if set to `1`
   * `POWER_THRESHOLD_HALF` (default `0`), voltage at which `SCHEDULE_T_OFF` time is doubled, suggested `3.7`
   * `POWER_THRESHOLD_QUART` (default `0`), voltage at which `SCHEDULE_T_OFF` time is quadrupled, suggested `3.4`
-  * Static schedule variables
+  * Static schedule variables:
     * `SCHEDULE_START` (default `00:01`), option is also `sunrise` calculated automatically if lat/long are defined
     * `SCHEDULE_END` (default `23:59`), option is also `sunset`calculated automatically if lat/long are defined
     * `SCHEDULE_T_ON` (default `5`), remains on for specified time in minutes
     * `SCHEDULE_T_OFF` (default `55`), remains off for specified time in minutes
-  * Month-dependent schedule variables (`x` is number of desired month, example: `SCHEDULE_MONTH5_START`)
+  * Month-dependent schedule variables (`x` is number of desired month):
     * `SCHEDULE_MONTHx_START` (default `08:00`), option is also `sunrise` calculated automatically if lat/long are defined
     * `SCHEDULE_MONTHx_END` (default `18:00`), option is also `sunset`calculated automatically if lat/long are defined
     * `SCHEDULE_MONTHx_T_ON` (default `35`), remains on for specified time in minutes
@@ -114,7 +114,7 @@ The following environment variables can be used to configure the firmware:
   * Configure environmental variables by adding them to the end of `/etc/environment` file, for example `SLEEP_WHEN_CHARGING="1"`
   * Run the start script by (-E is required to read environment variables correctly):
   ```
-  cd pira-zero-software
+  cd pira-smart-software
   sudo -E ./start.sh
   ```
  ### Using it with Resin.io Local Mode
