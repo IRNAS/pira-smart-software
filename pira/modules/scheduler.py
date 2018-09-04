@@ -45,7 +45,7 @@ class Module(object):
         self._ready = True
 
         if schedule_t_on.seconds > self._boot.get_pira_on_timer_set():
-            print("Scheduler: WARNING - p (safety on period) will shutdown Pi before scheduler on duration expires.")
+            print("WARNING: p (safety on period) will shutdown Pi before scheduler on duration expires.")
 
     def _parse_time(self, time):
         """Parse time string (HH:MM)."""

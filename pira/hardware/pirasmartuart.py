@@ -71,7 +71,7 @@ class PIRASMARTUART(object):
             #struct.unpack('<h', unhexlify(s1))[0]
             try:
                 value = float(struct.unpack('>L', x[2:6])[0])
-            except:
+            except: # TODO - handle that is doesn't spam anymore when Pira BLE not present
                 print("Error, read the following: " + str(x[2:6]))
                 time.sleep(1)
                 #return

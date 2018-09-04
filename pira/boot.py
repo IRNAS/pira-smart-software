@@ -219,7 +219,7 @@ class Boot(object):
                     traceback.print_exc()
 
             # Check if battery voltage is below threshold and shutdown
-            if ((self.get_voltage() is not None) and (self.get_voltage() <= float(os.environ.get('SHUTDOWN_VOLTAGE', '1.5')))):
+            if ((self.get_voltage() is not None) and (self.get_voltage() <= float(os.environ.get('SHUTDOWN_VOLTAGE', '2.6')))):
                 print("Voltage is under the threshold, need to shutdown.")
                 self.shutdown = True
 
@@ -383,29 +383,17 @@ class Boot(object):
             print("Error while forcing filesystem sync.")
             traceback.print_exc()
 
-        self.shutdown_strategy = os.environ.get('SHUTDOWN_STRATEGY', 'shutdown')
+        # TODO: handle error curl: (7) Failed to connect to 127.0.0.1 port 48484: Connection refused RESIN ERROR
 
-        # Configurable shutdown strategy, shutdown as an option, reboot as default
-        # TODO: handle error curl: (7) Failed to connect to 127.0.0.1 port 48484: Connection refused
-
-        if self.shutdown_strategy == 'shutdown':
-            # Turn off the pira status pin then shutdown
-            print('Shutting down as scheduled with shutdown.')
-            self.pigpio.write(devices.GPIO_PIRA_STATUS_PIN, gpio.LOW)
-            if RESIN_ENABLED:
-                subprocess.call(["/usr/src/app/scripts/resin-shutdown.sh"])
-            else:
-                subprocess.Popen(["/sbin/shutdown", "--poweroff", "now"])
+        # Turn off the pira status pin then shutdown
+        print('Shutting down as scheduled with shutdown.')
+        self.pigpio.write(devices.GPIO_PIRA_STATUS_PIN, gpio.LOW)
+        if RESIN_ENABLED:
+            subprocess.call(["/usr/src/app/scripts/resin-shutdown.sh"])
         else:
-            # Turn off the pira status pin then reboot
-            print('Shutting down as scheduled with reboot.')
-            self.pigpio.write(devices.GPIO_PIRA_STATUS_PIN, gpio.LOW)
-
-            if RESIN_ENABLED:
-                subprocess.call(["/usr/src/app/scripts/resin-reboot.sh"])
-            else:
-                subprocess.Popen(["/sbin/shutdown", "--reboot", "now"])
-
+            subprocess.Popen(["/sbin/shutdown", "--poweroff", "now"])
+        
         # Block.
         while True:
             time.sleep(1)
+
