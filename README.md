@@ -62,16 +62,16 @@ The following environment variables can be used to configure the firmware:
   * `SCHEDULE_MONTHLY` (default `0`), disabled - static schedule is used, enabled if set to `1`
   * `POWER_THRESHOLD_HALF` (default `0`), voltage at which `SCHEDULE_T_OFF` time is doubled, suggested `3.7`
   * `POWER_THRESHOLD_QUART` (default `0`), voltage at which `SCHEDULE_T_OFF` time is quadrupled, suggested `3.4`
-  * Month-dependent schedule variables
+  * Static schedule variables
     * `SCHEDULE_START` (default `00:01`), option is also `sunrise` calculated automatically if lat/long are defined
     * `SCHEDULE_END` (default `23:59`), option is also `sunset`calculated automatically if lat/long are defined
     * `SCHEDULE_T_ON` (default `5`), remains on for specified time in minutes
     * `SCHEDULE_T_OFF` (default `55`), remains off for specified time in minutes
-  * Static schedule variables
-    * `SCHEDULE_MONTH_START` (default `08:00`), option is also `sunrise` calculated automatically if lat/long are defined
-    * `SCHEDULE_MONTH_END` (default `18:00`), option is also `sunset`calculated automatically if lat/long are defined
-    * `SCHEDULE_MONTH_T_ON` (default `35`), remains on for specified time in minutes
-    * `SCHEDULE_MONTH_T_OFF` (default `15`), remains off for specified time in minutes
+  * Month-dependent schedule variables (`x` is number of desired month, example: `SCHEDULE_MONTH5_START`)
+    * `SCHEDULE_MONTHx_START` (default `08:00`), option is also `sunrise` calculated automatically if lat/long are defined
+    * `SCHEDULE_MONTHx_END` (default `18:00`), option is also `sunset`calculated automatically if lat/long are defined
+    * `SCHEDULE_MONTHx_T_ON` (default `35`), remains on for specified time in minutes
+    * `SCHEDULE_MONTHx_T_OFF` (default `15`), remains off for specified time in minutes
 * Camera
   * `CAMERA_RESOLUTION` (default `1280x720`), options are `1280x720`, `1920x1080`, `2592x1952` and some others. Mind fi copying resolution that you use the letter `x` not a multiply character.
   * `CAMERA_VIDEO_DURATION` (default `until-sleep`), duration in minutes or `off`
