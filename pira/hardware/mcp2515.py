@@ -48,6 +48,12 @@ class MCP2515():
     def get_enabled(self):
         """ check if enabled """
         return self._enabled
+    def get_raw_data(self):
+        self._message = self._bus.recv()
+        if self._message is not None:
+            return self._message
+        return None
+
     def get_data(self):
         """ waits until nothing received """
         self._message = self._bus.recv()
