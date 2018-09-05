@@ -14,17 +14,44 @@ import time
 
 CAN_MASTER_ID = 0x001
 CAN_DEVICE_1_ID = 0x100
-CAN_DEVICE_1_SENS1_ID = 0x101
-CAN_DEVICE_1_SENS2_ID = 0x102
+CAN_DEVICE_L0_ID = 0x101
+CAN_DEVICE_TSL2561_ID = 0x102
+CAN_DEVICE_BME280_ID = 0x103
+CAN_DEVICE_ANEMOMETER_ID = 0x104
+CAN_DEVICE_RAIN_ID = 0x105
+CAN_DEVICE_CO2_ID = 0x106
+CAN_DEVICE_TDR_ID = 0x107
 
 class Module(object):
     def __init__(self, boot):
         """ Inits the Mcp2515 """
         self._boot = boot
         
+        # L0
         self.l0_temp = []
         self.l0_vdd = []
         
+        # TSL2561
+        self.TSL2561_visible = []
+        self.TSL2561_fullspec = []
+        self.TSL2561_infrared = []
+        
+        self.BME280_pressure = []
+        self.BME280_temperature = []
+        self.BME280_humidity = []
+
+        self.ANEMOMETER_wind = []
+
+        self.RAIN_count = []
+
+        self.CO2_value = []
+
+        self.TDR_vol_w_content = []
+        self.TDR_soil_temp = []
+        self.TDR_soil_perm = []
+        self.TDR_soil_elec = []
+        self.TDR_other = []
+
         try:
             self._driver = mcp2515.MCP2515()
         except:
@@ -34,10 +61,10 @@ class Module(object):
 
         self._enabled = True
 
-    def dev_1_sens_1(self):
+    def get_data_sensors(self, sensor_ID):
         
         # send a "wakeup" to the sensor 1 
-        self._driver.send_data(CAN_DEVICE_1_SENS1_ID, [0x01], False)
+        self._driver.send_data(sensor_ID, [0x01], False)
 
         # receive message and read how many data points are we expecting
         number = self._driver.get_data()
@@ -77,31 +104,111 @@ class Module(object):
                     
                     # try except because of out of index error
                     try:
+                        calc = float(self._message.data[calc_second] << 8 | self._message.data[calc_first])
+                        if sensor_ID is CAN_DEVICE_L0_ID: 
+                            
+                            calc = calc / 100
 
-                        # print data
-                        #print(" Data[{}]: {}".format(i, self._message.data[i]))
-                        
-                        # calculate the value -> first + second/100 -> example: 27 + 48/100 -> 27.48
-                        calc = self._message.data[calc_first] + float(self._message.data[calc_second])/100
-                        
-                        # print the calculation
-                        print("Calc: {}".format(str(calc)))
-                       
-                        # it depends which variable we are using (VAR0 -> TEMP) (VAR1 -> VDD)
-                        if col is 0:
-                            self.l0_temp.append(calc)           # append it to the array
-                        elif col is 1:
-                            self.l0_vdd.append(calc)            # append it to the array
+                            # it depends which variable we are using (VAR0 -> TEMP) (VAR1 -> VDD)
+                            if col is 0:
+                                self.l0_temp.append(calc)           # append it to the array
+                            elif col is 1:
+                                self.l0_vdd.append(calc)            # append it to the array
+                    
+                        elif sensor_ID is CAN_DEVICE_TSL2561_ID:
+                            if col is 0:
+                                self.TSL2561_visible.append(calc)
+                            elif col is 1:
+                                self.TSL2561_fullspec.append(calc)
+                            elif col is 2:
+                                self.TSL2561_infrared.append(calc)
+                        elif sensor_ID is CAN_DEVICE_BME280_ID:
+                            
+                            calc = calc / 100
+
+                            if col is 0:
+                                self.BME280_pressure.append(calc)
+                            elif col is 1:
+                                self.BME280_temperature.append(calc)
+                            elif col is 2:
+                                self.BME280_humidity.append(calc)
+                        elif sensor_ID is CAN_DEVICE_ANEMOMETER_ID:
+                            
+                            calc = calc / 100
+                            if col is 0:
+                                self.ANEMOMETER_wind.append(calc)
+                        elif sensor_ID is CAN_DEVICE_RAIN_ID:
+
+                            if col is 0:
+                                self.RAIN_count.append(calc)
+                        elif sensor_ID is CAN_DEVICE_CO2_ID:
+
+                            calc = calc * 100
+
+                            if col is 0:
+                                self.CO2_value.append(calc)
+                        elif sensor_ID is CAN_DEVICE_TDR_ID:
+
+                            if col is 0:
+                                self.TDR_vol_w_content.append(calc)
+                            elif col is 1:
+                                self.TDR_soil_temp.append(calc)
+                            elif col is 2:
+                                self.TDR_soil_perm.append(calc)
+                            elif col is 3:
+                                self.TDR_soil_elec.append(calc)
+                            elif col is 4:
+                                self.TDR_other.append(calc)
+
                     except:
                         break       
+        if sensor_ID is CAN_DEVICE_L0_ID:
+            # print out the two arrays
+            print("L0 TEMP DATA:")
+            print(*self.l0_temp, sep=", ")
+            print("\nL0 VDD DATA:")
+            print(*self.l0_vdd, sep=", ")
+        
+        if sensor_ID is CAN_DEVICE_TSL2561_ID:
+            print("TSL2561 VISIBLE DATA:")
+            print(*self.TSL2561_visible, sep=", ")
+            print("\nTSL2561 FULLSPEC DATA:")
+            print(*self.TSL2561_fullspec, sep=", ")
+            print("\nTSL2561 INFRARED DATA:")
+            print(*self.TSL2561_infrared, sep=", ")
 
-        # print out the two arrays
-        print("L0 TEMP DATA:")
-        print(*self.l0_temp, sep=", ")
-        print("\nL0 VDD DATA:")
-        print(*self.l0_vdd, sep=", ")
+        if sensor_ID is CAN_DEVICE_BME280_ID:
+            print("BME280 PRESSURE DATA:")
+            print(*self.BME280_pressure, sep=", ")
+            print("BME280 TEMPERATURE DATA:")
+            print(*self.BME280_temperature, sep=", ")
+            print("BME280 HUMIDITY DATA:")
+            print(*self.BME280_humidity, sep=", ")
 
+        if sensor_ID is CAN_DEVICE_ANEMOMETER_ID:
+            print("ANEMOMETER WIND DATA:")
+            print(*self.ANEMOMETER_wind, sep=", ")
+            
+        if sensor_ID is CAN_DEVICE_RAIN_ID:
+            print("RAIN drops DATA:")
+            print(*self.RAIN_count, sep=", ")
 
+        if sensor_ID is CAN_DEVICE_CO2_ID:
+            print("CO2 value:")
+            print(*self.CO2_value, sep=", ")
+
+        if sensor_ID is CAN_DEVICE_TDR_ID:
+            print("TDR VOL. W. CONTENT DATA:")
+            print(*self.TDR_vol_w_content, sep=", ")
+            print("TDR SOIL TEMP DATA:")
+            print(*self.TDR_soil_temp, sep=", ")
+            print("TDR SOIL PERM DATA:")
+            print(*self.TDR_soil_perm, sep=", ")
+            print("TDR SOIL ELEC DATA:")
+            print(*self.TDR_soil_elec, sep=", ")
+            print("TDR other DATA:")
+            print(*self.TDR_other, sep=", ")
+    
     def process(self, modules):
         """ Sends out the data, receives """
         if not self._enabled:
@@ -109,7 +216,13 @@ class Module(object):
             return
         
         # execute the dev1 board sensor 1 
-        self.dev_1_sens_1()            
+        self.get_data_sensors(CAN_DEVICE_L0_ID)
+        self.get_data_sensors(CAN_DEVICE_TSL2561_ID)
+        self.get_data_sensors(CAN_DEVICE_BME280_ID)
+        self.get_data_sensors(CAN_DEVICE_ANEMOMETER_ID)
+        self.get_data_sensors(CAN_DEVICE_RAIN_ID)
+        self.get_data_sensors(CAN_DEVICE_CO2_ID)
+        self.get_data_sensors(CAN_DEVICE_TDR_ID)
 
         time.sleep(60)
         #print("Read temperature of murata: {}".format(self._recv_message.data[0]))

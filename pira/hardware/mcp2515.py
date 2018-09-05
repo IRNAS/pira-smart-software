@@ -21,7 +21,7 @@ class MCP2515():
         """
         Inits MCP2515 at a baudrate and sets up the bus and the link
         """
-        self._bitrate = os.environ.get('CAN_SPEED', '500000')
+        self._bitrate = os.environ.get('CAN_SPEED', '125000')
         self._enabled = False
         
         # DEBUG
