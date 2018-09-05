@@ -36,16 +36,21 @@ class Module(object):
         self.TSL2561_fullspec = []
         self.TSL2561_infrared = []
         
+        # BME
         self.BME280_pressure = []
         self.BME280_temperature = []
         self.BME280_humidity = []
 
+        # WIND
         self.ANEMOMETER_wind = []
 
+        # RAIN
         self.RAIN_count = []
 
+        # CO2
         self.CO2_value = []
 
+        # TDR
         self.TDR_vol_w_content = []
         self.TDR_soil_temp = []
         self.TDR_soil_perm = []
@@ -53,6 +58,7 @@ class Module(object):
         self.TDR_other = []
 
         try:
+            # init driver
             self._driver = mcp2515.MCP2515()
         except:
             print("WARNING: CAN connection failed.")
@@ -161,7 +167,9 @@ class Module(object):
                                 self.TDR_other.append(calc)
 
                     except:
-                        break       
+                        break
+
+        # L0 printing
         if sensor_ID is CAN_DEVICE_L0_ID:
             # print out the two arrays
             print("L0 TEMP DATA:")
@@ -169,6 +177,7 @@ class Module(object):
             print("\nL0 VDD DATA:")
             print(*self.l0_vdd, sep=", ")
         
+        # TSL2561 printing
         if sensor_ID is CAN_DEVICE_TSL2561_ID:
             print("TSL2561 VISIBLE DATA:")
             print(*self.TSL2561_visible, sep=", ")
@@ -176,7 +185,8 @@ class Module(object):
             print(*self.TSL2561_fullspec, sep=", ")
             print("\nTSL2561 INFRARED DATA:")
             print(*self.TSL2561_infrared, sep=", ")
-
+    
+        # BME280 printing
         if sensor_ID is CAN_DEVICE_BME280_ID:
             print("BME280 PRESSURE DATA:")
             print(*self.BME280_pressure, sep=", ")
@@ -185,18 +195,22 @@ class Module(object):
             print("BME280 HUMIDITY DATA:")
             print(*self.BME280_humidity, sep=", ")
 
+        # ANEMOMETER printing
         if sensor_ID is CAN_DEVICE_ANEMOMETER_ID:
             print("ANEMOMETER WIND DATA:")
             print(*self.ANEMOMETER_wind, sep=", ")
             
+        # RAIN printing
         if sensor_ID is CAN_DEVICE_RAIN_ID:
             print("RAIN drops DATA:")
             print(*self.RAIN_count, sep=", ")
 
+        # CO2 printing
         if sensor_ID is CAN_DEVICE_CO2_ID:
             print("CO2 value:")
             print(*self.CO2_value, sep=", ")
 
+        # TDR printing
         if sensor_ID is CAN_DEVICE_TDR_ID:
             print("TDR VOL. W. CONTENT DATA:")
             print(*self.TDR_vol_w_content, sep=", ")
@@ -215,7 +229,7 @@ class Module(object):
             print("WARNING: CAN is not connected, skipping.")
             return
         
-        # execute the dev1 board sensor 1 
+        # calling the sensors and getting data
         self.get_data_sensors(CAN_DEVICE_L0_ID)
         self.get_data_sensors(CAN_DEVICE_TSL2561_ID)
         self.get_data_sensors(CAN_DEVICE_BME280_ID)
@@ -225,7 +239,6 @@ class Module(object):
         self.get_data_sensors(CAN_DEVICE_TDR_ID)
 
         time.sleep(60)
-        #print("Read temperature of murata: {}".format(self._recv_message.data[0]))
 
     def shutdown(self):
         """ Shutdown """
