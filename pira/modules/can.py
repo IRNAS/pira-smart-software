@@ -38,6 +38,7 @@ class Module(object):
         
         # send a "wakeup" to the sensor 1 
         self._driver.send_data(CAN_DEVICE_1_SENS1_ID, [0x01], False)
+        # TODO add timeout
 
         # receive message and read how many data points are we expecting
         number = self._driver.get_data()
@@ -81,8 +82,8 @@ class Module(object):
                         # print data
                         #print(" Data[{}]: {}".format(i, self._message.data[i]))
                         
-                        # calculate the value -> first + second/100 -> example: 27 + 48/100 -> 27.48
-                        calc = self._message.data[calc_first] + float(self._message.data[calc_second])/100
+                        # calculates it -> convert 2x8bit values into 16bit
+                        calc = ((self._message.data[calc_second] << 8) | (self._message.data[calc_first] & 0xff));
                         
                         # print the calculation
                         print("Calc: {}".format(str(calc)))
@@ -109,22 +110,11 @@ class Module(object):
             return
         
         # execute the dev1 board sensor 1 
-        self.dev_1_sens_1()    
+        self.dev_1_sens_1()            
 
-        time.sleep(60)
+        #time.sleep(60)
         #print("Read temperature of murata: {}".format(self._recv_message.data[0]))
 
     def shutdown(self):
         """ Shutdown """
         self._driver.shutdown()
-
-    def get_last_temp(self):
-        """ Get CAN - last measured temperature """
-        last_temp = self.l0_temp[-1]
-        return last_temp
-
-    def get_last_vdd(self):
-        """ Get CAN - last measured voltage """
-        last_vdd = self.l0_vdd[-1]
-        return last_vdd
-

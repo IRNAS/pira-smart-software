@@ -54,17 +54,17 @@ class Module(object):
         """
         return datetime.now()
 
-    def upload_data(self, data, time):
+    def upload_data(self, time, data_temp, data_vdd):
         """
-        Uploads data at the certain time (can be the past or future
+        Uploads data at the certain time (can be the past or future)
         """
         print("Updating data to M2X @ {}".format(datetime.now()))
         self._device.post_updates(values = {
-            self.M2X_NAME: [
-                {
-                    'timestamp': time,
-                    'value':     data
-                }
+            "temperature": [
+                { 'timestamp': time, 'value': data_temp }
+            ],
+            "vdd": [
+                { 'timestamp': time, 'value': data_vdd }
             ]
         })
 
@@ -74,12 +74,12 @@ class Module(object):
             print("WARNING: M2X is not correctly configured, skipping.")
             return
         print("M2X Process | Inited: {}".format(self._enabled))
-        # self.upload_data(120, self.get_timestamp())
+        self.upload_data(self.get_timestamp(), 42, 420)     # testing
 
-        read_temp = modules['pira.modules.can'].get_last_temp()
-        read_vdd = modules['pira.modules.can'].get_last_vdd()
-        print("Temp: " + str(read_temp))
-        print("VDD: " + str(read_vdd))
+        #read_temp = modules['pira.modules.can'].get_last_temp()
+        #read_vdd = modules['pira.modules.can'].get_last_vdd()
+        #print("Temp: " + str(read_temp))
+        #print("VDD: " + str(read_vdd))
 
     def shutdown(self, modules):
         """ Shutdown """
