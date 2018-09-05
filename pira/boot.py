@@ -41,7 +41,7 @@ class Boot(object):
         # 'pira.modules.nodewatcher',
         'pira.modules.debug',
         #'pira.modules.webserver',
-        #'pira.modules.m2x_plat',
+        'pira.modules.m2x_plat',
         'pira.modules.can',
         #'pira.modules.azure_images',
 

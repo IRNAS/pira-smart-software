@@ -74,12 +74,14 @@ class Module(object):
             print("WARNING: M2X is not correctly configured, skipping.")
             return
         print("M2X Process | Inited: {}".format(self._enabled))
-        self.upload_data(self.get_timestamp(), 42, 420)     # testing
+        #self.upload_data(self.get_timestamp(), 42, 420)     # testing
 
-        #read_temp = modules['pira.modules.can'].get_last_temp()
-        #read_vdd = modules['pira.modules.can'].get_last_vdd()
-        #print("Temp: " + str(read_temp))
-        #print("VDD: " + str(read_vdd))
+        if 'pira.modules.can' in modules:
+            read_temp = modules['pira.modules.can'].get_last_temp()
+            read_vdd = modules['pira.modules.can'].get_last_vdd()
+            print("Temp: " + str(read_temp))
+            print("VDD: " + str(read_vdd))
+        
 
     def shutdown(self, modules):
         """ Shutdown """

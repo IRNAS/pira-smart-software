@@ -118,3 +118,14 @@ class Module(object):
     def shutdown(self):
         """ Shutdown """
         self._driver.shutdown()
+
+    def get_last_temp(self):
+        """ Get CAN - last measured temperature """
+        last_temp = self.l0_temp[-1]
+        return last_temp
+
+    def get_last_vdd(self):
+        """ Get CAN - last measured voltage """
+        last_vdd = self.l0_vdd[-1]
+        return last_vdd
+        
