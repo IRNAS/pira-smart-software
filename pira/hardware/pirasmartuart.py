@@ -31,34 +31,38 @@ class PIRASMARTUART(object):
         :param timeout: Timeout
         :return: Value
 
-        t:<uint32_t> Time in epoch format, seconds
-        o:<uint32_t> General status value -> time left until next sleep - 'o' stands for overview since 'p' and 's' are occupied
-        b:<uint32_t> Battery level in ADC units
-        p:<uint32_t> On time value
-        s:<uint32_t> Off time value
-        r:<uint32_t> Reboot period duration
-        w:<uint32_t> Next wakeup period duration
-        a:<uint32_t> RPi status pin value
-        Command is not implemented yet
-        c:<uint32_t>
+        t:<uint32_t> time - seconds in epoch format
+        o:<uint32_t> overwiev - time left until next sleep
+        b:<uint32_t> battery - level in ADC units
+        p:<uint32_t> power - safety on period
+        s:<uint32_t> sleep - safety off period
+        r:<uint32_t> reboot - reboot period duration
+        w:<uint32_t> wakeup - period for next wakeup
+        a:<uint32_t> active - Pi status pin value
+        c:<uint32_t> command - not yet implemented
         """
 
         start = time.time()
         #reset values
-        self.pira_time = None
-        self.pira_voltage = None
-        self.pira_on_timer_get = None
-        self.pira_on_timer_set = None
-        self.pira_rpi_gpio = None
-        self.pira_next_wakeup_get = None
+        self.pira_time = None # t
+        self.pira_on_timer_set = None # o
+        self.pira_voltage = None # b
+        self.pira_on_timer_get = None # p
+        self.pira_sleep = None # s
+        self.pira_reboot = None # r
+        self.pira_next_wakeup_get = None # w
+        self.pira_rpi_gpio = None # a
+        
 
         self.ser.flushInput()
         while (self.pira_time == None) or \
-                (self.pira_voltage == None) or \
-                (self.pira_rpi_gpio == None) or \
                 (self.pira_on_timer_set == None) or \
+                (self.pira_voltage == None) or \
+                (self.pira_on_timer_get == None) or \
+                (self.pira_sleep == None) or \
+                (self.pira_reboot == None) or \
                 (self.pira_next_wakeup_get == None) or \
-                (self.pira_on_timer_get == None) and not \
+                (self.pira_rpi_gpio == None) and not \
                 (time.time() - start < timeout):
 
             x=self.ser.readline()
@@ -67,38 +71,45 @@ class PIRASMARTUART(object):
             #struct.unpack('<h', unhexlify(s1))[0]
             try:
                 value = float(struct.unpack('>L', x[2:6])[0])
-            except:
+            except: # TODO - handle that is doesn't spam anymore when Pira BLE not present
                 print("Error, read the following: " + str(x[2:6]))
                 time.sleep(1)
+                #return
 
             if x.startswith(str('t:')):
                 self.pira_time = float(value)
-                print "Pira time: " + str(self.pira_time)
-            elif x.startswith(str('b:')):
-                self.pira_voltage = float(value)*0.0164
-                print "Pira voltage: " + str(self.pira_voltage)
+                #print "Pira time: " + str(self.pira_time)
             elif x.startswith(str('o:')):
                 self.pira_on_timer_set = float(value)
-                print "Pira on timer set: " + str(self.pira_on_timer_set)
+                #print "Pira overwiev: " + str(self.pira_on_timer_set)
+            elif x.startswith(str('b:')):
+                self.pira_voltage = float(value)*0.0164
+                #print "Pira battery: " + str(self.pira_voltage)
             elif x.startswith(str('p:')):
                 self.pira_on_timer_get = float(value)
-                print "Pira on timer get: " + str(self.pira_on_timer_get)
-            elif x.startswith(str('a:')):
-                self.pira_rpi_gpio = float(value)
-                print "Pira gpio : " + str(self.pira_rpi_gpio)
+                #print "Pira get safety on period: " + str(self.pira_on_timer_get)
+            elif x.startswith(str('s:')):
+                self.pira_sleep = float(value)
+                #print "Pira get safety off period: " + str(self.pira_sleep)
+            elif x.startswith(str('r:')):
+                self.pira_reboot = float(value)
+                #print "Pira get reboot period: " + str(self.pira_reboot)
             elif x.startswith(str('w:')):
                 self.pira_next_wakeup_get = float(value)
-                print "Pira next wakeup get : " + str(self.pira_next_wakeup_get)
+                #print "Pira next wakeup get : " + str(self.pira_next_wakeup_get)
+            elif x.startswith(str('a:')):
+                self.pira_rpi_gpio = float(value)
+                print "Pira reports Pi status pin value: " + str(self.pira_rpi_gpio)
 
         return
 
     """
-    t:<uint32_t> - time in epoch format, set date/time
-    p:<uint32_t>- configure ON time (safeguard)
-    s:<uint32_t> - configure OFF time (safeguard)
-    r:<uint32_t> - reboot wait period
-    w:<uint32_t> - period for next wakeup
-    c:<uint32_t> - other commands - implemented, but NOT USED currently
+        t:<uint32_t> time - seconds in epoch format
+        p:<uint32_t> power - safety on period
+        s:<uint32_t> sleep - safety off period
+        r:<uint32_t> reboot - reboot period duration
+        w:<uint32_t> wakeup - period for next wakeup
+        c:<uint32_t> command - TODO
     """
 
     def set_time(self, new_time_epoch):
@@ -106,14 +117,16 @@ class PIRASMARTUART(object):
         data = "t:" + struct.pack('>L', int(new_time_epoch))
         self.ser.write(data+'\n')
 
-    def set_off_time(self, time_seconds):
-        """Writes new off time to pira"""
-        data = "s:" + struct.pack('>L', int(time_seconds))
+    def set_on_time(self, time_seconds):
+        """Writes new on period time to pira"""
+        print "New on period time: " + str(time_seconds)
+        data = "p:" + struct.pack('>L', int(time_seconds))
         self.ser.write(data+'\n')
 
-    def set_on_time(self, time_seconds):
-        """Writes new on time to pira"""
-        data = "p:" + struct.pack('>L', int(time_seconds))
+    def set_off_time(self, time_seconds):
+        """Writes new off period time to pira"""
+        print "New off period time: " + str(time_seconds)
+        data = "s:" + struct.pack('>L', int(time_seconds))
         self.ser.write(data+'\n')
 
     def set_reboot_time(self, time_seconds):
@@ -122,11 +135,14 @@ class PIRASMARTUART(object):
         self.ser.write(data+'\n')
 
     def set_wakeup_time(self, time_seconds):
-        """Writes new reboot time to pira"""
+        """Writes new wakeup time to pira"""
         data = "w:" + struct.pack('>L', int(time_seconds))
         self.ser.write(data+'\n')
 
-
+    def send_command(self, command):    # TO DO
+        """Sends command to pira"""
+        data = "c:" + struct.pack('>L', int(command))
+        self.ser.write(data+'\n')
 
     def close(self):
         """Close device."""

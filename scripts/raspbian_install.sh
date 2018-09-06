@@ -45,9 +45,11 @@ sudo mkdir /data/
 
 # manual execute
 echo "---------------------------------------------------"
-echo "Execute raspi-config and enable I2C,SPI and Serial"
+echo "Execute raspi-config and enable I2C, SPI and Serial" 
+echo "Serial: when asked to enable shell: NO, hardware: YES"
 echo "---------------------------------------------------"
 echo "Edit /boot/config and paste the following:         "
 echo "dtoverlay=pi3-miniuart-bt"
+echo "dtoverlay=mcp2515-can0,oscillator=8000000,interrupt=12"
 echo "gpu_mem=128"
 echo "start_x=1"

@@ -71,6 +71,7 @@ class Module(object):
         
         # send a "wakeup" to the sensor 1 
         self._driver.send_data(sensor_ID, [0x01], False)
+        # TODO add timeout
 
         # receive message and read how many data points are we expecting
         number = self._driver.get_data()
@@ -165,7 +166,7 @@ class Module(object):
                                 self.TDR_soil_elec.append(calc)
                             elif col is 4:
                                 self.TDR_other.append(calc)
-
+                                
                     except:
                         break
 
@@ -243,3 +244,14 @@ class Module(object):
     def shutdown(self):
         """ Shutdown """
         self._driver.shutdown()
+
+    def get_last_temp(self):
+        """ Get CAN - last measured temperature """
+        last_temp = self.l0_temp[-1]
+        return last_temp
+
+    def get_last_vdd(self):
+        """ Get CAN - last measured voltage """
+        last_vdd = self.l0_vdd[-1]
+        return last_vdd
+        
