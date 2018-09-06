@@ -53,6 +53,7 @@ class PIRASMARTUART(object):
         self.pira_next_wakeup_get = None # w
         self.pira_rpi_gpio = None # a
         
+        read_timeout = 0    # handles when pira ble is not connected
 
         self.ser.flushInput()
         while (self.pira_time == None) or \
@@ -71,10 +72,12 @@ class PIRASMARTUART(object):
             #struct.unpack('<h', unhexlify(s1))[0]
             try:
                 value = float(struct.unpack('>L', x[2:6])[0])
-            except: # TODO - handle that is doesn't spam anymore when Pira BLE not present
-                print("Error, read the following: " + str(x[2:6]))
+            except:
+                print("ERROR: read from Pira BLE the following: " + str(x[2:6]))
                 time.sleep(1)
-                #return
+                read_timeout += 1
+                if read_timeout >= 3:   # after failing 3 or more times stop Pira BLE reading
+                    return 0
 
             if x.startswith(str('t:')):
                 self.pira_time = float(value)
@@ -101,7 +104,7 @@ class PIRASMARTUART(object):
                 self.pira_rpi_gpio = float(value)
                 print "Pira reports Pi status pin value: " + str(self.pira_rpi_gpio)
 
-        return
+        return 1
 
     """
         t:<uint32_t> time - seconds in epoch format

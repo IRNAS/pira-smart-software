@@ -13,10 +13,12 @@ import pigpio
 
 # Optional Resin support.
 try:
+    print("Importing resin...")
     import resin
     RESIN_ENABLED = True
 except ImportError:
     RESIN_ENABLED = False
+    print("Importing resin failed.")
 
 from .hardware import devices, pirasmartuart
 from .state import State
@@ -33,6 +35,7 @@ class Boot(object):
         # Sensor modules.
         # 'pira.modules.ultrasonic',
         #'pira.modules.camera',
+        'pira.modules.can',
 
         # Reporting modules should come after all sensor modules, so they can get
         # the latest values.
@@ -42,7 +45,6 @@ class Boot(object):
         'pira.modules.debug',
         #'pira.modules.webserver',
         'pira.modules.m2x_plat',
-        'pira.modules.can',
         #'pira.modules.azure_images',
 
     ]
@@ -134,10 +136,14 @@ class Boot(object):
         # Simplest logic is to take the latest of the system and RTC time
         # This assumes the clock that is behind is always wrong
         # Get latest values from pira smart
-        self.pirasmart.read()
-        rtc_time = self.get_time()
+        
+        self.pira_ok = self.pirasmart.read()
+        if self.pira_ok:
+            rtc_time = self.get_time()
+        else:
+            rtc_time = datetime.datetime.now()
+        
         system_time = datetime.datetime.now()
-
 
         if rtc_time > system_time:
             #write RTC to system

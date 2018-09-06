@@ -8,7 +8,6 @@ from __future__ import print_function
 from ..messages import MeasurementConfig
 from ..hardware import mcp2515
 
-
 import os
 import time
 
@@ -245,13 +244,48 @@ class Module(object):
         """ Shutdown """
         self._driver.shutdown()
 
-    def get_last_temp(self):
-        """ Get CAN - last measured temperature """
-        last_temp = self.l0_temp[-1]
-        return last_temp
+    def get_last_values(self):  # Read last value from all available lists
+        """ Get CAN - last measured values from all implemented sensors """
+        last_values = { }   #dictionary
+        # L0
+        if self.l0_temp:
+            last_values["temperature"] = self.l0_temp[-1]
+        if self.l0_vdd:
+            last_values["vdd"] = self.l0_vdd[-1]
+        # TSL2561
+        if self.TSL2561_visible:
+            last_values["tsl_visible"] = self.TSL2561_visible[-1]
+        if self.TSL2561_fullspec:
+            last_values["tsl_fullspec"] = self.TSL2561_fullspec[-1]
+        if self.TSL2561_infrared:
+            last_values["tsl_infrared"] = self.TSL2561_infrared[-1]
+        # BME
+        if self.BME280_pressure:
+            last_values["bme_pressure"] = self.BME280_pressure[-1]
+        if self.BME280_temperature:
+            last_values["bme_temperature"] = self.BME280_temperature[-1]
+        if self.BME280_humidity:
+            last_values["bme_humidity"] = self.BME280_humidity[-1]
+        # WIND
+        if self.ANEMOMETER_wind:
+            last_values["wind"] = self.ANEMOMETER_wind[-1]
+        # RAIN
+        if self.RAIN_count:
+            last_values["rain"] = self.RAIN_count[-1]
+        #CO2
+        if self.CO2_value:
+            last_values["co2"] = self.CO2_value[-1]
+        #TDR
+        if self.TDR_vol_w_content:
+            last_values["tdr_vol_w_cont"] = self.TDR_vol_w_content[-1]
+        if self.TDR_soil_temp:
+            last_values["tdr_soil_temp"] = self.TDR_soil_temp[-1]
+        if self.TDR_soil_perm:
+            last_values["tdr_soil_perm"] = self.TDR_soil_perm[-1]
+        if self.TDR_soil_elec:
+            last_values["tdr_soil_elec"] = self.TDR_soil_elec[-1]
+        if self.TDR_other:
+            last_values["tdr_other"] = self.TDR_other[-1]
 
-    def get_last_vdd(self):
-        """ Get CAN - last measured voltage """
-        last_vdd = self.l0_vdd[-1]
-        return last_vdd
-        
+        return last_values
+
