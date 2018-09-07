@@ -54,17 +54,14 @@ class Module(object):
         """
         return datetime.now()
 
-    def upload_data(self, time, data_temp, data_vdd):
+    def upload_data(self, time, value_name, value_data):
         """
         Uploads data at the certain time (can be the past or future)
         """
         print("Updating data to M2X @ {}".format(datetime.now()))
         self._device.post_updates(values = {
-            "temperature": [
-                { 'timestamp': time, 'value': data_temp }
-            ],
-            "vdd": [
-                { 'timestamp': time, 'value': data_vdd }
+            value_name : [
+                { 'timestamp': time, 'value': value_data }
             ]
         })
 
@@ -80,7 +77,9 @@ class Module(object):
             values = modules['pira.modules.can'].get_last_values()
             print("From can module read: ")
             print(values)
-
+            for x in values:
+                self.upload_data(self.get_timestamp(), x, values[x])
+            
 
     def shutdown(self, modules):
         """ Shutdown """
