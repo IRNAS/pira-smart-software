@@ -25,16 +25,16 @@ class Module(object):
     def __init__(self, boot):
         """ Inits the Mcp2515 """
         self._boot = boot
-        
+
         # L0
         self.l0_temp = []
         self.l0_vdd = []
-        
+
         # TSL2561
         self.TSL2561_visible = []
         self.TSL2561_fullspec = []
         self.TSL2561_infrared = []
-        
+
         # BME
         self.BME280_pressure = []
         self.BME280_temperature = []
@@ -67,8 +67,8 @@ class Module(object):
         self._enabled = True
 
     def get_data_sensors(self, sensor_ID):
-        
-        # send a "wakeup" to the sensor 1 
+
+        # send a "wakeup" to the sensor 1
         self._driver.send_data(sensor_ID, [0x01], False)
         # TODO add timeout
 
@@ -86,33 +86,33 @@ class Module(object):
 
             # log the varaible number
             #print("VAR {}".format(col))
-            
+
             # go through the amount of data in a var
             for dat in range(0, num_of_data):
 
                 # read message
                 self._message = self._driver.get_raw_data()
-                
+
                 # print out our message received with dlc
                 #print("Message DLC: {}".format(self._message.dlc))
                 #print(*self._message.data, sep=", ")
-              
-                # for looping through data 
+
+                # for looping through data
                 calc_first = -1
                 calc_second = -1
-                
+
                 # dlc represents how many data points are in the received message
                 for i in range(0, self._message.dlc):
 
                     # calculate the index for the first and second number
                     calc_first = calc_second + 1
                     calc_second = calc_first + 1
-                    
+
                     # try except because of out of index error
                     try:
                         calc = float(self._message.data[calc_second] << 8 | self._message.data[calc_first])
-                        if sensor_ID is CAN_DEVICE_L0_ID: 
-                            
+                        if sensor_ID is CAN_DEVICE_L0_ID:
+
                             calc = calc / 100
 
                             # it depends which variable we are using (VAR0 -> TEMP) (VAR1 -> VDD)
@@ -120,7 +120,7 @@ class Module(object):
                                 self.l0_temp.append(calc)           # append it to the array
                             elif col is 1:
                                 self.l0_vdd.append(calc)            # append it to the array
-                    
+
                         elif sensor_ID is CAN_DEVICE_TSL2561_ID:
                             if col is 0:
                                 self.TSL2561_visible.append(calc)
@@ -129,7 +129,7 @@ class Module(object):
                             elif col is 2:
                                 self.TSL2561_infrared.append(calc)
                         elif sensor_ID is CAN_DEVICE_BME280_ID:
-                            
+
                             calc = calc / 100
 
                             if col is 0:
@@ -139,7 +139,7 @@ class Module(object):
                             elif col is 2:
                                 self.BME280_humidity.append(calc)
                         elif sensor_ID is CAN_DEVICE_ANEMOMETER_ID:
-                            
+
                             calc = calc / 100
                             if col is 0:
                                 self.ANEMOMETER_wind.append(calc)
@@ -165,7 +165,7 @@ class Module(object):
                                 self.TDR_soil_elec.append(calc)
                             elif col is 4:
                                 self.TDR_other.append(calc)
-                                
+
                     except:
                         break
 
@@ -177,7 +177,7 @@ class Module(object):
             print(*self.l0_temp, sep=", ")
             print("\nL0 VDD DATA:")
             print(*self.l0_vdd, sep=", ")
-        
+
         # TSL2561 printing
         if sensor_ID is CAN_DEVICE_TSL2561_ID:
             print("TSL2561 VISIBLE DATA:")
@@ -186,7 +186,7 @@ class Module(object):
             print(*self.TSL2561_fullspec, sep=", ")
             print("\nTSL2561 INFRARED DATA:")
             print(*self.TSL2561_infrared, sep=", ")
-    
+
         # BME280 printing
         if sensor_ID is CAN_DEVICE_BME280_ID:
             print("BME280 PRESSURE DATA:")
@@ -200,7 +200,7 @@ class Module(object):
         if sensor_ID is CAN_DEVICE_ANEMOMETER_ID:
             print("ANEMOMETER WIND DATA:")
             print(*self.ANEMOMETER_wind, sep=", ")
-            
+
         # RAIN printing
         if sensor_ID is CAN_DEVICE_RAIN_ID:
             print("RAIN drops DATA:")
@@ -229,14 +229,20 @@ class Module(object):
         if not self._enabled:
             print("WARNING: CAN is not connected, skipping.")
             return
-        
+
         # calling the sensors and getting data
         self.get_data_sensors(CAN_DEVICE_L0_ID)
+        time.sleep(0.1)
         self.get_data_sensors(CAN_DEVICE_TSL2561_ID)
+        time.sleep(0.1)
         self.get_data_sensors(CAN_DEVICE_BME280_ID)
+        time.sleep(0.1)
         self.get_data_sensors(CAN_DEVICE_ANEMOMETER_ID)
+        time.sleep(0.1)
         self.get_data_sensors(CAN_DEVICE_RAIN_ID)
+        time.sleep(0.1)
         self.get_data_sensors(CAN_DEVICE_CO2_ID)
+        time.sleep(0.1)
         self.get_data_sensors(CAN_DEVICE_TDR_ID)
 
         time.sleep(60)
@@ -289,4 +295,3 @@ class Module(object):
             last_values["tdr_other"] = self.TDR_other[-1]
 
         return last_values
-
