@@ -10,7 +10,8 @@ GPIO_SOFT_POWER_PIN = 25
 # ROCKBLOCK_UART = '/dev/ttyAMA0'
 # Plantower
 # PLANTOWER_UART = '/dev/ttyAMA0'
-PIRASMART_UART = '/dev/ttyAMA0'
+#PIRASMART_UART = '/dev/ttyAMA0' #if pi3-miniuart-bt overlay
+PIRASMART_UART = '/dev/ttyS0' #default
 
 # Ultrasonic sensor.
 GPIO_ULTRASONIC_RX_PIN = 5
