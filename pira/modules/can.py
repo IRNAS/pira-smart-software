@@ -169,6 +169,7 @@ class Module(object):
                     except:
                         break
 
+        '''
         # L0 printing
         if sensor_ID is CAN_DEVICE_L0_ID:
             # print out the two arrays
@@ -222,7 +223,7 @@ class Module(object):
             print(*self.TDR_soil_elec, sep=", ")
             print("TDR other DATA:")
             print(*self.TDR_other, sep=", ")
-    
+    '''
     def process(self, modules):
         """ Sends out the data, receives """
         if not self._enabled:

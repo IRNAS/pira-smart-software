@@ -64,7 +64,7 @@ class Module(object):
 
             # Set the permission so the blobs are public.
             if self.block_blob_service.set_container_acl(self.container_name, public_access=PublicAccess.Container) is None:
-                print("Soemthing went from when setting the container")
+                print("Something went from when setting the container")
                 return
 
             # it is set to True -> all okay

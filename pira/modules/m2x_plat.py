@@ -58,7 +58,7 @@ class Module(object):
         """
         Uploads data at the certain time (can be the past or future)
         """
-        print("Updating data to M2X @ {}".format(datetime.now()))
+        #print("Updating data to M2X @ {}".format(datetime.now()))
         self._device.post_updates(values = {
             value_name : [
                 { 'timestamp': time, 'value': value_data }
