@@ -23,7 +23,6 @@ class MCP2515():
         """
         self._bitrate = os.environ.get('CAN_SPEED', '125000')
         self._enabled = False
-        self._bitrate = 250000
         # DEBUG
         #os.system("ifconfig")
         
