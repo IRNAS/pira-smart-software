@@ -45,7 +45,7 @@ class Boot(object):
         'pira.modules.debug',
         #'pira.modules.webserver',
         'pira.modules.m2x_plat',
-        #'pira.modules.azure_images',
+        'pira.modules.azure_images',
 
     ]
 
