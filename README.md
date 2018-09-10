@@ -58,6 +58,11 @@ The following environment variables can be used to configure the firmware:
   * `SHUTDOWN_VOLTAGE` (default `2.6`V) to configure when the system should shutdown. At 2.6V hardware shutdown will occur, suggested value is 2.3-3V. When this is triggered, the device will wake up next based on the configured interval, unless the battery voltage continues to fall under the hardware limit, then it will boot again when it charges. Note this shutdown will be aborted if in debug mode.
   * `LATITUDE` (default `0`) to define location, used for sunrise/sunset calculation
   * `LONGITUDE` (default `0`) to define location
+* Pira BLE (can be controled with following values, if set to `None` BLE device settings are not updated): 
+  * `PIRA_POWER` (default `None`), p - safety on period, in seconds
+  * `PIRA_SLEEP` (default `None`), s - safety off period, in seconds
+  * `PIRA_REBOOT` (default `None`), r - reboot period duration, in seconds
+  * `PIRA_WAKEUP` (default `None`), w - period for next wakeup, in seconds
 * Scheduler
   * `SCHEDULE_MONTHLY` (default `0`), disabled - static schedule is used, enabled if set to `1`
   * `POWER_THRESHOLD_HALF` (default `0`), voltage at which `SCHEDULE_T_OFF` time is doubled, suggested `3.7`
