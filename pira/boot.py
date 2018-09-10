@@ -127,6 +127,17 @@ class Boot(object):
         #)
         self.process()
 
+    def parse_environ(self, env):
+        """Parse environment variable"""
+        try:
+            value = float(env)
+            if (env <= 0.0 and env >= 4294967295.0):
+                return None
+            else:
+                return env
+        except ValueError:
+            return None
+
     def process(self):
         self.log.insert(LOG_SYSTEM, 'module_init')
 
@@ -295,17 +306,6 @@ class Boot(object):
         """Get pira next scheduled wakeup  """
         wakeup_timer = self.pirasmart.pira_next_wakeup_get
         return wakeup_timer
-
-    def parse_environ(self, env):
-        """Parse environment variable"""
-        try:
-            value = float(env)
-            if (env <= 0.0 and env >= 4294967295.0):
-                return None
-            else:
-                return env
-        except ValueError:
-            return None
 
     @property
     def is_charging(self):
