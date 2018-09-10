@@ -46,7 +46,6 @@ class Boot(object):
         #'pira.modules.webserver',
         'pira.modules.m2x_plat',
         'pira.modules.azure_images',
-
     ]
 
     def __init__(self):
@@ -136,6 +135,19 @@ class Boot(object):
         # Simplest logic is to take the latest of the system and RTC time
         # This assumes the clock that is behind is always wrong
         # Get latest values from pira smart
+
+        pira_on_time = os.environ.get('PIRA_POWER', None)
+        pira_off_time = os.environ.get('PIRA_SLEEP', None)
+        pira_reboot_time = os.environ.get('PIRA_REBOOT', None)
+        pira_wakeup_time = os.environ.get('PIRA_WAKEUP', None)
+
+        self.pirasmart.set_on_time(pira_on_time)
+        time.sleep(0.1)
+        self.pirasmart.set_off_time(pira_off_time)
+        time.sleep(0.1)
+        self.pirasmart.set_reboot_time(pira_reboot_time)
+        time.sleep(0.1)
+        self.pirasmart.set_wakeup_time(pira_wakeup_time)
         
         self.pira_ok = self.pirasmart.read()
         if self.pira_ok:
@@ -191,17 +203,6 @@ class Boot(object):
                 traceback.print_exc()
 
         self.log.insert(LOG_SYSTEM, 'main_loop')
-
-        '''
-        #configure pira smart parameters / overrides BT settings - ONLY FOR TESTING
-        self.pirasmart.set_on_time(500)
-        time.sleep(0.1)
-        self.pirasmart.set_off_time(200)
-        time.sleep(0.1)
-        self.pirasmart.set_reboot_time(30)
-        time.sleep(0.1)
-        self.pirasmart.set_wakeup_time(60)
-        '''
 
         # Enter main loop.
         print("Starting processing loop.")
@@ -289,6 +290,18 @@ class Boot(object):
         """Get pira next scheduled wakeup  """
         wakeup_timer = self.pirasmart.pira_next_wakeup_get
         return wakeup_timer
+
+     def parse_environ(self, env):
+        """Parse environment variable"""
+        #if (None)
+        try:
+            value = float(env)
+            if (env <= 0.0 and env >= 4294967295.0):
+                return None
+            else:
+                return env
+        except ValueError:
+            return None
 
     @property
     def is_charging(self):

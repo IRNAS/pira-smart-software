@@ -230,7 +230,6 @@ class Module(object):
         """ Sends out the data, receives """
         if not self._enabled:
             print("WARNING: CAN is not connected, skipping.")
-            return
 
         # calling the sensors and getting data
         self.get_data_sensors(CAN_DEVICE_L0_ID)
