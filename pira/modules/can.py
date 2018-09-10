@@ -296,5 +296,4 @@ class Module(object):
         if self.TDR_other:
             last_values["tdr_other"] = self.TDR_other[-1]
 
-        print (last_values)
         return last_values
