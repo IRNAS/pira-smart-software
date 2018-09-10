@@ -75,6 +75,7 @@ class Module(object):
         number = self._driver.get_data()
         if (number is None):
             print("ERROR: Failed receiving message from CAN.")
+            #return
         
         # get how many coloumns there are (coloumn x 8bit)
         num_of_data = number.data[0] + 1
@@ -170,7 +171,7 @@ class Module(object):
                     except:
                         break
 
-        '''
+        
         # L0 printing
         if sensor_ID is CAN_DEVICE_L0_ID:
             # print out the two arrays
@@ -224,7 +225,7 @@ class Module(object):
             print(*self.TDR_soil_elec, sep=", ")
             print("TDR other DATA:")
             print(*self.TDR_other, sep=", ")
-    '''
+    
     def process(self, modules):
         """ Sends out the data, receives """
         if not self._enabled:
@@ -295,4 +296,5 @@ class Module(object):
         if self.TDR_other:
             last_values["tdr_other"] = self.TDR_other[-1]
 
+        print (last_values)
         return last_values

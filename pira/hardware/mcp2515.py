@@ -49,14 +49,14 @@ class MCP2515():
         return self._enabled
     
     def get_raw_data(self):
-        self._message = self._bus.recv(3.0)
+        self._message = self._bus.recv()
         if self._message is not None:
             return self._message
         return None
 
     def get_data(self):
-        """ waits until nothing received, timeouts after 3 seconds """
-        self._message = self._bus.recv(3.0)
+        """ waits until nothing received, TODO:timeouts after 3 seconds """
+        self._message = self._bus.recv()
         if self._message is not None:
             c = '{0:f} {1:x} {2:x} '.format(self._message.timestamp, self._message.arbitration_id, self._message.dlc)
             s = ''
