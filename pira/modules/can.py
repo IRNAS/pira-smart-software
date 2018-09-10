@@ -70,10 +70,12 @@ class Module(object):
 
         # send a "wakeup" to the sensor 1
         self._driver.send_data(sensor_ID, [0x01], False)
-        # TODO add timeout
 
         # receive message and read how many data points are we expecting
         number = self._driver.get_data()
+        if (number == None):
+            print("ERROR: Failed receiving message from CAN.")
+            return
 
         # get how many coloumns there are (coloumn x 8bit)
         num_of_data = number.data[0] + 1
