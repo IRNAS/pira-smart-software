@@ -296,7 +296,7 @@ class Boot(object):
         wakeup_timer = self.pirasmart.pira_next_wakeup_get
         return wakeup_timer
 
-     def parse_environ(self, env):
+    def parse_environ(self, env):
         """Parse environment variable"""
         try:
             value = float(env)
