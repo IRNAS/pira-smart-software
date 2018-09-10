@@ -73,10 +73,9 @@ class Module(object):
 
         # receive message and read how many data points are we expecting
         number = self._driver.get_data()
-        if (number == None):
+        if (number is None):
             print("ERROR: Failed receiving message from CAN.")
-            return
-
+        
         # get how many coloumns there are (coloumn x 8bit)
         num_of_data = number.data[0] + 1
 
@@ -230,6 +229,7 @@ class Module(object):
         """ Sends out the data, receives """
         if not self._enabled:
             print("WARNING: CAN is not connected, skipping.")
+            return
 
         # calling the sensors and getting data
         self.get_data_sensors(CAN_DEVICE_L0_ID)

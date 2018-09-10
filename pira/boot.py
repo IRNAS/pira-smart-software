@@ -136,18 +136,23 @@ class Boot(object):
         # This assumes the clock that is behind is always wrong
         # Get latest values from pira smart
 
-        pira_on_time = os.environ.get('PIRA_POWER', None)
-        pira_off_time = os.environ.get('PIRA_SLEEP', None)
-        pira_reboot_time = os.environ.get('PIRA_REBOOT', None)
-        pira_wakeup_time = os.environ.get('PIRA_WAKEUP', None)
+        pira_on_time = parse_environ(os.environ.get('PIRA_POWER', None))
+        pira_off_time = parse_environ(os.environ.get('PIRA_SLEEP', None))
+        pira_reboot_time = parse_environ(os.environ.get('PIRA_REBOOT', None))
+        pira_wakeup_time = parse_environ(os.environ.get('PIRA_WAKEUP', None))
 
-        self.pirasmart.set_on_time(pira_on_time)
-        time.sleep(0.1)
-        self.pirasmart.set_off_time(pira_off_time)
-        time.sleep(0.1)
-        self.pirasmart.set_reboot_time(pira_reboot_time)
-        time.sleep(0.1)
-        self.pirasmart.set_wakeup_time(pira_wakeup_time)
+        if (pira_on_time is not None):
+            self.pirasmart.set_on_time(pira_on_time)
+            time.sleep(0.1)
+        if (pira_off_time is not None):
+            self.pirasmart.set_off_time(pira_off_time)
+            time.sleep(0.1)
+        if (pira.reboot_time is not None):
+            self.pirasmart.set_reboot_time(pira_reboot_time)
+            time.sleep(0.1)
+        if (pira.wakeup_time is not None):
+            self.pirasmart.set_wakeup_time(pira_wakeup_time)
+            time.sleep(0.1)
         
         self.pira_ok = self.pirasmart.read()
         if self.pira_ok:
@@ -293,7 +298,6 @@ class Boot(object):
 
      def parse_environ(self, env):
         """Parse environment variable"""
-        #if (None)
         try:
             value = float(env)
             if (env <= 0.0 and env >= 4294967295.0):
