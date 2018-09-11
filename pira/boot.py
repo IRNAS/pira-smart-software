@@ -131,11 +131,11 @@ class Boot(object):
         """Parse environment variable"""
         try:
             value = float(env)
-            if (env <= 0.0 and env >= 4294967295.0):
+            if (value <= 0.0 or value >= 4294967295.0):
                 return None
             else:
-                return env
-        except ValueError:
+                return value
+        except:
             return None
 
     def process(self):
@@ -147,10 +147,11 @@ class Boot(object):
         # This assumes the clock that is behind is always wrong
         # Get latest values from pira smart
 
-        #pira_on_time = parse_environ(os.environ.get('PIRA_POWER', None))
-        #pira_off_time = parse_environ(os.environ.get('PIRA_SLEEP', None))
-        #pira_reboot_time = parse_environ(os.environ.get('PIRA_REBOOT', None))
-        #pira_wakeup_time = parse_environ(os.environ.get('PIRA_WAKEUP', None))
+        # If defined set new Pira BLE values
+        pira_on_time = self.parse_environ(os.environ.get('PIRA_POWER', None))
+        pira_off_time = self.parse_environ(os.environ.get('PIRA_SLEEP', None))
+        pira_reboot_time = self.parse_environ(os.environ.get('PIRA_REBOOT', None))
+        pira_wakeup_time = self.parse_environ(os.environ.get('PIRA_WAKEUP', None))
         '''
         if (pira_on_time is not None):
             self.pirasmart.set_on_time(pira_on_time)
@@ -165,6 +166,7 @@ class Boot(object):
             self.pirasmart.set_wakeup_time(pira_wakeup_time)
             time.sleep(0.1)
         '''
+        
         self.pira_ok = self.pirasmart.read()
         if self.pira_ok:
             rtc_time = self.get_time()

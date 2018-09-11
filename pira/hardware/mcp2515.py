@@ -13,8 +13,6 @@ import os
 import time
 import can
 
-
-
 class MCP2515():
     
     def __init__(self):

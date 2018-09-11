@@ -102,7 +102,7 @@ class Module(object):
 
         # Check pira on timer is about to expire - o variable
         if self._boot.get_pira_on_timer_set() < 30 and not self._boot.get_pira_on_timer_set() == None :
-            print("Scheduler: WARNING - Pira safety on timer about to expire, going to sleep.")
+            print("Scheduler: WARNING - Pira safety on timer about to expire.")
             self._boot.shutdown = True
             #here we could reset it as well
 
