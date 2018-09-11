@@ -152,7 +152,7 @@ class Boot(object):
         pira_off_time = self.parse_environ(os.environ.get('PIRA_SLEEP', None))
         pira_reboot_time = self.parse_environ(os.environ.get('PIRA_REBOOT', None))
         pira_wakeup_time = self.parse_environ(os.environ.get('PIRA_WAKEUP', None))
-        '''
+        
         if (pira_on_time is not None):
             self.pirasmart.set_on_time(pira_on_time)
             time.sleep(0.1)
@@ -165,7 +165,6 @@ class Boot(object):
         if (pira.wakeup_time is not None):
             self.pirasmart.set_wakeup_time(pira_wakeup_time)
             time.sleep(0.1)
-        '''
         
         self.pira_ok = self.pirasmart.read()
         if self.pira_ok:

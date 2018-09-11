@@ -159,7 +159,7 @@ class Module(object):
         with picamera.array.PiRGBArray(self._camera) as output:
             self._camera.capture(output, format='rgb')
             #image = array.array('f', output)
-            image = output.array.astype(float32) # numpy
+            image = output.array.astype(np.float32) # numpy
 
         # Compute light level.
         light_level = 0.2126 * image[..., 0] + 0.7152 * image[..., 1] + 0.0722 * image[..., 2]
