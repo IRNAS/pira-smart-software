@@ -34,8 +34,8 @@ class Boot(object):
 
         # Sensor modules.
         # 'pira.modules.ultrasonic',
-        #'pira.modules.camera',
-        'pira.modules.can',
+        'pira.modules.camera',
+        #'pira.modules.can',
 
         # Reporting modules should come after all sensor modules, so they can get
         # the latest values.
@@ -44,7 +44,7 @@ class Boot(object):
         # 'pira.modules.nodewatcher',
         'pira.modules.debug',
         #'pira.modules.webserver',
-        'pira.modules.m2x_plat',
+        #'pira.modules.m2x_plat',
         'pira.modules.azure_images',
     ]
 
@@ -146,25 +146,6 @@ class Boot(object):
         # Simplest logic is to take the latest of the system and RTC time
         # This assumes the clock that is behind is always wrong
         # Get latest values from pira smart
-
-        # If defined set new Pira BLE values
-        pira_on_time = self.parse_environ(os.environ.get('PIRA_POWER', None))
-        pira_off_time = self.parse_environ(os.environ.get('PIRA_SLEEP', None))
-        pira_reboot_time = self.parse_environ(os.environ.get('PIRA_REBOOT', None))
-        pira_wakeup_time = self.parse_environ(os.environ.get('PIRA_WAKEUP', None))
-        
-        if (pira_on_time is not None):
-            self.pirasmart.set_on_time(pira_on_time)
-            time.sleep(0.1)
-        if (pira_off_time is not None):
-            self.pirasmart.set_off_time(pira_off_time)
-            time.sleep(0.1)
-        if (pira.reboot_time is not None):
-            self.pirasmart.set_reboot_time(pira_reboot_time)
-            time.sleep(0.1)
-        if (pira.wakeup_time is not None):
-            self.pirasmart.set_wakeup_time(pira_wakeup_time)
-            time.sleep(0.1)
         
         self.pira_ok = self.pirasmart.read()
         if self.pira_ok:
@@ -189,6 +170,25 @@ class Boot(object):
         else:
             #if equal no need to do anything
             pass
+
+        if self.pira_ok:     # If defined set new Pira BLE values
+            pira_on_time = self.parse_environ(os.environ.get('PIRA_POWER', None))
+            pira_off_time = self.parse_environ(os.environ.get('PIRA_SLEEP', None))
+            pira_reboot_time = self.parse_environ(os.environ.get('PIRA_REBOOT', None))
+            pira_wakeup_time = self.parse_environ(os.environ.get('PIRA_WAKEUP', None))
+        
+            if (pira_on_time is not None):
+                self.pirasmart.set_on_time(pira_on_time)
+                time.sleep(0.1)
+            if (pira_off_time is not None):
+                self.pirasmart.set_off_time(pira_off_time)
+                time.sleep(0.1)
+            if (pira_reboot_time is not None):
+                self.pirasmart.set_reboot_time(pira_reboot_time)
+                time.sleep(0.1)
+            if (pira_wakeup_time is not None):
+                self.pirasmart.set_wakeup_time(pira_wakeup_time)
+                time.sleep(0.1)
 
         # Override module list if configured.
         override_modules = os.environ.get('MODULES', None)

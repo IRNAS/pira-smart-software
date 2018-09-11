@@ -8,7 +8,7 @@ class Module(object):
         print('=========================DEBUG=========================')
         if self._boot.pira_ok:     # Report Pira BLE values
             print('Pira     : t - rtc time           : {}'.format(self._boot.get_time()))
-            print('Pira     : o - overwiev value     : {} s'.format(self._boot.get_pira_on_timer_set()))
+            print('Pira     : o - overview value     : {} s'.format(self._boot.get_pira_on_timer_set()))
             print('Pira     : b - battery level      : ' + str(self._boot.get_voltage()) + ' V')
             print('Pira     : p - safety on period   : {} s'.format(self._boot.get_pira_on_timer()))
             print('Pira     : s - safety off period  : {} s'.format(self._boot.get_pira_sleep_timer()))
