@@ -4,8 +4,8 @@ import datetime
 import io
 import os
 
-#import numpy as np
-import statistics as np     # statistics module used instead of numpy
+import numpy as np
+#import statistics as np     # statistics module used instead of numpy
 import array
 import picamera
 import picamera.array
@@ -158,13 +158,13 @@ class Module(object):
         image = None
         with picamera.array.PiRGBArray(self._camera) as output:
             self._camera.capture(output, format='rgb')
-            image = array.array('f', output)
-            #image = output.array.astype(float32) - numpy
+            #image = array.array('f', output)
+            image = output.array.astype(float32) # numpy
 
         # Compute light level.
         light_level = 0.2126 * image[..., 0] + 0.7152 * image[..., 1] + 0.0722 * image[..., 2]
-        light_level = np.mean(light_level)
-        #light_level = np.average(light_level) - numpy
+        #light_level = np.mean(light_level)
+        light_level = np.average(light_level) # numpy
 
         self.light_level = light_level
 
