@@ -30,7 +30,8 @@ class Boot(object):
 
     # Modules that should be loaded.
     enabled_modules = [
-        #'pira.modules.scheduler',
+        # Device management modules
+        'pira.modules.scheduler',
 
         # Sensor modules.
         # 'pira.modules.ultrasonic',
@@ -178,15 +179,19 @@ class Boot(object):
             pira_wakeup_time = self.parse_environ(os.environ.get('PIRA_WAKEUP', None))
         
             if (pira_on_time is not None):
+                print("PIRA BLE: Setting new safety on (p) value.")
                 self.pirasmart.set_on_time(pira_on_time)
                 time.sleep(0.1)
             if (pira_off_time is not None):
+                print("PIRA BLE: Setting new safety off (s) value.")
                 self.pirasmart.set_off_time(pira_off_time)
                 time.sleep(0.1)
             if (pira_reboot_time is not None):
+                print("PIRA BLE: Setting new reboot (r) value.")
                 self.pirasmart.set_reboot_time(pira_reboot_time)
                 time.sleep(0.1)
             if (pira_wakeup_time is not None):
+                print("PIRA BLE: Setting new wakeup (w) value.")
                 self.pirasmart.set_wakeup_time(pira_wakeup_time)
                 time.sleep(0.1)
 

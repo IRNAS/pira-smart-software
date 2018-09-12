@@ -15,6 +15,10 @@ class Module(object):
         self._boot = boot
         self._ready = False
 
+        if not self._boot.pira_ok:     # exit module if pira is not connected
+            print("Scheduler: ERROR - Pira is not connected. Exiting...")
+            return
+
         # Initialize schedule.
         if os.environ.get('SCHEDULE_MONTHLY', '0') == '1':
             # Month-dependent schedule.
@@ -87,6 +91,10 @@ class Module(object):
         if not self._ready:
             return
 
+        if not self._boot.pira_ok:     # exit module if pira is not connected
+            print("Scheduler: ERROR - Pira is not connected. Exiting...")
+            return
+
         """Shutdown is triggered in two ways:
         1) Pira smart on timer expires, safeguarding if pi crashes or similar
         2) Pi completes the operation and goes to sleep
@@ -109,6 +117,10 @@ class Module(object):
     def shutdown(self, modules):
         """Compute next alarm before shutdown."""
         if not self._ready:  
+            return
+
+        if not self._boot.pira_ok:     # exit module if pira is not connected
+            print("Scheduler: ERROR - Pira is not connected. Exiting...")
             return
 
         # Checking voltage to configure boot interval
