@@ -30,7 +30,7 @@ class Boot(object):
 
     # Modules that should be loaded.
     enabled_modules = [
-        'pira.modules.scheduler',
+        #'pira.modules.scheduler',
 
         # Sensor modules.
         # 'pira.modules.ultrasonic',

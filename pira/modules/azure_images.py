@@ -144,6 +144,7 @@ class Module(object):
             self._new_files = [f for f in listdir(images_path) if isfile(join(images_path, f))]
            
             difference = list(set(self._new_files) - set(self._old_files))
+            print("Azure: New files to upload: ")
             print(difference)
             for item in difference:
                 full_path_item = join(images_path, item)
