@@ -77,7 +77,7 @@ class PIRASMARTUART(object):
                 time.sleep(1)
                 read_timeout += 1
                 if read_timeout >= 3:   # after failing 3 or more times stop Pira BLE reading
-                    return 0
+                    return False
 
             if x.startswith(str('t:')):
                 self.pira_time = float(value)
@@ -104,7 +104,7 @@ class PIRASMARTUART(object):
                 self.pira_rpi_gpio = float(value)
                 print "Pira reports Pi status pin value: " + str(self.pira_rpi_gpio)
 
-        return 1
+        return True
 
     """
         t:<uint32_t> time - seconds in epoch format

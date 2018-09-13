@@ -231,7 +231,7 @@ class Boot(object):
         while True:
 
             # Get latest values from pira smart
-            self.pirasmart.read()
+            self.pira_ok = self.pirasmart.read()
             # Shutdown hold is reset in every loop
             self.shutdown_hold = None
 
@@ -247,10 +247,11 @@ class Boot(object):
                     print("Error while running processing in module '{}'.".format(name))
                     traceback.print_exc()
 
-            # Check if battery voltage is below threshold and shutdown
-            if ((self.get_voltage() is not None) and (self.get_voltage() <= float(os.environ.get('SHUTDOWN_VOLTAGE', '2.6')))):
-                print("Voltage is under the threshold, need to shutdown.")
-                self.shutdown = True
+            # If pira is connected, check if battery voltage is below threshold and shutdown
+            if self.pira_ok:
+                if ((self.get_voltage() is not None) and (self.get_voltage() <= float(os.environ.get('SHUTDOWN_VOLTAGE', '2.6')))):
+                    print("Voltage is under the threshold, need to shutdown.")
+                    self.shutdown = True
 
             # Save state.
             try:
