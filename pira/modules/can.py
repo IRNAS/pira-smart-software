@@ -246,7 +246,7 @@ class Module(object):
 
         # calling the sensors and getting data
         self.get_data_sensors(CAN_DEVICE_L0_ID)
-        time.sleep(0.1)
+        '''time.sleep(0.1)
         self.get_data_sensors(CAN_DEVICE_TSL2561_ID)
         time.sleep(0.1)
         self.get_data_sensors(CAN_DEVICE_BME280_ID)
@@ -257,7 +257,7 @@ class Module(object):
         time.sleep(0.1)
         self.get_data_sensors(CAN_DEVICE_CO2_ID)
         time.sleep(0.1)
-        self.get_data_sensors(CAN_DEVICE_TDR_ID)
+        self.get_data_sensors(CAN_DEVICE_TDR_ID)'''
 
         self.get_last_value()
 
