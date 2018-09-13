@@ -140,6 +140,10 @@ class Boot(object):
             return None
 
     def process(self):
+        
+        while True:
+            print("")
+        
         self.log.insert(LOG_SYSTEM, 'module_init')
 
         #Determine clock status and perform sync
