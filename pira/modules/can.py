@@ -246,10 +246,8 @@ class Module(object):
 
         # calling the sensors and getting data
         self.get_data_sensors(CAN_DEVICE_L0_ID)
-        time.sleep(1)
-        self.get_data_sensors(CAN_DEVICE_TSL2561_ID)
-        time.sleep(1)
-        self.get_data_sensors(CAN_DEVICE_BME280_ID)
+        
+        
         time.sleep(1)
         '''
         self.get_data_sensors(CAN_DEVICE_ANEMOMETER_ID)
@@ -264,10 +262,16 @@ class Module(object):
         print(*self.l0_vdd, sep=", ")
         print(*self.l0_time, sep=", ")
         
+        time.sleep(1)
+        self.get_data_sensors(CAN_DEVICE_TSL2561_ID)
+        
         print(*self.TSL2561_visible, sep=", ")
         print(*self.TSL2561_fullspec, sep=", ")
         print(*self.TSL2561_infrared, sep=", ")
         print(*self.TSL2561_time, sep=", ")
+        
+        time.sleep(1)
+        self.get_data_sensors(CAN_DEVICE_BME280_ID)
         
         print(*self.BME280_pressure, sep=", ")
         print(*self.BME280_temperature, sep=", ")
