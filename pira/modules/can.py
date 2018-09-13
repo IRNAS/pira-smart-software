@@ -246,11 +246,11 @@ class Module(object):
 
         # calling the sensors and getting data
         self.get_data_sensors(CAN_DEVICE_L0_ID)
-        '''time.sleep(0.1)
+        time.sleep(0.1)
         self.get_data_sensors(CAN_DEVICE_TSL2561_ID)
         time.sleep(0.1)
         self.get_data_sensors(CAN_DEVICE_BME280_ID)
-        time.sleep(0.1)
+        time.sleep(0.1)'''
         self.get_data_sensors(CAN_DEVICE_ANEMOMETER_ID)
         time.sleep(0.1)
         self.get_data_sensors(CAN_DEVICE_RAIN_ID)
@@ -310,8 +310,5 @@ class Module(object):
             last_values["tdr_soil_elec"] = self.TDR_soil_elec[-1]
         if self.TDR_other:
             last_values["tdr_other"] = self.TDR_other[-1]
-
-        print(last_values["temperature"])
-        print(last_values["temperature_time"])
 
         return last_values
