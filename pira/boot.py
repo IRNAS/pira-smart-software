@@ -48,7 +48,7 @@ class Boot(object):
         #'pira.modules.m2x_plat',
         #'pira.modules.azure_images',
     ]'''
-     enabled_modules = [
+    enabled_modules = [
         # Device management modules
         'pira.modules.scheduler',
 
