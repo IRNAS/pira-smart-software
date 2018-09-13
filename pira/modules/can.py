@@ -105,8 +105,8 @@ class Module(object):
                 self._message = self._driver.get_raw_data()
 
                 # print out our message received with dlc
-                #print("Message DLC: {}".format(self._message.dlc))
-                #print(*self._message.data, sep=", ")
+                print("Message DLC: {}".format(self._message.dlc))
+                print(*self._message.data, sep=", ")
 
                 # for looping through data
                 calc_first = -1
@@ -180,21 +180,14 @@ class Module(object):
                     except:
                         break
                     
-        # go through the variables
-        for col in range(0, num_of_var):
-
-            # log the varaible number
-            #print("VAR {}".format(col))
-
-            # go through the amount of data in a var
-            for dat in range(0, num_of_data):
-
+                    
+                    
                 # read message
                 self._message = self._driver.get_raw_data()
 
                 # print out our message received with dlc
-                #print("Message DLC: {}".format(self._message.dlc))
-                #print(*self._message.data, sep=", ")
+                print("Message DLC: {}".format(self._message.dlc))
+                print(*self._message.data, sep=", ")
 
                 # for looping through data
                 calc_first = -1
@@ -209,71 +202,48 @@ class Module(object):
 
                     # try except because of out of index error
                     try:
+                        
                         calc = float(self._message.data[calc_second] << 8 | self._message.data[calc_first])
+                        
                         if sensor_ID is CAN_DEVICE_L0_ID:
 
-                            calc = calc / 100
-
-                            # it depends which variable we are using (VAR0 -> TEMP) (VAR1 -> VDD)
-                            if col is 0:
-                                self.l0_time.append(calc)           # append it to the array
-                            elif col is 1:
-                                self.l0_vdd.append(calc)            # append it to the array
+                            self.l0_time.append(calc)          
 
                         elif sensor_ID is CAN_DEVICE_TSL2561_ID:
-                            if col is 0:
-                                self.TSL2561_visible.append(calc)
-                            elif col is 1:
-                                self.TSL2561_fullspec.append(calc)
-                            elif col is 2:
-                                self.TSL2561_infrared.append(calc)
+                            
+                            self.TSL2561_time.append(calc)
+                            
                         elif sensor_ID is CAN_DEVICE_BME280_ID:
 
-                            calc = calc / 100
-
-                            if col is 0:
-                                self.BME280_pressure.append(calc)
-                            elif col is 1:
-                                self.BME280_temperature.append(calc)
-                            elif col is 2:
-                                self.BME280_humidity.append(calc)
+                            self.BME280_time.append(calc)
+                            
                         elif sensor_ID is CAN_DEVICE_ANEMOMETER_ID:
 
-                            calc = calc / 100
-                            if col is 0:
-                                self.ANEMOMETER_wind.append(calc)
+                            self.ANEMOMETER_time.append(calc)
+                            
                         elif sensor_ID is CAN_DEVICE_RAIN_ID:
 
-                            if col is 0:
-                                self.RAIN_count.append(calc)
+                            self.RAIN_time.append(calc)
+                            
                         elif sensor_ID is CAN_DEVICE_CO2_ID:
 
-                            calc = calc * 100
-
-                            if col is 0:
-                                self.CO2_value.append(calc)
+                            self.CO2_time.append(calc)
+                            
                         elif sensor_ID is CAN_DEVICE_TDR_ID:
-
-                            if col is 0:
-                                self.TDR_vol_w_content.append(calc)
-                            elif col is 1:
-                                self.TDR_soil_temp.append(calc)
-                            elif col is 2:
-                                self.TDR_soil_perm.append(calc)
-                            elif col is 3:
-                                self.TDR_soil_elec.append(calc)
-                            elif col is 4:
-                                self.TDR_other.append(calc)
+                            
+                            self.TDR_time.append(calc)
 
                     except:
                         break
+                    
+        
     
     def process(self, modules):
         """ Sends out the data, receives """
         if not self._enabled:
             print("WARNING: CAN is not connected, skipping.")
             return
-'''
+
         # calling the sensors and getting data
         self.get_data_sensors(CAN_DEVICE_L0_ID)
         time.sleep(0.1)
@@ -287,7 +257,7 @@ class Module(object):
         time.sleep(0.1)
         self.get_data_sensors(CAN_DEVICE_CO2_ID)
         time.sleep(0.1)
-        self.get_data_sensors(CAN_DEVICE_TDR_ID)'''
+        self.get_data_sensors(CAN_DEVICE_TDR_ID)
 
         time.sleep(60)
 
