@@ -259,7 +259,7 @@ class Module(object):
         time.sleep(0.1)
         self.get_data_sensors(CAN_DEVICE_TDR_ID)'''
 
-        self.get_last_value()
+        self.get_last_values()
 
         time.sleep(60)
 
