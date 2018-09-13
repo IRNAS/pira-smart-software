@@ -105,8 +105,8 @@ class Module(object):
                 self._message = self._driver.get_raw_data()
 
                 # print out our message received with dlc
-                print("Message DLC: {}".format(self._message.dlc))
-                print(*self._message.data, sep=", ")
+                #print("Message DLC: {}".format(self._message.dlc))
+                #print(*self._message.data, sep=", ")
 
                 # for looping through data
                 calc_first = -1
@@ -186,8 +186,8 @@ class Module(object):
                 self._message = self._driver.get_raw_data()
 
                 # print out our message received with dlc
-                print("Message DLC: {}".format(self._message.dlc))
-                print(*self._message.data, sep=", ")
+                #print("Message DLC: {}".format(self._message.dlc))
+                #print(*self._message.data, sep=", ")
 
                 # for looping through data
                 calc_first = -1
@@ -258,6 +258,8 @@ class Module(object):
         self.get_data_sensors(CAN_DEVICE_CO2_ID)
         time.sleep(0.1)
         self.get_data_sensors(CAN_DEVICE_TDR_ID)
+
+        self.get_last_value()
 
         time.sleep(60)
 
