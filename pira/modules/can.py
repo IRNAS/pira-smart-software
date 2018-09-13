@@ -250,7 +250,8 @@ class Module(object):
         self.get_data_sensors(CAN_DEVICE_TSL2561_ID)
         time.sleep(0.1)
         self.get_data_sensors(CAN_DEVICE_BME280_ID)
-        time.sleep(0.1)'''
+        time.sleep(0.1)
+        '''
         self.get_data_sensors(CAN_DEVICE_ANEMOMETER_ID)
         time.sleep(0.1)
         self.get_data_sensors(CAN_DEVICE_RAIN_ID)
