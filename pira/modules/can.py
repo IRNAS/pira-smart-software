@@ -260,22 +260,21 @@ class Module(object):
         time.sleep(0.1)
         self.get_data_sensors(CAN_DEVICE_TDR_ID)'''
 
-
-        print(self.l0_temp[-1])
-        print(self.l0_vdd[-1])
-        print(self.l0_time[-1]) 
+        print(*l0_temp, sep=", ")
+        print(*l0_vdd, sep=", ")
+        print(*l0_time, sep=", ")
         
-        # TSL2561
-        print(self.TSL2561_visible[-1])
-        print(self.TSL2561_fullspec[-1])
-        print(self.TSL2561_infrared[-1])
-        print(self.TSL2561_time[-1])
+        print(*TSL2561_visible, sep=", ")
+        print(*TSL2561_fullspec, sep=", ")
+        print(*TSL2561_infrared, sep=", ")
+        print(*TSL2561_time, sep=", ")
+        
+        print(*BME280_pressure, sep=", ")
+        print(*BME280_temperature, sep=", ")
+        print(*BME280_humidity, sep=", ")
+        print(*BME280_time, sep=", ")
+        
 
-        # BME
-        print(self.BME280_pressure[-1])
-        print(self.BME280_temperature[-1])
-        print(self.BME280_humidity[-1])
-        print(self.BME280_time[-1])
 
         time.sleep(60)
 
