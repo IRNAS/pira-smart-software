@@ -246,11 +246,11 @@ class Module(object):
 
         # calling the sensors and getting data
         self.get_data_sensors(CAN_DEVICE_L0_ID)
-        time.sleep(0.1)
+        time.sleep(1)
         self.get_data_sensors(CAN_DEVICE_TSL2561_ID)
-        time.sleep(0.1)
+        time.sleep(1)
         self.get_data_sensors(CAN_DEVICE_BME280_ID)
-        time.sleep(0.1)
+        time.sleep(1)
         '''
         self.get_data_sensors(CAN_DEVICE_ANEMOMETER_ID)
         time.sleep(0.1)
