@@ -273,6 +273,7 @@ class Module(object):
         # L0
         if self.l0_temp:
             last_values["temperature"] = self.l0_temp[-1]
+            last_values["temperature_time"] = self.l0_time[-1]
         if self.l0_vdd:
             last_values["vdd"] = self.l0_vdd[-1]
         # TSL2561
@@ -309,5 +310,8 @@ class Module(object):
             last_values["tdr_soil_elec"] = self.TDR_soil_elec[-1]
         if self.TDR_other:
             last_values["tdr_other"] = self.TDR_other[-1]
+
+        print(last_values["temperature"])
+        print(last_values["temperature_time"])
 
         return last_values
