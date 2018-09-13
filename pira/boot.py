@@ -141,9 +141,6 @@ class Boot(object):
 
     def process(self):
         
-        while True:
-            print("")
-        
         self.log.insert(LOG_SYSTEM, 'module_init')
 
         #Determine clock status and perform sync
@@ -229,6 +226,9 @@ class Boot(object):
                 traceback.print_exc()
 
         self.log.insert(LOG_SYSTEM, 'main_loop')
+
+        while True:
+            print()
 
         # Enter main loop.
         print("Starting processing loop.")
