@@ -35,8 +35,8 @@ class Boot(object):
 
         # Sensor modules.
         # 'pira.modules.ultrasonic',
-        'pira.modules.camera',
-        #'pira.modules.can',
+        #'pira.modules.camera',
+        'pira.modules.can',
 
         # Reporting modules should come after all sensor modules, so they can get
         # the latest values.
@@ -46,7 +46,7 @@ class Boot(object):
         'pira.modules.debug',
         #'pira.modules.webserver',
         #'pira.modules.m2x_plat',
-        'pira.modules.azure_images',
+        #'pira.modules.azure_images',
     ]
 
     def __init__(self):
