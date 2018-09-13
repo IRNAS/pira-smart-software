@@ -273,7 +273,7 @@ class Module(object):
         if not self._enabled:
             print("WARNING: CAN is not connected, skipping.")
             return
-
+'''
         # calling the sensors and getting data
         self.get_data_sensors(CAN_DEVICE_L0_ID)
         time.sleep(0.1)
@@ -287,7 +287,7 @@ class Module(object):
         time.sleep(0.1)
         self.get_data_sensors(CAN_DEVICE_CO2_ID)
         time.sleep(0.1)
-        self.get_data_sensors(CAN_DEVICE_TDR_ID)
+        self.get_data_sensors(CAN_DEVICE_TDR_ID)'''
 
         time.sleep(60)
 

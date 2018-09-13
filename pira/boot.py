@@ -227,8 +227,6 @@ class Boot(object):
 
         self.log.insert(LOG_SYSTEM, 'main_loop')
 
-        while True:
-            print()
 
         # Enter main loop.
         print("Starting processing loop.")
