@@ -278,6 +278,32 @@ class Module(object):
         print(*self.BME280_humidity, sep=", ")
         print(*self.BME280_time, sep=", ")
         
+        self.get_data_sensors(CAN_DEVICE_ANEMOMETER_ID)
+        print(*self.ANEMOMETER_wind, sep=", ")
+        print(*self.ANEMOMETER_time, sep=", ")
+        
+        time.sleep(0.1)
+        
+        self.get_data_sensors(CAN_DEVICE_RAIN_ID)
+        print(*self.RAIN_count, sep=", ")
+        print(*self.RAIN_time, sep=", ")
+        
+        time.sleep(0.1)
+        
+        self.get_data_sensors(CAN_DEVICE_CO2_ID)
+        print(*self.CO2_value, sep=", ")
+        print(*self.CO2_time, sep=", ")
+        
+        time.sleep(0.1)
+        
+        self.get_data_sensors(CAN_DEVICE_TDR_ID)
+        
+        print(*self.TDR_vol_w_content, sep=", ")
+        print(*self.TDR_soil_temp, sep=", ")
+        print(*self.TDR_soil_perm, sep=", ")
+        print(*self.TDR_soil_elec, sep=", ")
+        print(*self.TDR_other, sep=", ")
+        print(*self.TDR_time, sep=", ")
 
 
         time.sleep(60)
