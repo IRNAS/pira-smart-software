@@ -29,25 +29,6 @@ from .const import LOG_SYSTEM, LOG_DEVICE_VOLTAGE, LOG_DEVICE_TEMPERATURE
 class Boot(object):
 
     # Modules that should be loaded.
-   ''' enabled_modules = [
-        # Device management modules
-        'pira.modules.scheduler',
-
-        # Sensor modules.
-        # 'pira.modules.ultrasonic',
-        #'pira.modules.camera',
-        'pira.modules.can',
-
-        # Reporting modules should come after all sensor modules, so they can get
-        # the latest values.
-        # 'pira.modules.lora',
-        # 'pira.modules.rockblock',
-        # 'pira.modules.nodewatcher',
-        'pira.modules.debug',
-        #'pira.modules.webserver',
-        #'pira.modules.m2x_plat',
-        #'pira.modules.azure_images',
-    ]'''
     enabled_modules = [
         # Device management modules
         'pira.modules.scheduler',
