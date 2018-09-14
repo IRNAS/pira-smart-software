@@ -26,6 +26,9 @@ class Module(object):
         """ Inits the Mcp2515 """
         self._boot = boot
 
+        self.sensors_list = []
+
+        # ----- OLD IMPLEMENTATION -----
         # L0
         self.l0_temp = []
         self.l0_vdd = []
@@ -55,7 +58,8 @@ class Module(object):
         self.TDR_soil_perm = []
         self.TDR_soil_elec = []
         self.TDR_other = []
-
+        # ----- OLD IMPLEMENTATION -----
+    
         try:
             # init driver
             self._driver = mcp2515.MCP2515()
@@ -65,6 +69,11 @@ class Module(object):
             return
 
         self._enabled = True
+
+    def scan_for_sensors(self, device_adr):
+        #sens_id = get_sensors(device_adr)   # TODO - return list of sensors on device
+        sens_id = [0x101, 0x102, 0x103, 0x104, 0x105, 0x106, 0x107]     # testing
+        sensors_list.extend(sens_id)    # extend list with new sensor addresses
 
     def get_data_sensors(self, sensor_ID):
 
@@ -173,61 +182,6 @@ class Module(object):
                     except:
                         break
 
-        '''
-        # L0 printing
-        if sensor_ID is CAN_DEVICE_L0_ID:
-            # print out the two arrays
-            print("L0 TEMP DATA:")
-            print(*self.l0_temp, sep=", ")
-            print("\nL0 VDD DATA:")
-            print(*self.l0_vdd, sep=", ")
-
-        # TSL2561 printing
-        if sensor_ID is CAN_DEVICE_TSL2561_ID:
-            print("TSL2561 VISIBLE DATA:")
-            print(*self.TSL2561_visible, sep=", ")
-            print("\nTSL2561 FULLSPEC DATA:")
-            print(*self.TSL2561_fullspec, sep=", ")
-            print("\nTSL2561 INFRARED DATA:")
-            print(*self.TSL2561_infrared, sep=", ")
-
-        # BME280 printing
-        if sensor_ID is CAN_DEVICE_BME280_ID:
-            print("BME280 PRESSURE DATA:")
-            print(*self.BME280_pressure, sep=", ")
-            print("BME280 TEMPERATURE DATA:")
-            print(*self.BME280_temperature, sep=", ")
-            print("BME280 HUMIDITY DATA:")
-            print(*self.BME280_humidity, sep=", ")
-
-        # ANEMOMETER printing
-        if sensor_ID is CAN_DEVICE_ANEMOMETER_ID:
-            print("ANEMOMETER WIND DATA:")
-            print(*self.ANEMOMETER_wind, sep=", ")
-
-        # RAIN printing
-        if sensor_ID is CAN_DEVICE_RAIN_ID:
-            print("RAIN drops DATA:")
-            print(*self.RAIN_count, sep=", ")
-
-        # CO2 printing
-        if sensor_ID is CAN_DEVICE_CO2_ID:
-            print("CO2 value:")
-            print(*self.CO2_value, sep=", ")
-
-        # TDR printing
-        if sensor_ID is CAN_DEVICE_TDR_ID:
-            print("TDR VOL. W. CONTENT DATA:")
-            print(*self.TDR_vol_w_content, sep=", ")
-            print("TDR SOIL TEMP DATA:")
-            print(*self.TDR_soil_temp, sep=", ")
-            print("TDR SOIL PERM DATA:")
-            print(*self.TDR_soil_perm, sep=", ")
-            print("TDR SOIL ELEC DATA:")
-            print(*self.TDR_soil_elec, sep=", ")
-            print("TDR other DATA:")
-            print(*self.TDR_other, sep=", ")
-        '''
     
     def process(self, modules):
         """ Sends out the data, receives """
@@ -235,6 +189,22 @@ class Module(object):
             print("WARNING: CAN is not connected, skipping.")
             return
 
+        # Scan for CAN devices
+        num_dev_addrs = 1   # number of modules to scan
+        device_addr = "0x100"   # address of first can device
+        hex_addr = int(device_addr, 16)
+        for i in range (0, num_dev_addrs):
+            dev_addr = hex_addr + i*256
+            self.scan_for_sensors(dev_addr)
+
+        print("Found sensors on addresses:")
+        print([hex(x) for x in sensors_list])    #Print sensor ids
+
+        # Call sensors and get data
+        for j in sensors_list:
+            self.get_data_sensors(j)
+            time.sleep(1)
+        '''
         # calling the sensors and getting data
         self.get_data_sensors(CAN_DEVICE_L0_ID)
         time.sleep(0.1)
@@ -249,6 +219,7 @@ class Module(object):
         self.get_data_sensors(CAN_DEVICE_CO2_ID)
         time.sleep(0.1)
         self.get_data_sensors(CAN_DEVICE_TDR_ID)
+        '''
 
         time.sleep(60)
 

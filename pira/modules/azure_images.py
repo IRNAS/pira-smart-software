@@ -159,5 +159,6 @@ class Module(object):
         """
         Shutdown (can delete the container if needed)
         """
-        self.delete_via_container(self.container_name)
+        if self._azure_delete is "on":
+            self.delete_via_container(self.container_name)
         pass
