@@ -10,6 +10,7 @@ from ..hardware import mcp2515
 
 import os
 import time
+import json
 
 CAN_MASTER_ID = 0x001
 CAN_DEVICE_1_ID = 0x100
@@ -25,6 +26,9 @@ class Module(object):
     def __init__(self, boot):
         """ Inits the Mcp2515 """
         self._boot = boot
+
+        self.devices_json = {}
+        self.sensors_json = {}
 
         self.sensors_list = []
 
@@ -81,6 +85,7 @@ class Module(object):
         hex_addr = int(device_addr, 16)
         for i in range (0, num_dev_addrs):
             dev_addr = hex_addr + i*256
+            self.devices_json[str(dev_addr)] = ''
             self.scan_for_sensors(dev_addr)
 
         print("CAN: Found sensors on addresses:")
@@ -102,14 +107,9 @@ class Module(object):
         number = self._driver.get_data()
         if (number is None):
             print("ERROR: Failed receiving message from CAN.")
-<<<<<<< HEAD
-            return
-        '''
-=======
             self._driver.flush_buffer()
             return
         
->>>>>>> 6c0136e004d63c4aac397f95f58e7ebfe663eda0
         # get how many coloumns there are (coloumn x 8bit)
         num_of_data = number.data[0] + 1
 
@@ -261,7 +261,122 @@ class Module(object):
                         break
                     
         
-    
+    def get_data_json(self, sensor_ID):
+        # send a "wakeup" to the sensor 1
+        self._driver.send_data(sensor_ID, [0x01], False)
+
+        # receive message and read how many data points are we expecting
+        number = self._driver.get_data()
+        if (number is None):
+            print("ERROR: Failed receiving message from CAN.")
+            self._driver.flush_buffer()
+            return
+        
+        # get how many coloumns there are (coloumn x 8bit)
+        num_of_data = number.data[0] + 1
+
+        # get how many variables there are
+        num_of_var = number.data[1]
+
+        values = {}
+
+        # go through the variables
+        for col in range(0, num_of_var):
+
+            # log the varaible number
+            #print("VAR {}".format(col))
+
+            # go through the amount of data in a var
+            for dat in range(0, num_of_data):
+
+                # read message
+                self._message = self._driver.get_raw_data()
+
+                # print out our message received with dlc
+                #print("Message DLC: {}".format(self._message.dlc))
+                #print(*self._message.data, sep=", ")
+
+                # for looping through data
+                calc_first = -1
+                calc_second = -1
+
+                # dlc represents how many data points are in the received message
+                for i in range(0, self._message.dlc):
+
+                    # calculate the index for the first and second number
+                    calc_first = calc_second + 1
+                    calc_second = calc_first + 1
+
+                    # try except because of out of index error
+                    try:
+                        calc = float(self._message.data[calc_second] << 8 | self._message.data[calc_first])
+                        for j in range(0, col):
+                            data = {}
+                            data['time'] = '999'
+                            data['data'] = calc
+                            values[i*col+j] = data
+
+                    except:
+                        break
+                    
+                    
+                    
+                # read message
+                self._message = self._driver.get_raw_data()
+
+                # print out our message received with dlc
+                #print("Message DLC: {}".format(self._message.dlc))
+                #print(*self._message.data, sep=", ")
+
+                # for looping through data
+                calc_first = -1
+                calc_second = -1
+
+                # dlc represents how many data points are in the received message
+                for i in range(0, self._message.dlc):
+
+                    # calculate the index for the first and second number
+                    calc_first = calc_second + 1
+                    calc_second = calc_first + 1
+
+                    # try except because of out of index error
+                    try:
+                        
+                        calc = float(self._message.data[calc_second] << 8 | self._message.data[calc_first])
+                        
+                        if sensor_ID is CAN_DEVICE_L0_ID:
+
+                            self.l0_time.append(calc)          
+
+                        elif sensor_ID is CAN_DEVICE_TSL2561_ID:
+                            
+                            self.TSL2561_time.append(calc)
+                            
+                        elif sensor_ID is CAN_DEVICE_BME280_ID:
+
+                            self.BME280_time.append(calc)
+                            
+                        elif sensor_ID is CAN_DEVICE_ANEMOMETER_ID:
+
+                            self.ANEMOMETER_time.append(calc)
+                            
+                        elif sensor_ID is CAN_DEVICE_RAIN_ID:
+
+                            self.RAIN_time.append(calc)
+                            
+                        elif sensor_ID is CAN_DEVICE_CO2_ID:
+
+                            self.CO2_time.append(calc)
+                            
+                        elif sensor_ID is CAN_DEVICE_TDR_ID:
+                            
+                            self.TDR_time.append(calc)
+
+                    except:
+                        break
+
+        self.sensors_json[str(sensor_ID)] = values
+
     def process(self, modules):
         """ Sends out the data, receives """
         if not self._enabled:
@@ -286,10 +401,6 @@ class Module(object):
         time.sleep(0.1)
         self.get_data_sensors(CAN_DEVICE_TDR_ID)
         '''
-<<<<<<< HEAD
-=======
-
->>>>>>> 6c0136e004d63c4aac397f95f58e7ebfe663eda0
         print(*self.l0_temp, sep=", ")
         print(*self.l0_vdd, sep=", ")
         print(*self.l0_time, sep=", ")
@@ -389,6 +500,9 @@ class Module(object):
 
         return last_values
 
+    def create_json(self):
+        dump = json.dumps(self.devices_json)
+        # TODO - append sensors_json to devices_json
+        return dump
 
-    #def make_json(self):
 
