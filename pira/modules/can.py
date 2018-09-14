@@ -90,7 +90,7 @@ class Module(object):
 
     def scan_for_sensors(self, device_adr):
         #sens_id = get_sensors(device_adr)   # TODO - return list of sensors on device
-        sens_id = [0x101, 0x102, 0x103]     # testing
+        sens_id = [0x101, 0x102, 0x103, 0x104, 0x105, 0x106, 0x107]     # testing
         self.sensors_list.extend(sens_id)    # extend list with new sensor addresses
 
     def get_data_sensors(self, sensor_ID):
