@@ -29,25 +29,31 @@ class Module(object):
         # L0
         self.l0_temp = []
         self.l0_vdd = []
+        self.l0_time = []
 
         # TSL2561
         self.TSL2561_visible = []
         self.TSL2561_fullspec = []
         self.TSL2561_infrared = []
+        self.TSL2561_time = []
 
         # BME
         self.BME280_pressure = []
         self.BME280_temperature = []
         self.BME280_humidity = []
+        self.BME280_time = []
 
         # WIND
         self.ANEMOMETER_wind = []
+        self.ANEMOMETER_time = []
 
         # RAIN
         self.RAIN_count = []
+        self.RAIN_time = []
 
         # CO2
         self.CO2_value = []
+        self.CO2_time = []
 
         # TDR
         self.TDR_vol_w_content = []
@@ -55,6 +61,7 @@ class Module(object):
         self.TDR_soil_perm = []
         self.TDR_soil_elec = []
         self.TDR_other = []
+        self.TDR_time = []
 
         try:
             # init driver
@@ -172,62 +179,64 @@ class Module(object):
 
                     except:
                         break
+                    
+                    
+                    
+                # read message
+                self._message = self._driver.get_raw_data()
 
-        '''
-        # L0 printing
-        if sensor_ID is CAN_DEVICE_L0_ID:
-            # print out the two arrays
-            print("L0 TEMP DATA:")
-            print(*self.l0_temp, sep=", ")
-            print("\nL0 VDD DATA:")
-            print(*self.l0_vdd, sep=", ")
+                # print out our message received with dlc
+                #print("Message DLC: {}".format(self._message.dlc))
+                #print(*self._message.data, sep=", ")
 
-        # TSL2561 printing
-        if sensor_ID is CAN_DEVICE_TSL2561_ID:
-            print("TSL2561 VISIBLE DATA:")
-            print(*self.TSL2561_visible, sep=", ")
-            print("\nTSL2561 FULLSPEC DATA:")
-            print(*self.TSL2561_fullspec, sep=", ")
-            print("\nTSL2561 INFRARED DATA:")
-            print(*self.TSL2561_infrared, sep=", ")
+                # for looping through data
+                calc_first = -1
+                calc_second = -1
 
-        # BME280 printing
-        if sensor_ID is CAN_DEVICE_BME280_ID:
-            print("BME280 PRESSURE DATA:")
-            print(*self.BME280_pressure, sep=", ")
-            print("BME280 TEMPERATURE DATA:")
-            print(*self.BME280_temperature, sep=", ")
-            print("BME280 HUMIDITY DATA:")
-            print(*self.BME280_humidity, sep=", ")
+                # dlc represents how many data points are in the received message
+                for i in range(0, self._message.dlc):
 
-        # ANEMOMETER printing
-        if sensor_ID is CAN_DEVICE_ANEMOMETER_ID:
-            print("ANEMOMETER WIND DATA:")
-            print(*self.ANEMOMETER_wind, sep=", ")
+                    # calculate the index for the first and second number
+                    calc_first = calc_second + 1
+                    calc_second = calc_first + 1
 
-        # RAIN printing
-        if sensor_ID is CAN_DEVICE_RAIN_ID:
-            print("RAIN drops DATA:")
-            print(*self.RAIN_count, sep=", ")
+                    # try except because of out of index error
+                    try:
+                        
+                        calc = float(self._message.data[calc_second] << 8 | self._message.data[calc_first])
+                        
+                        if sensor_ID is CAN_DEVICE_L0_ID:
 
-        # CO2 printing
-        if sensor_ID is CAN_DEVICE_CO2_ID:
-            print("CO2 value:")
-            print(*self.CO2_value, sep=", ")
+                            self.l0_time.append(calc)          
 
-        # TDR printing
-        if sensor_ID is CAN_DEVICE_TDR_ID:
-            print("TDR VOL. W. CONTENT DATA:")
-            print(*self.TDR_vol_w_content, sep=", ")
-            print("TDR SOIL TEMP DATA:")
-            print(*self.TDR_soil_temp, sep=", ")
-            print("TDR SOIL PERM DATA:")
-            print(*self.TDR_soil_perm, sep=", ")
-            print("TDR SOIL ELEC DATA:")
-            print(*self.TDR_soil_elec, sep=", ")
-            print("TDR other DATA:")
-            print(*self.TDR_other, sep=", ")
-        '''
+                        elif sensor_ID is CAN_DEVICE_TSL2561_ID:
+                            
+                            self.TSL2561_time.append(calc)
+                            
+                        elif sensor_ID is CAN_DEVICE_BME280_ID:
+
+                            self.BME280_time.append(calc)
+                            
+                        elif sensor_ID is CAN_DEVICE_ANEMOMETER_ID:
+
+                            self.ANEMOMETER_time.append(calc)
+                            
+                        elif sensor_ID is CAN_DEVICE_RAIN_ID:
+
+                            self.RAIN_time.append(calc)
+                            
+                        elif sensor_ID is CAN_DEVICE_CO2_ID:
+
+                            self.CO2_time.append(calc)
+                            
+                        elif sensor_ID is CAN_DEVICE_TDR_ID:
+                            
+                            self.TDR_time.append(calc)
+
+                    except:
+                        break
+                    
+        
     
     def process(self, modules):
         """ Sends out the data, receives """
@@ -237,18 +246,65 @@ class Module(object):
 
         # calling the sensors and getting data
         self.get_data_sensors(CAN_DEVICE_L0_ID)
-        time.sleep(0.1)
-        self.get_data_sensors(CAN_DEVICE_TSL2561_ID)
-        time.sleep(0.1)
-        self.get_data_sensors(CAN_DEVICE_BME280_ID)
-        time.sleep(0.1)
+        
+        
+        time.sleep(1)
+        '''
         self.get_data_sensors(CAN_DEVICE_ANEMOMETER_ID)
         time.sleep(0.1)
         self.get_data_sensors(CAN_DEVICE_RAIN_ID)
         time.sleep(0.1)
         self.get_data_sensors(CAN_DEVICE_CO2_ID)
         time.sleep(0.1)
+        self.get_data_sensors(CAN_DEVICE_TDR_ID)'''
+
+        print(*self.l0_temp, sep=", ")
+        print(*self.l0_vdd, sep=", ")
+        print(*self.l0_time, sep=", ")
+        
+        time.sleep(1)
+        self.get_data_sensors(CAN_DEVICE_TSL2561_ID)
+        
+        print(*self.TSL2561_visible, sep=", ")
+        print(*self.TSL2561_fullspec, sep=", ")
+        print(*self.TSL2561_infrared, sep=", ")
+        print(*self.TSL2561_time, sep=", ")
+        
+        time.sleep(1)
+        self.get_data_sensors(CAN_DEVICE_BME280_ID)
+        
+        print(*self.BME280_pressure, sep=", ")
+        print(*self.BME280_temperature, sep=", ")
+        print(*self.BME280_humidity, sep=", ")
+        print(*self.BME280_time, sep=", ")
+        
+        self.get_data_sensors(CAN_DEVICE_ANEMOMETER_ID)
+        print(*self.ANEMOMETER_wind, sep=", ")
+        print(*self.ANEMOMETER_time, sep=", ")
+        
+        time.sleep(0.1)
+        
+        self.get_data_sensors(CAN_DEVICE_RAIN_ID)
+        print(*self.RAIN_count, sep=", ")
+        print(*self.RAIN_time, sep=", ")
+        
+        time.sleep(0.1)
+        
+        self.get_data_sensors(CAN_DEVICE_CO2_ID)
+        print(*self.CO2_value, sep=", ")
+        print(*self.CO2_time, sep=", ")
+        
+        time.sleep(0.1)
+        
         self.get_data_sensors(CAN_DEVICE_TDR_ID)
+        
+        print(*self.TDR_vol_w_content, sep=", ")
+        print(*self.TDR_soil_temp, sep=", ")
+        print(*self.TDR_soil_perm, sep=", ")
+        print(*self.TDR_soil_elec, sep=", ")
+        print(*self.TDR_other, sep=", ")
+        print(*self.TDR_time, sep=", ")
+
 
         time.sleep(60)
 
