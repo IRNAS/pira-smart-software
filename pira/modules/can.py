@@ -75,6 +75,17 @@ class Module(object):
             self._enabled = False
             return
 
+        # Scan for CAN devices
+        num_dev_addrs = 1   # number of modules to scan
+        device_addr = "0x100"   # address of first can device
+        hex_addr = int(device_addr, 16)
+        for i in range (0, num_dev_addrs):
+            dev_addr = hex_addr + i*256
+            self.scan_for_sensors(dev_addr)
+
+        print("CAN: Found sensors on addresses:")
+        print([hex(x) for x in self.sensors_list])    #Print sensor ids
+
         self._enabled = True
 
     def scan_for_sensors(self, device_adr):
@@ -251,24 +262,13 @@ class Module(object):
             print("WARNING: CAN is not connected, skipping.")
             return
 
-        # Scan for CAN devices
-        num_dev_addrs = 1   # number of modules to scan
-        device_addr = "0x100"   # address of first can device
-        hex_addr = int(device_addr, 16)
-        for i in range (0, num_dev_addrs):
-            dev_addr = hex_addr + i*256
-            self.scan_for_sensors(dev_addr)
-
-        print("Found sensors on addresses:")
-        print([hex(x) for x in self.sensors_list])    #Print sensor ids
-
         # Call sensors and get data
         for j in self.sensors_list:
             self.get_data_sensors(j)
             time.sleep(1)
         
         '''
-        # calling the sensors and getting data
+        # calling the sensors and getting data - OLD IMPLEMENTATION
         self.get_data_sensors(CAN_DEVICE_L0_ID)
         time.sleep(1)
         
@@ -279,27 +279,27 @@ class Module(object):
         self.get_data_sensors(CAN_DEVICE_CO2_ID)
         time.sleep(0.1)
         self.get_data_sensors(CAN_DEVICE_TDR_ID)
-
+        '''
         print(*self.l0_temp, sep=", ")
         print(*self.l0_vdd, sep=", ")
         print(*self.l0_time, sep=", ")
-        
+        '''
         time.sleep(1)
         self.get_data_sensors(CAN_DEVICE_TSL2561_ID)
-        
+        '''
         print(*self.TSL2561_visible, sep=", ")
         print(*self.TSL2561_fullspec, sep=", ")
         print(*self.TSL2561_infrared, sep=", ")
         print(*self.TSL2561_time, sep=", ")
-        
+        '''
         time.sleep(1)
         self.get_data_sensors(CAN_DEVICE_BME280_ID)
-        
+        '''
         print(*self.BME280_pressure, sep=", ")
         print(*self.BME280_temperature, sep=", ")
         print(*self.BME280_humidity, sep=", ")
         print(*self.BME280_time, sep=", ")
-        
+        '''
         self.get_data_sensors(CAN_DEVICE_ANEMOMETER_ID)
         print(*self.ANEMOMETER_wind, sep=", ")
         print(*self.ANEMOMETER_time, sep=", ")
