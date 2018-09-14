@@ -100,11 +100,16 @@ class Module(object):
 
         # receive message and read how many data points are we expecting
         number = self._driver.get_data()
-        '''
         if (number is None):
             print("ERROR: Failed receiving message from CAN.")
+<<<<<<< HEAD
             return
         '''
+=======
+            self._driver.flush_buffer()
+            return
+        
+>>>>>>> 6c0136e004d63c4aac397f95f58e7ebfe663eda0
         # get how many coloumns there are (coloumn x 8bit)
         num_of_data = number.data[0] + 1
 
@@ -281,6 +286,10 @@ class Module(object):
         time.sleep(0.1)
         self.get_data_sensors(CAN_DEVICE_TDR_ID)
         '''
+<<<<<<< HEAD
+=======
+
+>>>>>>> 6c0136e004d63c4aac397f95f58e7ebfe663eda0
         print(*self.l0_temp, sep=", ")
         print(*self.l0_vdd, sep=", ")
         print(*self.l0_time, sep=", ")
