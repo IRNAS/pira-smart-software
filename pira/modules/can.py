@@ -74,7 +74,7 @@ class Module(object):
             print("WARNING: CAN connection failed.")
             self._enabled = False
             return
-
+        '''
         # Scan for CAN devices
         num_dev_addrs = 1   # number of modules to scan
         device_addr = "0x100"   # address of first can device
@@ -85,7 +85,7 @@ class Module(object):
 
         print("CAN: Found sensors on addresses:")
         print([hex(x) for x in self.sensors_list])    #Print sensor ids
-
+        '''
         self._enabled = True
 
     def scan_for_sensors(self, device_adr):
@@ -100,10 +100,11 @@ class Module(object):
 
         # receive message and read how many data points are we expecting
         number = self._driver.get_data()
+        '''
         if (number is None):
             print("ERROR: Failed receiving message from CAN.")
             return
-        
+        '''
         # get how many coloumns there are (coloumn x 8bit)
         num_of_data = number.data[0] + 1
 
@@ -261,7 +262,7 @@ class Module(object):
         if not self._enabled:
             print("WARNING: CAN is not connected, skipping.")
             return
-
+        '''
         # Call sensors and get data
         for j in self.sensors_list:
             self.get_data_sensors(j)
@@ -279,27 +280,27 @@ class Module(object):
         self.get_data_sensors(CAN_DEVICE_CO2_ID)
         time.sleep(0.1)
         self.get_data_sensors(CAN_DEVICE_TDR_ID)
-        '''
+
         print(*self.l0_temp, sep=", ")
         print(*self.l0_vdd, sep=", ")
         print(*self.l0_time, sep=", ")
-        '''
+
         time.sleep(1)
         self.get_data_sensors(CAN_DEVICE_TSL2561_ID)
-        '''
+        
         print(*self.TSL2561_visible, sep=", ")
         print(*self.TSL2561_fullspec, sep=", ")
         print(*self.TSL2561_infrared, sep=", ")
         print(*self.TSL2561_time, sep=", ")
-        '''
+        
         time.sleep(1)
         self.get_data_sensors(CAN_DEVICE_BME280_ID)
-        '''
+        
         print(*self.BME280_pressure, sep=", ")
         print(*self.BME280_temperature, sep=", ")
         print(*self.BME280_humidity, sep=", ")
         print(*self.BME280_time, sep=", ")
-        '''
+        
         self.get_data_sensors(CAN_DEVICE_ANEMOMETER_ID)
         print(*self.ANEMOMETER_wind, sep=", ")
         print(*self.ANEMOMETER_time, sep=", ")
@@ -326,7 +327,7 @@ class Module(object):
         print(*self.TDR_soil_elec, sep=", ")
         print(*self.TDR_other, sep=", ")
         print(*self.TDR_time, sep=", ")
-        '''
+        
 
         time.sleep(60)
 
@@ -334,7 +335,7 @@ class Module(object):
         """ Shutdown """
         self._driver.shutdown()
 
-    def get_last_values(self):  # Read last value from all available lists
+    def get_last_values(self):  # Read last value from all available lists - OLD IMPLEMENTATION
         """ Get CAN - last measured values from all implemented sensors """
         last_values = { }   #dictionary
         # L0
@@ -378,3 +379,7 @@ class Module(object):
             last_values["tdr_other"] = self.TDR_other[-1]
 
         return last_values
+
+
+    #def make_json(self):
+
