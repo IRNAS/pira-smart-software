@@ -35,18 +35,18 @@ class Boot(object):
 
         # Sensor modules.
         # 'pira.modules.ultrasonic',
-        'pira.modules.camera',
-        #'pira.modules.can',
+        #'pira.modules.camera',
+        'pira.modules.can',
 
         # Reporting modules should come after all sensor modules, so they can get
         # the latest values.
         # 'pira.modules.lora',
         # 'pira.modules.rockblock',
         # 'pira.modules.nodewatcher',
-        'pira.modules.debug',
+        'pira.modules.debug'
         #'pira.modules.webserver',
         #'pira.modules.m2x_plat',
-        'pira.modules.azure_images',
+        #'pira.modules.azure_images',
     ]
 
     def __init__(self):
@@ -140,6 +140,7 @@ class Boot(object):
             return None
 
     def process(self):
+        
         self.log.insert(LOG_SYSTEM, 'module_init')
 
         #Determine clock status and perform sync
@@ -225,6 +226,7 @@ class Boot(object):
                 traceback.print_exc()
 
         self.log.insert(LOG_SYSTEM, 'main_loop')
+
 
         # Enter main loop.
         print("Starting processing loop.")
