@@ -53,8 +53,8 @@ class MCP2515():
         return None
 
     def get_data(self):
-        """ waits until nothing received, TODO:timeouts after 3 seconds """
-        self._message = self._bus.recv()
+        """ waits until nothing received """
+        self._message = self._bus.recv(timeout=3.0)
         if self._message is not None:
             c = '{0:f} {1:x} {2:x} '.format(self._message.timestamp, self._message.arbitration_id, self._message.dlc)
             s = ''
@@ -65,6 +65,10 @@ class MCP2515():
             return self._message
         
         return None
+
+    def flush_buffer(self):
+        """ Discard messages still queued in output buffer """
+        self._bus.flush_tx_buffer()
 
     def send_data(self, ID, DATA, EXTID):
         """ sends data by ID, DATA and if y/n EXTID """
