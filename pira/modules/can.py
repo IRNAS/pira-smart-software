@@ -82,11 +82,9 @@ class Module(object):
 
         # receive message and read how many data points are we expecting
         number = self._driver.get_data()
-        '''
         if (number is None):
             print("ERROR: Failed receiving message from CAN.")
-            #return
-        '''
+            return
         
         # get how many coloumns there are (coloumn x 8bit)
         num_of_data = number.data[0] + 1
