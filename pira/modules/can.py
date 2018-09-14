@@ -198,7 +198,7 @@ class Module(object):
             self.scan_for_sensors(dev_addr)
 
         print("Found sensors on addresses:")
-        print([hex(x) for x in sensors_list])    #Print sensor ids
+        print([hex(x) for x in self.sensors_list])    #Print sensor ids
 
         # Call sensors and get data
         for j in self.sensors_list:
