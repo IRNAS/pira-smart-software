@@ -73,7 +73,7 @@ class Module(object):
     def scan_for_sensors(self, device_adr):
         #sens_id = get_sensors(device_adr)   # TODO - return list of sensors on device
         sens_id = [0x101, 0x102, 0x103, 0x104, 0x105, 0x106, 0x107]     # testing
-        sensors_list.extend(sens_id)    # extend list with new sensor addresses
+        self.sensors_list.extend(sens_id)    # extend list with new sensor addresses
 
     def get_data_sensors(self, sensor_ID):
 
@@ -201,7 +201,7 @@ class Module(object):
         print([hex(x) for x in sensors_list])    #Print sensor ids
 
         # Call sensors and get data
-        for j in sensors_list:
+        for j in self.sensors_list:
             self.get_data_sensors(j)
             time.sleep(1)
         '''
