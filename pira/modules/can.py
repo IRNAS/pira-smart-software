@@ -30,7 +30,7 @@ class Module(object):
         self.devices_json = {}
         self.sensors_json = {}
 
-        self.sensors_list = []
+        #self.sensors_list = []
 
         # ----- OLD IMPLEMENTATION -----
         # L0
@@ -79,24 +79,35 @@ class Module(object):
             self._enabled = False
             return
         
-        # Scan for CAN devices
-        num_dev_addrs = 1   # number of modules to scan
+        '''
+        # Scan for CAN devices and their sensors
+        num_dev_addrs = 1   # number of can devices to scan
+        num_sen_addrs = 10  # number of sensor addresses to scan
         device_addr = "0x100"   # address of first can device
         hex_addr = int(device_addr, 16)
         for i in range (0, num_dev_addrs):
             dev_addr = hex_addr + i*256
+            for j in range(1, num_sen_addrs+1):
+                sen_addr = dev_addr + j
+                can_return = self.get_data_sensors
             self.devices_json[str(dev_addr)] = ''
-            self.scan_for_sensors(dev_addr)
-
+        '''  
+        self.sensors_list = [0x101, 0x102, 0x103, 0x104, 0x105, 0x106, 0x107]     # testing
         print("CAN: Found sensors on addresses:")
         print([hex(x) for x in self.sensors_list])    #Print sensor ids
-        
+    
         self._enabled = True
 
-    def scan_for_sensors(self, device_adr):
-        #sens_id = get_sensors(device_adr)   # TODO - return list of sensors on device
-        sens_id = [0x101]     # testing
-        self.sensors_list.extend(sens_id)    # extend list with new sensor addresses
+    def scan_for_sensors(self, address):
+        # send a "wakeup" to the sensor 1
+        self._driver.send_data(address, [0x01], False)
+
+        # Sensor returns something if it is available
+        result = self._driver.get_data()
+        if (result is None):
+            return False
+        
+        return True
 
     def get_data_sensors(self, sensor_ID):
 
@@ -146,6 +157,7 @@ class Module(object):
                     # try except because of out of index error
                     try:
                         calc = float(self._message.data[calc_second] << 8 | self._message.data[calc_first])
+                        print(calc)
                         if sensor_ID is CAN_DEVICE_L0_ID:
 
                             calc = calc / 100
@@ -278,13 +290,15 @@ class Module(object):
         # get how many variables there are
         num_of_var = number.data[1]
 
-        values = {}
+        variables = {}
 
         # go through the variables
         for col in range(0, num_of_var):
 
             # log the varaible number
             #print("VAR {}".format(col))
+
+            values = {}
 
             # go through the amount of data in a var
             for dat in range(0, num_of_data):
@@ -310,16 +324,15 @@ class Module(object):
                     # try except because of out of index error
                     try:
                         calc = float(self._message.data[calc_second] << 8 | self._message.data[calc_first])
-                        for j in range(0, col):
-                            data = {}
-                            data['time'] = '999'
-                            data['data'] = calc
-                            values[i*col+j] = data
+                        data = {}
+                        data['time'] = '999'
+                        data['data'] = calc
+                        values[dat*self._message.dlc+i] = data
 
                     except:
                         break
                     
-                    
+            
                     
                 # read message
                 self._message = self._driver.get_raw_data()
@@ -375,19 +388,26 @@ class Module(object):
                     except:
                         break
 
-        self.sensors_json[str(sensor_ID)] = values
+            variables[col] = values
+
+        self.sensors_json[str(sensor_ID)] = variables
 
     def process(self, modules):
         """ Sends out the data, receives """
         if not self._enabled:
             print("WARNING: CAN is not connected, skipping.")
             return
-        
+        '''
         # Call sensors and get data
         for j in self.sensors_list:
-            self.get_data_sensors(j)
+            self.get_data_json(j)
             time.sleep(1)
-        
+        '''
+        self.get_data_json(self.sensors_list[1])
+        dumper = json.dumps(self.sensors_json)
+        print (dumper)
+
+
         '''
         # calling the sensors and getting data - OLD IMPLEMENTATION
         self.get_data_sensors(CAN_DEVICE_L0_ID)
@@ -400,27 +420,26 @@ class Module(object):
         self.get_data_sensors(CAN_DEVICE_CO2_ID)
         time.sleep(0.1)
         self.get_data_sensors(CAN_DEVICE_TDR_ID)
-        '''
+        
         print(*self.l0_temp, sep=", ")
         print(*self.l0_vdd, sep=", ")
         print(*self.l0_time, sep=", ")
-        time.sleep(1)
-        '''
+        #time.sleep(1)
+        
         self.get_data_sensors(CAN_DEVICE_TSL2561_ID)
-        '''
+        
         print(*self.TSL2561_visible, sep=", ")
         print(*self.TSL2561_fullspec, sep=", ")
         print(*self.TSL2561_infrared, sep=", ")
         print(*self.TSL2561_time, sep=", ")
-        time.sleep(1)
-        '''
+        #time.sleep(1)
+        
         self.get_data_sensors(CAN_DEVICE_BME280_ID)
-        '''
         print(*self.BME280_pressure, sep=", ")
         print(*self.BME280_temperature, sep=", ")
         print(*self.BME280_humidity, sep=", ")
         print(*self.BME280_time, sep=", ")
-        '''
+        
         self.get_data_sensors(CAN_DEVICE_ANEMOMETER_ID)
         print(*self.ANEMOMETER_wind, sep=", ")
         print(*self.ANEMOMETER_time, sep=", ")
@@ -434,6 +453,7 @@ class Module(object):
         time.sleep(0.1)
         
         self.get_data_sensors(CAN_DEVICE_CO2_ID)
+        
         print(*self.CO2_value, sep=", ")
         print(*self.CO2_time, sep=", ")
         
