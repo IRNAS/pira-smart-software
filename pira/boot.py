@@ -45,10 +45,10 @@ class Boot(object):
         # 'pira.modules.lora',
         # 'pira.modules.rockblock',
         # 'pira.modules.nodewatcher',
-        'pira.modules.debug'
+        'pira.modules.debug',
         #'pira.modules.webserver',
-        #'pira.modules.m2x_plat',
-        #'pira.modules.azure_images',
+        'pira.modules.m2x_plat'
+        #'pira.modules.azure_images'
     ]
 
     def __init__(self):

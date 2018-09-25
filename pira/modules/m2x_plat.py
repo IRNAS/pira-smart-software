@@ -77,8 +77,20 @@ class Module(object):
         if 'pira.modules.can' in modules:
             json_data = modules['pira.modules.can'].return_json_data()
             can_data = json.loads(json_data)
-            
+            for i in can_data:  # device
+                for j in can_data[i]:   # sensor
+                    for k in can_data[i][j]:    # variable
+                        value_name = str(i) + "_" + str(j) + "_" + str(k)
+                        print("Value name: "+  str(value_name))
+                        for l in can_data[i][j][k]:
+                            #timestamp is currently used from rpi - TODO fix in can module
+                            data = l["data"]
+                            time = l["time"]
+                            print("Data: " + str(data))
+                            print("Time: " + str(time))
+                            #self.upload_data(self.get_timestamp(), value_name, data)
 
+            '''
             # ----- OLD IMPLEMENTATION -----
             values = modules['pira.modules.can'].get_last_values()
             print("From can module read: ")
@@ -86,7 +98,7 @@ class Module(object):
             for x in values:
                 self.upload_data(self.get_timestamp(), x, values[x])
             # ----- OLD IMPLEMENTATION -----
-            
+            '''
 
     def shutdown(self, modules):
         """ Shutdown """

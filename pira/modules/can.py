@@ -81,8 +81,8 @@ class Module(object):
             return
         
         # Scan for CAN devices and their sensors
-        num_dev_addrs = os.environ.get('CAN_NUM_DEV', 4) # number of can devices to scan
-        num_sen_addrs = os.environ.get('CAN_NUM_SEN', 16) # number of sensor addresses to scan
+        num_dev_addrs = os.environ.get('CAN_NUM_DEV', 2) # number of can devices to scan
+        num_sen_addrs = os.environ.get('CAN_NUM_SEN', 9) # number of sensor addresses to scan
         device_addr = "0x100"   # address of first can device to scan
         hex_addr = int(device_addr, 16)
         for i in range (0, num_dev_addrs):
@@ -114,13 +114,14 @@ class Module(object):
             return False
         if (result.dlc < 2 or (result.data[0] == 0 and result.data[1] == 0)):
             return False
-
+    
         # We read the data from sensors only to clear the buffer
         num_of_data = result.data[0] + 1
         num_of_var = result.data[1]
         for col in range(0, num_of_var):
             for dat in range(0, num_of_data):
                 data_read = self._driver.get_raw_data()
+        
 
         return True
 
@@ -494,7 +495,7 @@ class Module(object):
         print(*self.TDR_time, sep=", ")
         '''
 
-        time.sleep(60)
+        #time.sleep(60)
 
     def shutdown(self):
         """ Shutdown """
