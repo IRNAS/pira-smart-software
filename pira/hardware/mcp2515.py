@@ -47,7 +47,7 @@ class MCP2515():
         return self._enabled
     
     def get_raw_data(self):
-        self._message = self._bus.recv()
+        self._message = self._bus.recv(timeout=3.0)
         if self._message is not None:
             return self._message
         return None
