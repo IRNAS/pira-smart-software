@@ -100,7 +100,9 @@ The following environment variables can be used to configure the firmware:
 * Sensors
   * `MCP3021_RATIO` (default `0.0217`) is the conversion value between raw reading and voltage, measure and calibrate for more precise readings
 * CAN (MCP2515)
-  * `CAN_SPEED` (default 500000) is the speed of the CAN Bus
+  * `CAN_SPEED` (default `500000`) is the speed of the CAN Bus
+  * `CAN_NUM_DEV` (default `4`) number of CAN devices to scan for
+  * `CAN_NUM_SEN` (default `16`) number of CAN sensor addresses to scan on each device
 * M2X
   * `M2X_KEY` (must have) is the key of your M2X account
   * `M2X_DEVICE_ID` (must have) is the device ID you are connecting to
