@@ -30,7 +30,7 @@ class Module(object):
         self._boot = boot
 
         self.devices_json = {}
-        self.sensors_json = {}
+        #self.sensors_json = {}
         self.sensors_list = []
 
         # ----- OLD IMPLEMENTATION -----
@@ -81,7 +81,7 @@ class Module(object):
             return
         
         # Scan for CAN devices and their sensors
-        num_dev_addrs = os.environ.get('CAN_NUM_DEV', 3) # number of can devices to scan
+        num_dev_addrs = os.environ.get('CAN_NUM_DEV', 4) # number of can devices to scan
         num_sen_addrs = os.environ.get('CAN_NUM_SEN', 16) # number of sensor addresses to scan
         device_addr = "0x100"   # address of first can device to scan
         hex_addr = int(device_addr, 16)
@@ -92,7 +92,7 @@ class Module(object):
                 can_return = self.scan_for_sensors(sen_addr)
                 if can_return:
                     self.sensors_list.append(sen_addr)
-                time.sleep(0.1)
+                time.sleep(1)
  
         if self.sensors_list:
             print("CAN: Found sensors on addresses:")
@@ -114,6 +114,14 @@ class Module(object):
             return False
         if (result.dlc < 2 or (result.data[0] == 0 and result.data[1] == 0)):
             return False
+
+        # We read the data from sensors only to clear the buffer
+        num_of_data = result.data[0] + 1
+        num_of_var = result.data[1]
+        for col in range(0, num_of_var):
+            for dat in range(0, num_of_data):
+                data_read = self._driver.get_raw_data()
+
         return True
 
     def get_data_sensors(self, sensor_ID):  # OLD IMPLEMENTATION
@@ -290,15 +298,15 @@ class Module(object):
             print("ERROR: Failed receiving message from CAN.")
             self._driver.flush_buffer()
             return
+        # if sensor sends back two zeros there is nothing to read
+        if (number.dlc < 2 or (number.data[0] == 0 and number.data[1] == 0)):
+            return
         
         # get how many coloumns there are (coloumn x 8bit)
         num_of_data = number.data[0] + 1
         # get how many variables there are
         num_of_var = number.data[1]
-        # if sensor sends back two zeros there is nothing to read
-        if (number.dlc < 2 or (number.data[0] == 0 and number.data[1] == 0)):
-            return
-        
+
         variables = {}
 
         # go through the variables
@@ -397,11 +405,13 @@ class Module(object):
 
             variables[col] = values
 
-        self.sensors_json[str(sensor_ID % 256)] = variables
+        sensors_json = {}
+        sensors_json[str(sensor_ID % 256)] = variables    
+        return sensors_json
 
-    def create_json(self, data):
-        """ Create JSON object from data """
-        dump = json.dumps(data)
+    def return_json_data(self):
+        """ Create JSON object from devices sensor data """
+        dump = json.dumps(self.devices_json)
         return dump
 
     def process(self, modules):
@@ -410,17 +420,18 @@ class Module(object):
             print("WARNING: CAN is not connected, skipping.")
             return
         
+        sensors_json = {}
         # Call sensors and get data
         for j in self.sensors_list:
-            self.get_data_json(j)
-            device = int(j/0x100)
-            print("CAN device is: " + str(device))
-            #self.devices_json[str(j)]
+            sensor_data = self.get_data_json(j)
+            if sensor_data:     # if sensor returns some data
+                device = int(j/0x100)
+                self.devices_json[str(device)] = sensor_data
             time.sleep(0.1)
         
         #self.get_data_json(self.sensors_list[1])
-        dumper = self.create_json(self.sensors_json)
-        print (dumper)
+        dumper = self.return_json_data()
+        print(dumper)
 
         '''
         # calling the sensors and getting data - OLD IMPLEMENTATION
@@ -533,5 +544,4 @@ class Module(object):
             last_values["tdr_other"] = self.TDR_other[-1]
 
         return last_values
-
 

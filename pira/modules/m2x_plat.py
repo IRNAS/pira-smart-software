@@ -15,6 +15,7 @@ from __future__ import print_function
 import os
 import time
 import sys
+import json
 from datetime import datetime
 
 from m2x.client import M2XClient
@@ -74,11 +75,17 @@ class Module(object):
         #self.upload_data(self.get_timestamp(), 42, 420)     # testing
 
         if 'pira.modules.can' in modules:
+            json_data = modules['pira.modules.can'].return_json_data()
+            can_data = json.loads(json_data)
+            
+
+            # ----- OLD IMPLEMENTATION -----
             values = modules['pira.modules.can'].get_last_values()
             print("From can module read: ")
             print(values)
             for x in values:
                 self.upload_data(self.get_timestamp(), x, values[x])
+            # ----- OLD IMPLEMENTATION -----
             
 
     def shutdown(self, modules):
