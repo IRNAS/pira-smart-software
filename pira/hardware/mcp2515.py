@@ -54,7 +54,7 @@ class MCP2515():
 
     def get_data(self):
         """ waits until nothing received """
-        self._message = self._bus.recv(timeout=3.0)
+        self._message = self._bus.recv(timeout=1.0)
         if self._message is not None:
             c = '{0:f} {1:x} {2:x} '.format(self._message.timestamp, self._message.arbitration_id, self._message.dlc)
             s = ''
@@ -77,7 +77,7 @@ class MCP2515():
         self._EXTID = EXTID
         self._message = can.Message(arbitration_id=self._ID, data=self._DATA, extended_id=self._EXTID)
         self._bus.send(self._message)
-        print("CAN: Sent to {}, data: {}".format(self._ID, self._DATA))
+        print("CAN: Sent to {}, data: {}".format(hex(self._ID), self._DATA))
 
     def format_data_timestamp(self, msg):
         """ only get timestamp from msg """
