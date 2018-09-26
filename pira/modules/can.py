@@ -81,8 +81,8 @@ class Module(object):
             return
         
         # Scan for CAN devices and their sensors
-        num_dev_addrs = os.environ.get('CAN_NUM_DEV', 2) # number of can devices to scan
-        num_sen_addrs = os.environ.get('CAN_NUM_SEN', 9) # number of sensor addresses to scan
+        num_dev_addrs = os.environ.get('CAN_NUM_DEV', 4) # number of can devices to scan
+        num_sen_addrs = os.environ.get('CAN_NUM_SEN', 16) # number of sensor addresses to scan
         device_addr = "0x100"   # address of first can device to scan
         hex_addr = int(device_addr, 16)
         for i in range (0, num_dev_addrs):
@@ -104,23 +104,30 @@ class Module(object):
 
     def scan_for_sensors(self, address):
         """ Scan at address, return true if sensor returns expected data, false if not """
+        # Clear rx buffer
+        data_read = self._driver.get_raw_data()
+        print("Clearing rx: " + str(data_read))
         # send a "wakeup" to the sensor
         self._driver.send_data(address, [0x01], False)
         # Sensor returns two zeros for data if not available
+        time.sleep(0.1)
         result = self._driver.get_data()
         if result is None:
             print("ERROR: Failed receiving message from CAN.")
             self._driver.flush_buffer()
             return False
-        if (result.dlc < 2 or (result.data[0] == 0 and result.data[1] == 0)):
+        #if (result.dlc < 2 or (result.data[0] == 0 and result.data[1] == 0)):
+        if (result.dlc == 0):
+            print("Nothing to read.")
             return False
-    
+
         # We read the data from sensors only to clear the buffer
-        num_of_data = result.data[0] + 1
-        num_of_var = result.data[1]
-        for col in range(0, num_of_var):
-            for dat in range(0, num_of_data):
-                data_read = self._driver.get_raw_data()
+        num_data = result.data[0]   # nr of columns   
+        num_var = result.data[1]    # nr of variables
+        for var in range(0, num_var):
+            for dat in range(0, num_data):
+                data_read = self._driver.get_raw_data() # data
+                data_read = self._driver.get_raw_data() # time
         
 
         return True
@@ -163,7 +170,7 @@ class Module(object):
                 calc_second = -1
 
                 # dlc represents how many data points are in the received message
-                for i in range(0, self._message.dlc):
+                for i in range(0, self._message.dlc,2):
 
                     # calculate the index for the first and second number
                     calc_first = calc_second + 1
@@ -290,6 +297,10 @@ class Module(object):
         
     def get_data_json(self, sensor_ID):
         """ Read data from sensor """
+        # Clear rx buffer
+        data_read = self._driver.get_raw_data()
+        print("Clearing rx: " + str(data_read))
+
         # send a "wakeup" to the sensor 1
         self._driver.send_data(sensor_ID, [0x01], False)
 
@@ -300,18 +311,20 @@ class Module(object):
             self._driver.flush_buffer()
             return
         # if sensor sends back two zeros there is nothing to read
-        if (number.dlc < 2 or (number.data[0] == 0 and number.data[1] == 0)):
+        #if (number.dlc < 2 or (number.data[0] == 0 and number.data[1] == 0)):
+        if (number.dlc == 0):
+            print("Nothing to read...")
             return
         
         # get how many coloumns there are (coloumn x 8bit)
-        num_of_data = number.data[0] + 1
+        num_of_data = number.data[0]
         # get how many variables there are
         num_of_var = number.data[1]
 
         variables = {}
 
         # go through the variables
-        for col in range(0, num_of_var):
+        for var in range(0, num_of_var):
 
             # log the varaible number
             #print("VAR {}".format(col))
@@ -325,86 +338,49 @@ class Module(object):
                 self._message = self._driver.get_raw_data()
 
                 # print out our message received with dlc
-                #print("Message DLC: {}".format(self._message.dlc))
-                #print(*self._message.data, sep=", ")
-
-                # for looping through data
-                calc_first = -1
-                calc_second = -1
+                print("Message DLC: {}".format(self._message.dlc))
+                print(*self._message.data, sep=", ")
 
                 # dlc represents how many data points are in the received message
-                for i in range(0, self._message.dlc):
-
-                    # calculate the index for the first and second number
-                    calc_first = calc_second + 1
-                    calc_second = calc_first + 1
-
+                for i in range(0, self._message.dlc,2):
                     # try except because of out of index error
                     try:
-                        calc = float(self._message.data[calc_second] << 8 | self._message.data[calc_first])
+                        print("Message: " + str(hex(self._message.data[i])) + " " + str(hex(self._message.data[i+1])))
+                        calc = float(self._message.data[i+1] << 8 | self._message.data[i])
+                        print(str(calc))
                         data = {}
-                        data['time'] = '999'
+                        #data['time'] = '999'
                         data['data'] = calc
-                        values[dat*self._message.dlc+i] = data
+                        values[dat*self._message.dlc+(i/2)] = data
 
                     except:
+                        print("Out of index error - breaking...")
                         break
                     
                 # read message
                 self._message = self._driver.get_raw_data()
 
                 # print out our message received with dlc
-                #print("Message DLC: {}".format(self._message.dlc))
-                #print(*self._message.data, sep=", ")
-
-                # for looping through data
-                calc_first = -1
-                calc_second = -1
+                print("Message DLC: {}".format(self._message.dlc))
+                print(*self._message.data, sep=", ")
 
                 # dlc represents how many data points are in the received message
-                for i in range(0, self._message.dlc):
-
-                    # calculate the index for the first and second number
-                    calc_first = calc_second + 1
-                    calc_second = calc_first + 1
-
+                for i in range(0, self._message.dlc,2):
                     # try except because of out of index error
+                    print("Time - i: " + str(i))
                     try:
-                        
-                        calc = float(self._message.data[calc_second] << 8 | self._message.data[calc_first])
-                        
-                        if sensor_ID is CAN_DEVICE_L0_ID:
-
-                            self.l0_time.append(calc)          
-
-                        elif sensor_ID is CAN_DEVICE_TSL2561_ID:
-                            
-                            self.TSL2561_time.append(calc)
-                            
-                        elif sensor_ID is CAN_DEVICE_BME280_ID:
-
-                            self.BME280_time.append(calc)
-                            
-                        elif sensor_ID is CAN_DEVICE_ANEMOMETER_ID:
-
-                            self.ANEMOMETER_time.append(calc)
-                            
-                        elif sensor_ID is CAN_DEVICE_RAIN_ID:
-
-                            self.RAIN_time.append(calc)
-                            
-                        elif sensor_ID is CAN_DEVICE_CO2_ID:
-
-                            self.CO2_time.append(calc)
-                            
-                        elif sensor_ID is CAN_DEVICE_TDR_ID:
-                            
-                            self.TDR_time.append(calc)
+                        print("Message: " + str(hex(self._message.data[i])) + " " + str(hex(self._message.data[i+1])))
+                        calc = float(self._message.data[i+1] << 8 | self._message.data[i])
+                        print("Time: " + str(calc))
+                        data = values[dat*self._message.dlc+(i/2)]
+                        data['time'] = calc
+                        values[dat*self._message.dlc+(i/2)] = data
 
                     except:
+                        print("Out of index error - breaking...")
                         break
-
-            variables[col] = values
+                    
+            variables[var] = values
 
         sensors_json = {}
         sensors_json[str(sensor_ID % 256)] = variables    

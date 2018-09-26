@@ -25,6 +25,7 @@ class Module(object):
         self._boot = boot
         self._last_time = 0
         self._enabled = False
+        self._first_run = True
 
         # get these values under API Keys 
         self.M2X_KEY = os.environ.get('M2X_KEY',None) # get m2x device key
@@ -55,7 +56,7 @@ class Module(object):
         """
         return datetime.now()
 
-    def upload_data(self, time, value_name, value_data):
+    def upload_data(self, value_name, time, value_data):
         """
         Uploads data at the certain time (can be the past or future)
         """
@@ -66,15 +67,35 @@ class Module(object):
             ]
         })
 
+    def generate_streams(self, stream_list):
+        """
+        Generates streams at M2X servers
+        """
+        for stream_name in stream_list:
+            print("Generating stream:" + str(stream_name))
+            stream = self._device.create_stream(stream_name)
+
     def process(self, modules):
         """ Main process, uploading data """
         if not self._enabled:
             print("WARNING: M2X is not correctly configured, skipping.")
             return
         print("M2X Process | Inited: {}".format(self._enabled))
-        #self.upload_data(self.get_timestamp(), 42, 420)     # testing
+        
+        # if first run, read can module and generate needed streams
+        if self._first_run and 'pira.modules.can' in modules:
+            stream_list = []
+            json_data = modules['pira.modules.can'].return_json_data()
+            can_data = json.loads(json_data)
+            for i in can_data:  # device
+                for j in can_data[i]:   # sensor
+                    for k in can_data[i][j]:    # variable
+                        value_name = str(i) + "_" + str(j) + "_" + str(k)
+                        stream_list.append(value_name)
+            self.generate_streams(stream_list)
 
-        if 'pira.modules.can' in modules:
+        # if not first run, read data from can module and push it to m2x server
+        if not self._first_run and 'pira.modules.can' in modules:
             json_data = modules['pira.modules.can'].return_json_data()
             can_data = json.loads(json_data)
             for i in can_data:  # device
@@ -84,11 +105,10 @@ class Module(object):
                         print("Value name: "+  str(value_name))
                         for l in can_data[i][j][k]:
                             #timestamp is currently used from rpi - TODO fix in can module
-                            data = l["data"]
-                            time = l["time"]
-                            print("Data: " + str(data))
-                            print("Time: " + str(time))
-                            #self.upload_data(self.get_timestamp(), value_name, data)
+                            data = can_data[i][j][k][l]['data']
+                            time = can_data[i][j][k][l]['time']
+                            #print("Data: " + str(data) + " Time: " + str(time))
+                            self.upload_data(value_name, self.get_timestamp(), data)
 
             '''
             # ----- OLD IMPLEMENTATION -----
@@ -99,6 +119,8 @@ class Module(object):
                 self.upload_data(self.get_timestamp(), x, values[x])
             # ----- OLD IMPLEMENTATION -----
             '''
+        
+        self._first_run = False
 
     def shutdown(self, modules):
         """ Shutdown """
