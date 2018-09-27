@@ -11,18 +11,7 @@ from ..hardware import mcp2515
 import os
 import time
 import json
-
-# ----- OLD IMPLEMENTATION -----
-CAN_MASTER_ID = 0x001
-CAN_DEVICE_1_ID = 0x100
-CAN_DEVICE_L0_ID = 0x101
-CAN_DEVICE_TSL2561_ID = 0x102
-CAN_DEVICE_BME280_ID = 0x103
-CAN_DEVICE_ANEMOMETER_ID = 0x104
-CAN_DEVICE_RAIN_ID = 0x105
-CAN_DEVICE_CO2_ID = 0x106
-CAN_DEVICE_TDR_ID = 0x107
-# ----- OLD IMPLEMENTATION -----
+import datetime
 
 class Module(object):
     def __init__(self, boot):
@@ -30,47 +19,7 @@ class Module(object):
         self._boot = boot
 
         self.devices_json = {}
-        #self.sensors_json = {}
         self.sensors_list = []
-
-        # ----- OLD IMPLEMENTATION -----
-        # L0
-        self.l0_temp = []
-        self.l0_vdd = []
-        self.l0_time = []
-
-        # TSL2561
-        self.TSL2561_visible = []
-        self.TSL2561_fullspec = []
-        self.TSL2561_infrared = []
-        self.TSL2561_time = []
-
-        # BME
-        self.BME280_pressure = []
-        self.BME280_temperature = []
-        self.BME280_humidity = []
-        self.BME280_time = []
-
-        # WIND
-        self.ANEMOMETER_wind = []
-        self.ANEMOMETER_time = []
-
-        # RAIN
-        self.RAIN_count = []
-        self.RAIN_time = []
-
-        # CO2
-        self.CO2_value = []
-        self.CO2_time = []
-
-        # TDR
-        self.TDR_vol_w_content = []
-        self.TDR_soil_temp = []
-        self.TDR_soil_perm = []
-        self.TDR_soil_elec = []
-        self.TDR_other = []
-        self.TDR_time = []
-        # ----- OLD IMPLEMENTATION -----
 
         try:
             # init driver
@@ -81,8 +30,8 @@ class Module(object):
             return
         
         # Scan for CAN devices and their sensors
-        num_dev_addrs = os.environ.get('CAN_NUM_DEV', 4) # number of can devices to scan
-        num_sen_addrs = os.environ.get('CAN_NUM_SEN', 16) # number of sensor addresses to scan
+        num_dev_addrs = os.environ.get('CAN_NUM_DEV', 2) # number of can devices to scan
+        num_sen_addrs = os.environ.get('CAN_NUM_SEN', 10) # number of sensor addresses to scan
         device_addr = "0x100"   # address of first can device to scan
         hex_addr = int(device_addr, 16)
         for i in range (0, num_dev_addrs):
@@ -92,7 +41,7 @@ class Module(object):
                 can_return = self.scan_for_sensors(sen_addr)
                 if can_return:
                     self.sensors_list.append(sen_addr)
-                time.sleep(1)
+                time.sleep(0.1)
  
         if self.sensors_list:
             print("CAN: Found sensors on addresses:")
@@ -106,18 +55,19 @@ class Module(object):
         """ Scan at address, return true if sensor returns expected data, false if not """
         # Clear rx buffer
         data_read = self._driver.get_raw_data()
-        print("Clearing rx: " + str(data_read))
+        print("CAN: on " + str(hex(address)) + " clearing rx: " + str(data_read))
+
         # send a "wakeup" to the sensor
         self._driver.send_data(address, [0x01], False)
-        # Sensor returns two zeros for data if not available
         time.sleep(0.1)
+        
+        # Sensor returns two zeros for data if not available
         result = self._driver.get_data()
         if result is None:
             print("ERROR: Failed receiving message from CAN.")
             self._driver.flush_buffer()
             return False
-        #if (result.dlc < 2 or (result.data[0] == 0 and result.data[1] == 0)):
-        if (result.dlc == 0):
+        if (result.dlc == 0 or (len(result.data) < 4)):
             print("Nothing to read.")
             return False
 
@@ -132,177 +82,16 @@ class Module(object):
 
         return True
 
-    def get_data_sensors(self, sensor_ID):  # OLD IMPLEMENTATION
-        # send a "wakeup" to the sensor 1
-        self._driver.send_data(sensor_ID, [0x01], False)
 
-        # receive message and read how many data points are we expecting
-        number = self._driver.get_data()
-        if (number is None):
-            print("ERROR: Failed receiving message from CAN.")
-            self._driver.flush_buffer()
-            return
-        
-        # get how many coloumns there are (coloumn x 8bit)
-        num_of_data = number.data[0] + 1
-
-        # get how many variables there are
-        num_of_var = number.data[1]
-
-        # go through the variables
-        for col in range(0, num_of_var):
-
-            # log the varaible number
-            #print("VAR {}".format(col))
-
-            # go through the amount of data in a var
-            for dat in range(0, num_of_data):
-
-                # read message
-                self._message = self._driver.get_raw_data()
-
-                # print out our message received with dlc
-                #print("Message DLC: {}".format(self._message.dlc))
-                #print(*self._message.data, sep=", ")
-
-                # for looping through data
-                calc_first = -1
-                calc_second = -1
-
-                # dlc represents how many data points are in the received message
-                for i in range(0, self._message.dlc,2):
-
-                    # calculate the index for the first and second number
-                    calc_first = calc_second + 1
-                    calc_second = calc_first + 1
-
-                    # try except because of out of index error
-                    try:
-                        calc = float(self._message.data[calc_second] << 8 | self._message.data[calc_first])
-                        print(calc)
-                        if sensor_ID is CAN_DEVICE_L0_ID:
-
-                            calc = calc / 100
-
-                            # it depends which variable we are using (VAR0 -> TEMP) (VAR1 -> VDD)
-                            if col is 0:
-                                self.l0_temp.append(calc)           # append it to the array
-                            elif col is 1:
-                                self.l0_vdd.append(calc)            # append it to the array
-
-                        elif sensor_ID is CAN_DEVICE_TSL2561_ID:
-                            if col is 0:
-                                self.TSL2561_visible.append(calc)
-                            elif col is 1:
-                                self.TSL2561_fullspec.append(calc)
-                            elif col is 2:
-                                self.TSL2561_infrared.append(calc)
-                        elif sensor_ID is CAN_DEVICE_BME280_ID:
-
-                            calc = calc / 100
-
-                            if col is 0:
-                                self.BME280_pressure.append(calc)
-                            elif col is 1:
-                                self.BME280_temperature.append(calc)
-                            elif col is 2:
-                                self.BME280_humidity.append(calc)
-                        elif sensor_ID is CAN_DEVICE_ANEMOMETER_ID:
-
-                            calc = calc / 100
-                            if col is 0:
-                                self.ANEMOMETER_wind.append(calc)
-                        elif sensor_ID is CAN_DEVICE_RAIN_ID:
-
-                            if col is 0:
-                                self.RAIN_count.append(calc)
-                        elif sensor_ID is CAN_DEVICE_CO2_ID:
-
-                            calc = calc * 100
-
-                            if col is 0:
-                                self.CO2_value.append(calc)
-                        elif sensor_ID is CAN_DEVICE_TDR_ID:
-
-                            if col is 0:
-                                self.TDR_vol_w_content.append(calc)
-                            elif col is 1:
-                                self.TDR_soil_temp.append(calc)
-                            elif col is 2:
-                                self.TDR_soil_perm.append(calc)
-                            elif col is 3:
-                                self.TDR_soil_elec.append(calc)
-                            elif col is 4:
-                                self.TDR_other.append(calc)
-
-                    except:
-                        break
-                    
-                    
-                    
-                # read message
-                self._message = self._driver.get_raw_data()
-
-                # print out our message received with dlc
-                #print("Message DLC: {}".format(self._message.dlc))
-                #print(*self._message.data, sep=", ")
-
-                # for looping through data
-                calc_first = -1
-                calc_second = -1
-
-                # dlc represents how many data points are in the received message
-                for i in range(0, self._message.dlc):
-
-                    # calculate the index for the first and second number
-                    calc_first = calc_second + 1
-                    calc_second = calc_first + 1
-
-                    # try except because of out of index error
-                    try:
-                        
-                        calc = float(self._message.data[calc_second] << 8 | self._message.data[calc_first])
-                        
-                        if sensor_ID is CAN_DEVICE_L0_ID:
-
-                            self.l0_time.append(calc)          
-
-                        elif sensor_ID is CAN_DEVICE_TSL2561_ID:
-                            
-                            self.TSL2561_time.append(calc)
-                            
-                        elif sensor_ID is CAN_DEVICE_BME280_ID:
-
-                            self.BME280_time.append(calc)
-                            
-                        elif sensor_ID is CAN_DEVICE_ANEMOMETER_ID:
-
-                            self.ANEMOMETER_time.append(calc)
-                            
-                        elif sensor_ID is CAN_DEVICE_RAIN_ID:
-
-                            self.RAIN_time.append(calc)
-                            
-                        elif sensor_ID is CAN_DEVICE_CO2_ID:
-
-                            self.CO2_time.append(calc)
-                            
-                        elif sensor_ID is CAN_DEVICE_TDR_ID:
-                            
-                            self.TDR_time.append(calc)
-
-                    except:
-                        break
-                    
-        
     def get_data_json(self, sensor_ID):
         """ Read data from sensor """
         # Clear rx buffer
         data_read = self._driver.get_raw_data()
-        print("Clearing rx: " + str(data_read))
+        print("CAN: on " + str(hex(sensor_ID)) + " clearing rx: " + str(data_read))
 
         # send a "wakeup" to the sensor 1
         self._driver.send_data(sensor_ID, [0x01], False)
+        send_time = datetime.datetime.now()  # we save current rpi time
 
         # receive message and read how many data points are we expecting
         number = self._driver.get_data()
@@ -311,15 +100,19 @@ class Module(object):
             self._driver.flush_buffer()
             return
         # if sensor sends back two zeros there is nothing to read
-        #if (number.dlc < 2 or (number.data[0] == 0 and number.data[1] == 0)):
-        if (number.dlc == 0):
-            print("Nothing to read...")
+        if (number.dlc == 0 or (len(number.data) < 4)):
+            print("Nothing to read.")
             return
         
         # get how many coloumns there are (coloumn x 8bit)
         num_of_data = number.data[0]
         # get how many variables there are
         num_of_var = number.data[1]
+        # get delta time between last measurement and can send
+        time_low = number.data[2]
+        time_high = number.data[3]
+        delta_time = datetime.timedelta(seconds=(float(time_high << 8 | time_low)/10))
+        read_time = send_time - delta_time
 
         variables = {}
 
@@ -330,61 +123,60 @@ class Module(object):
             #print("VAR {}".format(col))
 
             values = {}
+            calculated_delta = 0
+            data_list = []
+            delta_list = []
 
             # go through the amount of data in a var
             for dat in range(0, num_of_data):
 
-                # read message
+                # read message DATA
                 self._message = self._driver.get_raw_data()
 
                 # print out our message received with dlc
-                print("Message DLC: {}".format(self._message.dlc))
-                print(*self._message.data, sep=", ")
+                #print("Message DLC: {}".format(self._message.dlc))
+                #print(*self._message.data, sep=", ")
 
                 # dlc represents how many data points are in the received message
-                for i in range(0, self._message.dlc,2):
+                for i in range(0, self._message.dlc, 2):
                     # try except because of out of index error
                     try:
-                        print("Message: " + str(hex(self._message.data[i])) + " " + str(hex(self._message.data[i+1])))
                         calc = float(self._message.data[i+1] << 8 | self._message.data[i])
-                        print(str(calc))
-                        data = {}
-                        #data['time'] = '999'
-                        data['data'] = calc
-                        values[dat*self._message.dlc+(i/2)] = data
-
+                        data_list.append(calc)
                     except:
-                        print("Out of index error - breaking...")
                         break
                     
-                # read message
+                # read message TIME
                 self._message = self._driver.get_raw_data()
 
                 # print out our message received with dlc
-                print("Message DLC: {}".format(self._message.dlc))
-                print(*self._message.data, sep=", ")
+                #print("Time Message DLC: {}".format(self._message.dlc))
+                #print(*self._message.data, sep=", ")
 
                 # dlc represents how many data points are in the received message
-                for i in range(0, self._message.dlc,2):
+                for i in range(0, self._message.dlc, 2):
                     # try except because of out of index error
-                    print("Time - i: " + str(i))
                     try:
-                        print("Message: " + str(hex(self._message.data[i])) + " " + str(hex(self._message.data[i+1])))
                         calc = float(self._message.data[i+1] << 8 | self._message.data[i])
-                        print("Time: " + str(calc))
-                        data = values[dat*self._message.dlc+(i/2)]
-                        data['time'] = calc
-                        values[dat*self._message.dlc+(i/2)] = data
-
+                        delta_list.append(calc/10)
                     except:
-                        print("Out of index error - breaking...")
                         break
-                    
+                
+            # insert read data into json     
+            for i in range(len(data_list)-1, -1, -1):
+                data = {}
+                data['data'] = data_list[i]
+                if i != len(data_list)-1:
+                    calculated_delta += delta_list[-1]
+                    delta_list.pop()
+                calculated_time = read_time - datetime.timedelta(seconds=calculated_delta)
+                data['time'] = str(calculated_time)
+                values[i] = data
+            
             variables[var] = values
 
-        sensors_json = {}
-        sensors_json[str(sensor_ID % 256)] = variables    
-        return sensors_json
+        #sensors_json[str(sensor_ID % 256)] = variables
+        return variables
 
     def return_json_data(self):
         """ Create JSON object from devices sensor data """
@@ -397,128 +189,23 @@ class Module(object):
             print("WARNING: CAN is not connected, skipping.")
             return
         
-        sensors_json = {}
         # Call sensors and get data
+        sensor_json = {}
         for j in self.sensors_list:
             sensor_data = self.get_data_json(j)
             if sensor_data:     # if sensor returns some data
+                sensor_json[str(j % 256)] = sensor_data
                 device = int(j/0x100)
-                self.devices_json[str(device)] = sensor_data
+                self.devices_json[str(device)] = sensor_json
             time.sleep(0.1)
         
-        #self.get_data_json(self.sensors_list[1])
+        # DEBUG
         dumper = self.return_json_data()
         print(dumper)
-
-        '''
-        # calling the sensors and getting data - OLD IMPLEMENTATION
-        self.get_data_sensors(CAN_DEVICE_L0_ID)
-        time.sleep(1)
-        
-        self.get_data_sensors(CAN_DEVICE_ANEMOMETER_ID)
-        time.sleep(0.1)
-        self.get_data_sensors(CAN_DEVICE_RAIN_ID)
-        time.sleep(0.1)
-        self.get_data_sensors(CAN_DEVICE_CO2_ID)
-        time.sleep(0.1)
-        self.get_data_sensors(CAN_DEVICE_TDR_ID)
-        
-        print(*self.l0_temp, sep=", ")
-        print(*self.l0_vdd, sep=", ")
-        print(*self.l0_time, sep=", ")
-        #time.sleep(1)
-        
-        self.get_data_sensors(CAN_DEVICE_TSL2561_ID)
-        
-        print(*self.TSL2561_visible, sep=", ")
-        print(*self.TSL2561_fullspec, sep=", ")
-        print(*self.TSL2561_infrared, sep=", ")
-        print(*self.TSL2561_time, sep=", ")
-        #time.sleep(1)
-        
-        self.get_data_sensors(CAN_DEVICE_BME280_ID)
-        print(*self.BME280_pressure, sep=", ")
-        print(*self.BME280_temperature, sep=", ")
-        print(*self.BME280_humidity, sep=", ")
-        print(*self.BME280_time, sep=", ")
-        
-        self.get_data_sensors(CAN_DEVICE_ANEMOMETER_ID)
-        print(*self.ANEMOMETER_wind, sep=", ")
-        print(*self.ANEMOMETER_time, sep=", ")
-        
-        time.sleep(0.1)
-        
-        self.get_data_sensors(CAN_DEVICE_RAIN_ID)
-        print(*self.RAIN_count, sep=", ")
-        print(*self.RAIN_time, sep=", ")
-        
-        time.sleep(0.1)
-        
-        self.get_data_sensors(CAN_DEVICE_CO2_ID)
-        
-        print(*self.CO2_value, sep=", ")
-        print(*self.CO2_time, sep=", ")
-        
-        time.sleep(0.1)
-        
-        self.get_data_sensors(CAN_DEVICE_TDR_ID)
-        
-        print(*self.TDR_vol_w_content, sep=", ")
-        print(*self.TDR_soil_temp, sep=", ")
-        print(*self.TDR_soil_perm, sep=", ")
-        print(*self.TDR_soil_elec, sep=", ")
-        print(*self.TDR_other, sep=", ")
-        print(*self.TDR_time, sep=", ")
-        '''
 
         #time.sleep(60)
 
     def shutdown(self):
         """ Shutdown """
         self._driver.shutdown()
-
-    def get_last_values(self):  # Read last value from all available lists - OLD IMPLEMENTATION
-        """ Get CAN - last measured values from all implemented sensors """
-        last_values = { }   #dictionary
-        # L0
-        if self.l0_temp:
-            last_values["temperature"] = self.l0_temp[-1]
-        if self.l0_vdd:
-            last_values["vdd"] = self.l0_vdd[-1]
-        # TSL2561
-        if self.TSL2561_visible:
-            last_values["tsl_visible"] = self.TSL2561_visible[-1]
-        if self.TSL2561_fullspec:
-            last_values["tsl_fullspec"] = self.TSL2561_fullspec[-1]
-        if self.TSL2561_infrared:
-            last_values["tsl_infrared"] = self.TSL2561_infrared[-1]
-        # BME
-        if self.BME280_pressure:
-            last_values["bme_pressure"] = self.BME280_pressure[-1]
-        if self.BME280_temperature:
-            last_values["bme_temperature"] = self.BME280_temperature[-1]
-        if self.BME280_humidity:
-            last_values["bme_humidity"] = self.BME280_humidity[-1]
-        # WIND
-        if self.ANEMOMETER_wind:
-            last_values["wind"] = self.ANEMOMETER_wind[-1]
-        # RAIN
-        if self.RAIN_count:
-            last_values["rain"] = self.RAIN_count[-1]
-        #CO2
-        if self.CO2_value:
-            last_values["co2"] = self.CO2_value[-1]
-        #TDR
-        if self.TDR_vol_w_content:
-            last_values["tdr_vol_w_cont"] = self.TDR_vol_w_content[-1]
-        if self.TDR_soil_temp:
-            last_values["tdr_soil_temp"] = self.TDR_soil_temp[-1]
-        if self.TDR_soil_perm:
-            last_values["tdr_soil_perm"] = self.TDR_soil_perm[-1]
-        if self.TDR_soil_elec:
-            last_values["tdr_soil_elec"] = self.TDR_soil_elec[-1]
-        if self.TDR_other:
-            last_values["tdr_other"] = self.TDR_other[-1]
-
-        return last_values
 

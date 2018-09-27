@@ -12,8 +12,7 @@ import RPi.GPIO as gpio
 import pigpio
 
 # Optional Resin support.
-print("Resin is commented out")
-'''
+#print("Resin is commented out")
 try:
     print("Importing resin...")
     import resin
@@ -21,7 +20,7 @@ try:
 except ImportError:
     RESIN_ENABLED = False
     print("Importing resin failed.")
-'''
+
 from .hardware import devices, pirasmartuart
 from .state import State
 from .log import Log

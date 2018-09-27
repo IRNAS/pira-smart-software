@@ -16,7 +16,7 @@ import os
 import time
 import sys
 import json
-from datetime import datetime
+import datetime
 
 from m2x.client import M2XClient
 
@@ -28,9 +28,9 @@ class Module(object):
         self._first_run = True
 
         # get these values under API Keys 
-        self.M2X_KEY = os.environ.get('M2X_KEY',None) # get m2x device key
-        self.M2X_DEVICE_ID = os.environ.get('M2X_DEVICE_ID',None) # get m2x device id
-        self.M2X_NAME = os.environ.get('M2X_NAME', 'DEMO_PI') # get m2x device name (default demo_pi)
+        self.M2X_KEY = os.environ.get('M2X_KEY', None) # get m2x device key
+        self.M2X_DEVICE_ID = os.environ.get('M2X_DEVICE_ID', None) # get m2x device id
+        self.M2X_NAME = os.environ.get('M2X_NAME', 'DEMO_PI') # get m2x device name (default DEMO_PI)
 
         # Check if nodewatcher push is correctly configured
         if self.M2X_KEY is None or self.M2X_KEY is None:
@@ -44,7 +44,7 @@ class Module(object):
         # create device object
         self._device = self._client.device(self.M2X_DEVICE_ID)
 
-        #DEBUG
+        # DEBUG
         #print(self._device.data)
 
         # all good to go
@@ -54,13 +54,13 @@ class Module(object):
         """
         Returns the timestamp for the timestamp parameter
         """
-        return datetime.now()
+        return datetime.datetime.now()
 
     def upload_data(self, value_name, time, value_data):
         """
         Uploads data at the certain time (can be the past or future)
         """
-        #print("Updating data to M2X @ {}".format(datetime.now()))
+        #print("Updating data to M2X @ {}".format(datetime.datetime.now()))
         self._device.post_updates(values = {
             value_name : [
                 { 'timestamp': time, 'value': value_data }
@@ -108,17 +108,8 @@ class Module(object):
                             data = can_data[i][j][k][l]['data']
                             time = can_data[i][j][k][l]['time']
                             #print("Data: " + str(data) + " Time: " + str(time))
-                            self.upload_data(value_name, self.get_timestamp(), data)
+                            self.upload_data(value_name, datetime.datetime.strptime(time, "%Y-%m-%d %H:%M:%S.%f"), data)
 
-            '''
-            # ----- OLD IMPLEMENTATION -----
-            values = modules['pira.modules.can'].get_last_values()
-            print("From can module read: ")
-            print(values)
-            for x in values:
-                self.upload_data(self.get_timestamp(), x, values[x])
-            # ----- OLD IMPLEMENTATION -----
-            '''
         
         self._first_run = False
 
