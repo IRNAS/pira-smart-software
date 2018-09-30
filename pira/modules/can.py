@@ -221,7 +221,7 @@ class Module(object):
             time.sleep(0.1)
         
         # DEBUG
-        dumper = self.return_json_data()
+        #dumper = self.return_json_data()
         #print(dumper) # incorrect values, repeated from last device
 
     def shutdown(self):

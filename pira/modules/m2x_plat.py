@@ -26,6 +26,7 @@ class Module(object):
         self._last_time = 0
         self._enabled = False
         self._first_run = True
+        self._upload_result = True
 
         # get these values under API Keys 
         self.M2X_KEY = os.environ.get('M2X_KEY', None) # get m2x device key
@@ -40,9 +41,14 @@ class Module(object):
 
         # connect to the client
         self._client = M2XClient(key=self.M2X_KEY)
-
-        # create device object
-        self._device = self._client.device(self.M2X_DEVICE_ID)
+        try:
+            # create device object
+            self._device = self._client.device(self.M2X_DEVICE_ID)
+        except:
+            print("M2X connection failed with the following error:")
+            print(str(self._client.last_response.raw))
+            self._enabled = False
+            return
 
         # DEBUG
         #print(self._device.data)
@@ -59,21 +65,33 @@ class Module(object):
     def upload_data(self, value_name, time, value_data):
         """
         Uploads data at the certain time (can be the past or future)
+        Returns true if successful, false if not
         """
         #print("Updating data to M2X @ {}".format(datetime.datetime.now()))
-        self._device.post_updates(values = {
-            value_name : [
-                { 'timestamp': time, 'value': value_data }
-            ]
-        })
+        try:
+            self._device.post_updates(values = {
+                value_name : [
+                    { 'timestamp': time, 'value': value_data }
+                ]
+            })
+        except:
+            print("Uploading data failed.")
+            return False
+
+        return True
 
     def generate_streams(self, stream_list):
         """
-        Generates streams at M2X servers
+        Generates streams at M2X server
         """
         for stream_name in stream_list:
             print("Generating stream:" + str(stream_name))
-            stream = self._device.create_stream(stream_name)
+            try:
+                stream = self._device.create_stream(stream_name)
+            except:
+                print("Creating stream failed.")
+                return
+        self._first_run = False
 
     def process(self, modules):
         """ Main process, uploading data """
@@ -82,18 +100,6 @@ class Module(object):
             return
         print("M2X Process | Inited: {}".format(self._enabled))
         
-        # if first run, read can module and generate needed streams
-        if self._first_run and 'pira.modules.can' in modules:
-            stream_list = []
-            json_data = modules['pira.modules.can'].return_json_data()
-            can_data = json.loads(json_data)
-            for i in can_data:  # device
-                for j in can_data[i]:   # sensor
-                    for k in can_data[i][j]:    # variable
-                        value_name = str(i) + "_" + str(j) + "_" + str(k)
-                        stream_list.append(value_name)
-            self.generate_streams(stream_list)
-
         # if not first run, read data from can module and push it to m2x server
         if not self._first_run and 'pira.modules.can' in modules:
             json_data = modules['pira.modules.can'].return_json_data()
@@ -104,14 +110,30 @@ class Module(object):
                         value_name = str(i) + "_" + str(j) + "_" + str(k)
                         print("Value name: "+  str(value_name))
                         for l in can_data[i][j][k]:
-                            #timestamp is currently used from rpi - TODO fix in can module
                             data = can_data[i][j][k][l]['data']
                             time = can_data[i][j][k][l]['time']
                             #print("Data: " + str(data) + " Time: " + str(time))
-                            self.upload_data(value_name, datetime.datetime.strptime(time, "%Y-%m-%d %H:%M:%S.%f"), data)
+                            formated_time = datetime.datetime.strptime(time, "%Y-%m-%d %H:%M:%S.%f")
+                            if self._upload_result:
+                                self._upload_result = self.upload_data(value_name, formated_time, data)
+                            if not self._upload_result:
+                                print("Update failed, breaking ...")
+                                break
+                            
+                                
+        # if first run, read can module and generate needed streams
+        if self._first_run and 'pira.modules.can' in modules:
+            stream_list = []
+            json_data = modules['pira.modules.can'].return_json_data()
+            can_data = json.loads(json_data)
+            for i in can_data:  # device
+                for j in can_data[i]:   # sensor
+                    for k in can_data[i][j]:    # variable
+                        value_name = str(i) + "_" + str(j) + "_" + str(k)
+                        if not value_name in stream_list:   # check if stream already exists in list
+                            stream_list.append(value_name)
+            self.generate_streams(stream_list)
 
-        
-        self._first_run = False
 
     def shutdown(self, modules):
         """ Shutdown """
