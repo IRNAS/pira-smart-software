@@ -12,6 +12,7 @@ import os
 import time
 import json
 import datetime
+import struct
 
 class Module(object):
     def __init__(self, boot):
@@ -30,18 +31,26 @@ class Module(object):
             return
         
         # Scan for CAN devices and their sensors
-        num_dev_addrs = os.environ.get('CAN_NUM_DEV', 2) # number of can devices to scan
+        num_dev_addrs = os.environ.get('CAN_NUM_DEV', 4) # number of can devices to scan
         num_sen_addrs = os.environ.get('CAN_NUM_SEN', 10) # number of sensor addresses to scan
         device_addr = "0x100"   # address of first can device to scan
         hex_addr = int(device_addr, 16)
         for i in range (0, num_dev_addrs):
             dev_addr = hex_addr + i*256
-            for j in range(1, num_sen_addrs+1):
+            # check from 0, which is device to the max number of sensors
+            for j in range(0, num_sen_addrs+1):
                 sen_addr = dev_addr + j
                 can_return = self.scan_for_sensors(sen_addr)
-                if can_return:
+                #if sensor present add it to the list
+                if can_return>0:
                     self.sensors_list.append(sen_addr)
-                time.sleep(0.1)
+                #if received the response but not present continue through the loop
+                elif can_return==0:
+                    continue #go to the next loop iteration
+                #if no response device is not present and skip to next device
+                elif can_return<0:
+                    break # break out of this loop
+                    #note if one sensor does not respond, it will not continue this way
  
         if self.sensors_list:
             print("CAN: Found sensors on addresses:")
@@ -52,13 +61,13 @@ class Module(object):
         self._enabled = True
 
     def scan_for_sensors(self, address):
-        """ Scan at address, return true if sensor returns expected data, false if not """
+        """ Scan at address, return 1 if sensor returns expected data, 0 if responding but not present and -1 if timeout """
         # Clear rx buffer
         data_read = self._driver.get_raw_data()
         print("CAN: on " + str(hex(address)) + " clearing rx: " + str(data_read))
 
-        # send a "wakeup" to the sensor
-        self._driver.send_data(address, [0x01], False)
+        # send a "wakeup" to the sensor, send 0x02 indicating scan
+        self._driver.send_data(address, [0x02], False)
         time.sleep(0.1)
         
         # Sensor returns two zeros for data if not available
@@ -66,10 +75,11 @@ class Module(object):
         if result is None:
             print("ERROR: Failed receiving message from CAN.")
             self._driver.flush_buffer()
-            return False
+            # this means the device is not present, can skip to next device, TODO
+            return -1
         if (result.dlc == 0 or (len(result.data) < 4)):
             print("Nothing to read.")
-            return False
+            return 0
 
         # We read the data from sensors only to clear the buffer
         num_data = result.data[0]   # nr of columns   
@@ -80,7 +90,7 @@ class Module(object):
                 data_read = self._driver.get_raw_data() # time
         
 
-        return True
+        return 1
 
 
     def get_data_json(self, sensor_ID):
@@ -142,6 +152,9 @@ class Module(object):
                     # try except because of out of index error
                     try:
                         calc = float(self._message.data[i+1] << 8 | self._message.data[i])
+                        # conversion to negative numbers
+                        if calc > 32767:
+                            calc -= 65536
                         data_list.append(calc)
                     except:
                         break
