@@ -27,7 +27,8 @@ class Module(object):
         self._enabled = False
         self._first_run = True
         self._upload_result = True
-
+        self._old_data = []
+        
         # get these values under API Keys 
         self.M2X_KEY = os.environ.get('M2X_KEY', None) # get m2x device key
         self.M2X_DEVICE_ID = os.environ.get('M2X_DEVICE_ID', None) # get m2x device id
@@ -49,6 +50,8 @@ class Module(object):
             print(str(self._client.last_response.raw))
             self._enabled = False
             return
+
+        # TODO load old data from disk
 
         # DEBUG
         #print(self._device.data)
@@ -93,34 +96,52 @@ class Module(object):
                 return
         self._first_run = False
 
+    def process_json(self, can_data):
+        """
+        Process json and prepare data for upload to m2x
+        """
+        for i in can_data:  # device
+            for j in can_data[i]:   # sensor
+                for k in can_data[i][j]:    # variable
+                    value_name = str(i) + "_" + str(j) + "_" + str(k)
+                    print("Value name: "+  str(value_name))
+                    for l in can_data[i][j][k]:
+                        data = can_data[i][j][k][l]['data']
+                        time = can_data[i][j][k][l]['time']
+                        #print("Data: " + str(data) + " Time: " + str(time))
+                        formated_time = datetime.datetime.strptime(time, "%Y-%m-%d %H:%M:%S.%f")
+                        if self._upload_result:
+                            self._upload_result = self.upload_data(value_name, formated_time, data)
+                        if not self._upload_result:
+                            print("Update failed, breaking ...")
+                            # TODO remove already uploaded data from json
+                            self._old_data.append(can_data)
+                            return
+
     def process(self, modules):
         """ Main process, uploading data """
         if not self._enabled:
             print("WARNING: M2X is not correctly configured, skipping.")
             return
         print("M2X Process | Inited: {}".format(self._enabled))
-        
+
         # if not first run, read data from can module and push it to m2x server
         if not self._first_run and 'pira.modules.can' in modules:
             json_data = modules['pira.modules.can'].return_json_data()
             can_data = json.loads(json_data)
-            for i in can_data:  # device
-                for j in can_data[i]:   # sensor
-                    for k in can_data[i][j]:    # variable
-                        value_name = str(i) + "_" + str(j) + "_" + str(k)
-                        print("Value name: "+  str(value_name))
-                        for l in can_data[i][j][k]:
-                            data = can_data[i][j][k][l]['data']
-                            time = can_data[i][j][k][l]['time']
-                            #print("Data: " + str(data) + " Time: " + str(time))
-                            formated_time = datetime.datetime.strptime(time, "%Y-%m-%d %H:%M:%S.%f")
-                            if self._upload_result:
-                                self._upload_result = self.upload_data(value_name, formated_time, data)
-                            if not self._upload_result:
-                                print("Update failed, breaking ...")
-                                break
-                            
-                                
+            self.process_json(can_data)
+
+        # if not first run, check if we have old data to upload - TODO finish it
+        if not self._first_run and self._old_data:
+            current_data = self._old_data
+            for i in current_data:
+                try:    # first we remove it from old_data list, new one is created if uploading fails
+                    self._old_data.remove(i)
+                except:
+                    pass
+                self.process_json(i)
+
+                                              
         # if first run, read can module and generate needed streams
         if self._first_run and 'pira.modules.can' in modules:
             stream_list = []
@@ -134,7 +155,9 @@ class Module(object):
                             stream_list.append(value_name)
             self.generate_streams(stream_list)
 
+        self._upload_result = True  # we set it back to true, for retry in next process loop iteration
 
     def shutdown(self, modules):
         """ Shutdown """
+        # TODO save old data to disk
         pass
