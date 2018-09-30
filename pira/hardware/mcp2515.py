@@ -61,7 +61,7 @@ class MCP2515():
             for i in range(self._message.dlc):
                 s += '{0:x} '.format(self._message.data[i])
             
-            print(' {}'.format(c+s))
+            #print(' {}'.format(c+s))
             return self._message
         
         return None
@@ -77,7 +77,7 @@ class MCP2515():
         self._EXTID = EXTID
         self._message = can.Message(arbitration_id=self._ID, data=self._DATA, extended_id=self._EXTID)
         self._bus.send(self._message)
-        print("CAN: Sent to {}, data: {}".format(hex(self._ID), self._DATA))
+        #print("CAN: Sent to {}, data: {}".format(hex(self._ID), self._DATA))
 
     def format_data_timestamp(self, msg):
         """ only get timestamp from msg """

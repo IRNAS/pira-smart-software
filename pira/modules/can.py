@@ -64,7 +64,7 @@ class Module(object):
         """ Scan at address, return 1 if sensor returns expected data, 0 if responding but not present and -1 if timeout """
         # Clear rx buffer
         data_read = self._driver.get_raw_data()
-        print("CAN: on " + str(hex(address)) + " clearing rx: " + str(data_read))
+        #print("CAN: on " + str(hex(address)) + " clearing rx: " + str(data_read))
 
         # send a "wakeup" to the sensor, send 0x02 indicating scan
         self._driver.send_data(address, [0x02], False)
@@ -73,12 +73,12 @@ class Module(object):
         # Sensor returns two zeros for data if not available
         result = self._driver.get_data()
         if result is None:
-            print("ERROR: Failed receiving message from CAN.")
+            #print("ERROR: Failed receiving message from CAN.")
             self._driver.flush_buffer()
             # this means the device is not present, can skip to next device, TODO
             return -1
         if (result.dlc == 0 or (len(result.data) < 4)):
-            print("Nothing to read.")
+            #print("Nothing to read.")
             return 0
 
         # We read the data from sensors only to clear the buffer
@@ -97,7 +97,7 @@ class Module(object):
         """ Read data from sensor """
         # Clear rx buffer
         data_read = self._driver.get_raw_data()
-        print("CAN: on " + str(hex(sensor_ID)) + " clearing rx: " + str(data_read))
+        #print("CAN: on " + str(hex(sensor_ID)) + " clearing rx: " + str(data_read))
 
         # send a "wakeup" to the sensor 1
         self._driver.send_data(sensor_ID, [0x01], False)
@@ -106,12 +106,12 @@ class Module(object):
         # receive message and read how many data points are we expecting
         number = self._driver.get_data()
         if (number is None):
-            print("ERROR: Failed receiving message from CAN.")
+            #print("ERROR: Failed receiving message from CAN.")
             self._driver.flush_buffer()
             return
         # if sensor sends back two zeros there is nothing to read
         if (number.dlc == 0 or (len(number.data) < 4)):
-            print("Nothing to read.")
+            #print("Nothing to read.")
             return
         
         # get how many coloumns there are (coloumn x 8bit)
@@ -174,7 +174,7 @@ class Module(object):
                         delta_list.append(calc/10)
                     except:
                         break
-                
+                        
             # insert read data into json     
             for i in range(len(data_list)-1, -1, -1):
                 data = {}
@@ -203,20 +203,26 @@ class Module(object):
             return
         
         # Call sensors and get data
-        sensor_json = {}
         for j in self.sensors_list:
+            # list of measurements per sensor
             sensor_data = self.get_data_json(j)
             if sensor_data:     # if sensor returns some data
-                sensor_json[str(j % 256)] = sensor_data
+                sensor_json = {}
+                #check if there is an entry for this device yet
                 device = int(j/0x100)
+                if self.devices_json.has_key(str(device)):
+                    # load existing values and add
+                    sensor_json =self.devices_json[str(device)]
+                # store sensor readings                
+                sensor_json[str(j % 256)] = sensor_data 
+                # write the data back to main json
                 self.devices_json[str(device)] = sensor_json
+
             time.sleep(0.1)
         
         # DEBUG
         dumper = self.return_json_data()
-        print(dumper)
-
-        #time.sleep(60)
+        #print(dumper) # incorrect values, repeated from last device
 
     def shutdown(self):
         """ Shutdown """
