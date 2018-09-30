@@ -34,7 +34,7 @@ class Module(object):
         self.M2X_NAME = os.environ.get('M2X_NAME', 'DEMO_PI') # get m2x device name (default DEMO_PI)
 
         # Check if nodewatcher push is correctly configured
-        if self.M2X_KEY is None or self.M2X_KEY is None:
+        if self.M2X_KEY is None or self.M2X_DEVICE_ID is None:
             print("M2X integration not configured, skipping")
             self._enabled = False
             return
