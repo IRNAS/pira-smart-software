@@ -26,7 +26,6 @@ class Module(object):
         self._last_time = 0
         self._enabled = False
         self._first_run = True
-        self._upload_result = True
         self._old_data = []
         
         # get these values under API Keys 
@@ -68,7 +67,6 @@ class Module(object):
     def upload_data(self, value_name, time, value_data):
         """
         Uploads data at the certain time (can be the past or future)
-        Returns true if successful, false if not
         """
         #print("Updating data to M2X @ {}".format(datetime.datetime.now()))
         try:
@@ -78,10 +76,9 @@ class Module(object):
                 ]
             })
         except:
-            print("Uploading data failed.")
-            return False
-
-        return True
+            failed_data = [value_name, time, value_data]
+            if not failed_data in self._old_data:
+                self._old_data.append(failed_data)
 
     def generate_streams(self, stream_list):
         """
@@ -104,19 +101,14 @@ class Module(object):
             for j in can_data[i]:   # sensor
                 for k in can_data[i][j]:    # variable
                     value_name = str(i) + "_" + str(j) + "_" + str(k)
-                    print("Value name: "+  str(value_name))
+                    #print("Value name: "+  str(value_name))
                     for l in can_data[i][j][k]:
                         data = can_data[i][j][k][l]['data']
                         time = can_data[i][j][k][l]['time']
                         #print("Data: " + str(data) + " Time: " + str(time))
                         formated_time = datetime.datetime.strptime(time, "%Y-%m-%d %H:%M:%S.%f")
-                        if self._upload_result:
-                            self._upload_result = self.upload_data(value_name, formated_time, data)
-                        if not self._upload_result:
-                            print("Update failed, breaking ...")
-                            # TODO remove already uploaded data from json
-                            self._old_data.append(can_data)
-                            return
+                        self.upload_data(value_name, formated_time, data)
+        
 
     def process(self, modules):
         """ Main process, uploading data """
@@ -125,23 +117,27 @@ class Module(object):
             return
         print("M2X Process | Inited: {}".format(self._enabled))
 
-        # if not first run, read data from can module and push it to m2x server
-        if not self._first_run and 'pira.modules.can' in modules:
-            json_data = modules['pira.modules.can'].return_json_data()
-            can_data = json.loads(json_data)
-            self.process_json(can_data)
+        if not self._first_run:
+            # check if we have old data to upload
+            if self._old_data:
+                print("Uploading old data...")
+                old_data_size = len(self._old_data)
+                for i in range(old_data_size-1, -1, -1):
+                    cur_el = self._old_data[i]
+                    del self._old_data[i]
+                    self.upload_data(cur_el[0], cur_el[1], cur_el[2])
+        
+            # read data from can module and push it to m2x server
+            if 'pira.modules.can' in modules:
+                print("Reading new data from can module...")
+                json_data = modules['pira.modules.can'].return_json_data()
+                can_data = json.loads(json_data)
+                self.process_json(can_data)
 
-        # if not first run, check if we have old data to upload - TODO finish it
-        if not self._first_run and self._old_data:
-            current_data = self._old_data
-            for i in current_data:
-                try:    # first we remove it from old_data list, new one is created if uploading fails
-                    self._old_data.remove(i)
-                except:
-                    pass
-                self.process_json(i)
-
-                                              
+            # display a message to user if uploading of some data failed
+            if self._old_data:
+                print("Some data has failed to upload...")
+                    
         # if first run, read can module and generate needed streams
         if self._first_run and 'pira.modules.can' in modules:
             stream_list = []
@@ -151,11 +147,9 @@ class Module(object):
                 for j in can_data[i]:   # sensor
                     for k in can_data[i][j]:    # variable
                         value_name = str(i) + "_" + str(j) + "_" + str(k)
-                        if not value_name in stream_list:   # check if stream already exists in list
-                            stream_list.append(value_name)
+                        stream_list.append(value_name)
             self.generate_streams(stream_list)
-
-        self._upload_result = True  # we set it back to true, for retry in next process loop iteration
+    
 
     def shutdown(self, modules):
         """ Shutdown """
