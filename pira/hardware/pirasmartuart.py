@@ -59,6 +59,7 @@ class PIRASMARTUART(object):
             self.ser.flushInput()
         except:
             print("WARNING: Pira input buffer flush failed.")
+            return False
 
         while (self.pira_time == None) or \
                 (self.pira_on_timer_set == None) or \
