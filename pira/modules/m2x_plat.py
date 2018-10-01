@@ -17,6 +17,7 @@ import time
 import sys
 import json
 import datetime
+import pickle
 
 from m2x.client import M2XClient
 
@@ -50,7 +51,12 @@ class Module(object):
             self._enabled = False
             return
 
-        # TODO load old data from disk
+        # try to load old data from disk
+        try:
+            with open("upload_failed_data.txt", "rb") as fp:
+                self._old_data = pickle.load(fp)
+        except:
+            self._old_data = []
 
         # DEBUG
         #print(self._device.data)
@@ -101,7 +107,7 @@ class Module(object):
             for j in can_data[i]:   # sensor
                 for k in can_data[i][j]:    # variable
                     value_name = str(i) + "_" + str(j) + "_" + str(k)
-                    #print("Value name: "+  str(value_name))
+                    print("Value name: "+  str(value_name))
                     for l in can_data[i][j][k]:
                         data = can_data[i][j][k][l]['data']
                         time = can_data[i][j][k][l]['time']
@@ -134,9 +140,11 @@ class Module(object):
                 can_data = json.loads(json_data)
                 self.process_json(can_data)
 
-            # display a message to user if uploading of some data failed
+            # display a message to user if uploading of some data failed and save it to disk
             if self._old_data:
                 print("Some data has failed to upload...")
+                with open("upload_failed_data.txt", "wb") as fp:
+                    pickle.dump(self._old_data, fp)
                     
         # if first run, read can module and generate needed streams
         if self._first_run and 'pira.modules.can' in modules:
@@ -153,5 +161,6 @@ class Module(object):
 
     def shutdown(self, modules):
         """ Shutdown """
-        # TODO save old data to disk
-        pass
+        # save old data to disk
+        with open("upload_failed_data.txt", "wb") as fp:
+            pickle.dump(self._old_data, fp)
