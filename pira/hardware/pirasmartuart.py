@@ -77,7 +77,10 @@ class PIRASMARTUART(object):
                 #struct.unpack('<h', unhexlify(s1))[0]
                 value = float(struct.unpack('>L', x[2:6])[0])
             except:
-                print("ERROR: read from Pira BLE the following: " + str(x[2:6]))
+                if x:
+                    print("ERROR: read from Pira BLE the following: " + str(x[2:6]))
+                else:
+                    print("ERROR: Pira read failed...")
                 time.sleep(1)
                 read_timeout += 1
                 if read_timeout >= 3:   # after failing 3 or more times stop Pira BLE reading
