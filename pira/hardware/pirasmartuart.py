@@ -55,7 +55,11 @@ class PIRASMARTUART(object):
         
         read_timeout = 0    # handles when pira ble is not connected
 
-        self.ser.flushInput()
+        try:
+            self.ser.flushInput()
+        except:
+            print("WARNING: Pira input buffer flush failed.")
+
         while (self.pira_time == None) or \
                 (self.pira_on_timer_set == None) or \
                 (self.pira_voltage == None) or \
