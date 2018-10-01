@@ -71,17 +71,14 @@ class PIRASMARTUART(object):
                 (time.time() - start < timeout):
 
             try:
-                x = None
+                x = ""
                 x = self.ser.readline()
                 #print "Preamble: " + x[0:2] + "Data: " + x[2:-1].encode('hex') + " Line: " + str(x.startswith(preamble))
                 #' '.join(map(lambda x:x.encode('hex'),x))
                 #struct.unpack('<h', unhexlify(s1))[0]
                 value = float(struct.unpack('>L', x[2:6])[0])
             except:
-                if x:
-                    print("ERROR: read from Pira BLE the following: " + str(x[2:6]))
-                else:
-                    print("ERROR: Pira read failed...")
+                print("ERROR: read from Pira BLE the following: " + str(x[2:6]))
                 time.sleep(1)
                 read_timeout += 1
                 if read_timeout >= 3:   # after failing 3 or more times stop Pira BLE reading
