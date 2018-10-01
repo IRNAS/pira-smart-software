@@ -204,9 +204,9 @@ class Module(object):
             )
             # Turn on flash
             if self._brightPi:
-                _brightPi.reset()
-                _brightPi.set_led_on_off(LED_WHITE, ON)
-                _brightPi.set_led_on_off(LED_IR, ON)
+                self._brightPi.reset()
+                self._brightPi.set_led_on_off(LED_WHITE, ON)
+                self._brightPi.set_led_on_off(LED_IR, ON)
             # Take screenshot
             self._camera.capture(
                 self._new_path,
@@ -214,9 +214,9 @@ class Module(object):
             )
             # Turn off flash
             if self._brightPi:
-                _brightPi.reset()
-                _brightPi.set_led_on_off(LED_WHITE, OFF)
-                _brightPi.set_led_on_off(LED_IR, OFF)
+                self._brightPi.reset()
+                self._brightPi.set_led_on_off(LED_WHITE, OFF)
+                self._brightPi.set_led_on_off(LED_IR, OFF)
 
             print("Snapshot taken at light level:", self.light_level)
             if self.integrate_azure is "on":
