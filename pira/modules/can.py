@@ -2,6 +2,11 @@
 can.py
 
 It is a module that controls the CAN interface
+
+ENV VARS:
+    - CAN_NUM_DEV
+    - CAN_NUM_SEN
+    
 """
 from __future__ import print_function
 
