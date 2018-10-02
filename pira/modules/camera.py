@@ -1,3 +1,17 @@
+"""
+camera.py
+
+It is a module that takes photos and records video
+
+ENV VARS:
+    - CAMERA_RESOLUTION
+    - CAMERA_VIDEO_DURATION
+    - CAMERA_MIN_LIGHT_LEVEL
+    - CAMERA_FAIL_SHUTDOWN
+    - CAMERA_SNAPSHOT_INTERVAL
+    - CAMERA_AZURE
+"""
+
 from __future__ import print_function
 
 import datetime
@@ -24,9 +38,9 @@ class Module(object):
         self._brightPi = None
 
         self.resolution = os.environ.get('CAMERA_RESOLUTION', '1280x720')
-        self.camera_shutdown = os.environ.get('CAMERA_SHUTDOWN', '0')
+        self.camera_shutdown = os.environ.get('CAMERA_FAIL_SHUTDOWN', '0')
         self.video_duration = os.environ.get('CAMERA_VIDEO_DURATION', 'until-sleep')
-        self.snapshot_interval_conf = os.environ.get('SNAPSHOT_INTERVAL', 'off')
+        self.snapshot_interval_conf = os.environ.get('CAMERA_SNAPSHOT_INTERVAL', 'off')
         self.integrate_azure=os.environ.get('CAMERA_AZURE', 'off')
 
         try:
