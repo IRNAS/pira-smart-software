@@ -6,7 +6,7 @@ It is a module that controls the CAN interface
 ENV VARS:
     - CAN_NUM_DEV
     - CAN_NUM_SEN
-    
+
 """
 from __future__ import print_function
 
@@ -239,7 +239,7 @@ class Module(object):
         #dumper = self.return_json_data()
         #print(dumper) # incorrect values, repeated from last device
 
-    def shutdown(self):
+    def shutdown(self, modules):
         """ Shutdown """
         self._driver.shutdown()
 
