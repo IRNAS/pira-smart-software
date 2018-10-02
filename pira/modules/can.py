@@ -29,16 +29,26 @@ class Module(object):
             print("WARNING: CAN connection failed.")
             self._enabled = False
             return
-        
+
+        # Read environs
+        num_dev_addrs = os.environ.get('CAN_NUM_DEV', '4') # number of can devices to scan
+        num_sen_addrs = os.environ.get('CAN_NUM_SEN', '10') # number of sensor addresses to scan
+        try:
+            self._num_dev_addrs = int(num_dev_addrs)
+        except:
+            self._num_dev_addrs = 4    
+        try:
+            self._num_sen_addrs = int(num_sen_addrs)
+        except:
+            self._num_sen_addrs = 10
+
         # Scan for CAN devices and their sensors
-        num_dev_addrs = os.environ.get('CAN_NUM_DEV', 4) # number of can devices to scan
-        num_sen_addrs = os.environ.get('CAN_NUM_SEN', 10) # number of sensor addresses to scan
         device_addr = "0x100"   # address of first can device to scan
         hex_addr = int(device_addr, 16)
-        for i in range (0, num_dev_addrs):
+        for i in range (0, self._num_dev_addrs):
             dev_addr = hex_addr + i*256
             # check from 0, which is device to the max number of sensors
-            for j in range(0, num_sen_addrs+1):
+            for j in range(0, self._num_sen_addrs+1):
                 sen_addr = dev_addr + j
                 can_return = self.scan_for_sensors(sen_addr)
                 #if sensor present add it to the list
