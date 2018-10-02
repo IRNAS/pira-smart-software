@@ -1,3 +1,10 @@
+"""
+debug.py
+
+It is a module that prints various debug information from Pira, RPi and other modules
+
+"""
+
 from __future__ import print_function
 
 class Module(object):

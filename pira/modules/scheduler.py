@@ -1,3 +1,23 @@
+"""
+scheduler.py
+
+It is a module that schedulers RPi turning on and off
+
+ENV VARS:
+    - SCHEDULE_MONTHLY
+    - POWER_THRESHOLD_HALF
+    - POWER_THRESHOLD_QUART
+    - SCHEDULE_START
+    - SCHEDULE_END
+    - SCHEDULE_T_ON
+    - SCHEDULE_T_OFF
+    - SCHEDULE_MONTHx_START
+    - SCHEDULE_MONTHx_END
+    - SCHEDULE_MONTHx_T_ON
+    - SCHEDULE_MONTHx_T_OFF
+
+"""
+
 from __future__ import print_function
 
 import datetime
