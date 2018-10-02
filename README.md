@@ -111,7 +111,8 @@ The following environment variables can be used to configure the firmware:
   * `AZURE_ACCOUNT_NAME` (must have), is the name 
   * `AZURE_ACCOUNT_KEY` (must have), is the account key
   * `AZURE_CONTAINER_NAME` (default `ImageExample`), is the container name in the blob
-  * `AZURE_DELETE_IMAGES` (default `off`), if set `on` it will delete past files in the /data/camera/ folder
+  * `AZURE_DELETE_LOCAL` (default `off`), if set to `on`, it will delete past files in the /data/camera/ folder
+  * `AZURE_DELETE_CLOUD` (default `off`), if set to `on`, it will delete the whole container in cloud
 
  ### Using without Resin.io
  To use on a standard Raspbian Lite image complete the following steps:

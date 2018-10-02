@@ -39,10 +39,11 @@ class Module(object):
         self._new_files = []
         self._old_files = []
 
-        self.ACCOUNT_NAME = os.environ.get('AZURE_ACCOUNT_NAME', None)                    # get azure account name from env var
-        self.ACCOUNT_KEY = os.environ.get('AZURE_ACCOUNT_KEY', None)                       # get azure account key from env var
+        self.ACCOUNT_NAME = os.environ.get('AZURE_ACCOUNT_NAME', None)                  # get azure account name from env var
+        self.ACCOUNT_KEY = os.environ.get('AZURE_ACCOUNT_KEY', None)                    # get azure account key from env var
         self.container_name = os.environ.get('AZURE_CONTAINER_NAME', 'ImageExample')    # get container name, default is ImageExample
-        self._azure_delete = os.environ.get("AZURE_DELETE_IMAGES", 'off')
+        self._local_delete = os.environ.get('AZURE_DELETE_LOCAL', 'off')                # delete local images
+        self._azure_delete = os.environ.get('AZURE_DELETE_CLOUD', 'off')                # delete images from cloud
 
         # Check if azure push is correctly configured
         if self.ACCOUNT_NAME is None or self.ACCOUNT_KEY is None:
@@ -73,7 +74,7 @@ class Module(object):
             print("AZURE ERROR: {}".format(e))
             self._enabled = False
 
-        if self._azure_delete is "on":
+        if self._local_delete is "on":
             for the_file in os.listdir(images_path):
                 file_path = os.path.join(images_path, the_file)
                 try:
