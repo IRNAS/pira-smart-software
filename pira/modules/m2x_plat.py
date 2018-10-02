@@ -76,7 +76,6 @@ class Module(object):
         """
         #print("Updating data to M2X @ {}".format(datetime.datetime.now()))
         try:
-            value_name="heh"    # introducing a bug to see what happens
             self._device.post_updates(values = {
                 value_name : [
                     { 'timestamp': time, 'value': value_data }
