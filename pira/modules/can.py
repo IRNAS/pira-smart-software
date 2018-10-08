@@ -241,5 +241,6 @@ class Module(object):
 
     def shutdown(self, modules):
         """ Shutdown """
-        self._driver.shutdown()
+        if self._enabled:
+            self._driver.shutdown()
 
