@@ -126,7 +126,7 @@ class Boot(object):
         _resin = resin.Resin()
 
         # Testing Resin Supervisor
-        device_status = _resin.models.supervisor.get_application_info()
+        device_status = _resin.models.supervisor.get_application_info("pira-test")
         print (device_status)
 
         # TODO: Monitor status pin from BT
