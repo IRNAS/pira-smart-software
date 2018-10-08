@@ -7,6 +7,8 @@ import subprocess
 import time
 import datetime
 import traceback
+import json
+import urllib
 
 import RPi.GPIO as gpio
 import pigpio
@@ -120,6 +122,12 @@ class Boot(object):
         self.log.insert(LOG_SYSTEM, 'boot')
 
         self._update_charging()
+
+        resin = resin.Resin()
+
+        # Testing Resin Supervisor
+        device_status = resin.models.supervisor.get_application_info()
+        print (device_status)
 
         # TODO: Monitor status pin from BT
         #self.pigpio.callback(
@@ -358,6 +366,8 @@ class Boot(object):
 
     def _perform_shutdown(self):
         """Perform shutdown."""
+
+        # TODO check if resin is updating
 
         sleep_mode = os.environ.get('SLEEP_ENABLE_MODE', 'sleep')
 
