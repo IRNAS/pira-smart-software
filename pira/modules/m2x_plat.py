@@ -124,27 +124,12 @@ class Module(object):
         print("M2X Process | Inited: {}".format(self._enabled))
 
         if not self._first_run:
-            # check if we have old data to upload
-            if self._old_data:
-                print("Uploading old data...")
-                old_data_size = len(self._old_data)
-                for i in range(old_data_size-1, -1, -1):
-                    cur_el = self._old_data[i]
-                    del self._old_data[i]
-                    self.upload_data(cur_el[0], cur_el[1], cur_el[2])
-        
             # read data from can module and push it to m2x server
             if 'pira.modules.can' in modules:
                 print("Reading new data from can module...")
                 json_data = modules['pira.modules.can'].return_json_data()
                 can_data = json.loads(json_data)
                 self.process_json(can_data)
-
-            # display a message to user if uploading of some data failed and save it to disk
-            if self._old_data:
-                print("Some data has failed to upload...")
-                with open("upload_failed_data.txt", "wb") as fp:
-                    pickle.dump(self._old_data, fp)
                     
         # if first run, read can module and generate needed streams
         if self._first_run and 'pira.modules.can' in modules:
@@ -157,6 +142,22 @@ class Module(object):
                         value_name = str(i) + "_" + str(j) + "_" + str(k)
                         stream_list.append(value_name)
             self.generate_streams(stream_list)
+            self.process_json(can_data)
+        
+        # check if we have old data to upload
+        if self._old_data:
+            print("Uploading old data...")
+            old_data_size = len(self._old_data)
+            for i in range(old_data_size-1, -1, -1):
+                cur_el = self._old_data[i]
+                del self._old_data[i]
+                self.upload_data(cur_el[0], cur_el[1], cur_el[2])
+
+        # if there is still some old data, display a message to user and save it to disk
+        if self._old_data:
+            print("Some data has failed to upload...")
+            with open("upload_failed_data.txt", "wb") as fp:
+                pickle.dump(self._old_data, fp)
     
 
     def shutdown(self, modules):
