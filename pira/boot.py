@@ -123,10 +123,10 @@ class Boot(object):
 
         self._update_charging()
 
-        resin = resin.Resin()
+        _resin = resin.Resin()
 
         # Testing Resin Supervisor
-        device_status = resin.models.supervisor.get_application_info()
+        device_status = _resin.models.supervisor.get_application_info()
         print (device_status)
 
         # TODO: Monitor status pin from BT
