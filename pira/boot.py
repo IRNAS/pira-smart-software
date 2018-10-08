@@ -364,7 +364,7 @@ class Boot(object):
     def _perform_shutdown(self):
         """Perform shutdown."""
 
-        # check if device is ready to shutdown (status of device is Idle)
+        # check if device is ready to shutdown: status of device is Idle
         device_status = self._resin.models.supervisor.get_device_state()
         if device_status['status'] != 'Idle':
             print ("Device not ready to shutdown, its status is : " + str(device_status['status']))
