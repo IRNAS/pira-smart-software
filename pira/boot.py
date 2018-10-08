@@ -126,14 +126,6 @@ class Boot(object):
         # Initialize Resin
         self._resin = resin.Resin()
 
-        # check if resin is updating - TESTING
-        device_status = self._resin.models.supervisor.get_device_state()
-        
-        if device_status['update_pending']:
-            print ("Update pending...")
-
-        print ("Device status: " + str(device_status['status']))
-
         # TODO: Monitor status pin from BT
         #self.pigpio.callback(
         #    devices.GPIO_TIMER_STATUS_PIN,
@@ -372,7 +364,11 @@ class Boot(object):
     def _perform_shutdown(self):
         """Perform shutdown."""
 
-         # check if resin is updating TODO
+        # check if device is ready to shutdown (status of device is Idle)
+        device_status = self._resin.models.supervisor.get_device_state()
+        if device_status['status'] != 'Idle':
+            print ("Device not ready to shutdown, its status is : " + str(device_status['status']))
+            return
 
         sleep_mode = os.environ.get('SLEEP_ENABLE_MODE', 'sleep')
 
