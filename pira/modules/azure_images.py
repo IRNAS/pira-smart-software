@@ -107,7 +107,7 @@ class Module(object):
             file.close()
 
             # debug
-            print("Uplading to storage file: {} {}".format(_path, filename))
+            print("Uploading to storage file: {} {}".format(_path, filename))
 
             # uploading it
             if self.block_blob_service.create_blob_from_path(self.container_name, filename, _path) is None:
