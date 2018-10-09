@@ -14,7 +14,6 @@ import RPi.GPIO as gpio
 import pigpio
 
 # Optional Resin support.
-#print("Resin is commented out")
 try:
     print("Importing resin...")
     import resin
