@@ -144,7 +144,6 @@ class Module(object):
         try:     # Get file names from server
             generator = self.block_blob_service.list_blobs(self.container_name)
             for blob in generator:
-                print("Blob name: " + blob.name)
                 self._old_files.append(blob.name)
             # Check for local files and upload ones not on server
             self._new_files = [f for f in listdir(images_path) if isfile(join(images_path, f))]
