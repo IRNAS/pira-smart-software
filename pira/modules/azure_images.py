@@ -143,7 +143,7 @@ class Module(object):
 
         try:
             # Get file names from server - to je treba v bootu naredit
-            generator = block_blob_service.list_blobs(self.container_name)
+            generator = self.block_blob_service.list_blobs(self.container_name)
             for blob in generator:
                 print("Blob name: " + blob.name)
 
