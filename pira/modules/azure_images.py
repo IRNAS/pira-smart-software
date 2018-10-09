@@ -141,13 +141,12 @@ class Module(object):
             print("WARNING: Azure is not correctly configured, skipping.")
             return
 
-        try:
-            # Get file names from server - to je treba v bootu naredit
+        try:     # Get file names from server
             generator = self.block_blob_service.list_blobs(self.container_name)
             for blob in generator:
                 print("Blob name: " + blob.name)
                 self._old_files.append(blob.name)
-
+            # Check for local files and upload ones not on server
             self._new_files = [f for f in listdir(images_path) if isfile(join(images_path, f))]
             difference = list(set(self._new_files) - set(self._old_files))
             if difference:
@@ -156,7 +155,6 @@ class Module(object):
             for item in difference:
                 full_path_item = join(images_path, item)
                 self.upload_via_path(full_path_item)
-            self._old_files = self._new_files
           
         except Exception as e:
             print("AZURE ERROR: {}".format(e))
