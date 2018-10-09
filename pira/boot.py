@@ -16,7 +16,7 @@ import pigpio
 # Optional Resin support.
 try:
     print("Importing resin...")
-    import resin
+    from resin import Resin
     RESIN_ENABLED = True
 except ImportError:
     RESIN_ENABLED = False
@@ -123,7 +123,7 @@ class Boot(object):
         self._update_charging()
 
         # Initialize Resin
-        self._resin = resin.Resin()
+        self._resin = Resin()
 
         # TODO: Monitor status pin from BT
         #self.pigpio.callback(
