@@ -142,11 +142,18 @@ class Module(object):
             return
 
         try:
+            # Get file names from server - to je treba v bootu naredit
+            generator = block_blob_service.list_blobs(self.container_name)
+            for blob in generator:
+                print("Blob name: " + blob.name)
+
+            #self._old_files.append(blob.name)
+
             self._new_files = [f for f in listdir(images_path) if isfile(join(images_path, f))]
-           
             difference = list(set(self._new_files) - set(self._old_files))
-            print("Azure: New files to upload: ")
-            print(difference)
+            if difference:
+                print("Azure: New files to upload: ")
+                print(difference)
             for item in difference:
                 full_path_item = join(images_path, item)
                 self.upload_via_path(full_path_item)
@@ -154,7 +161,6 @@ class Module(object):
           
         except Exception as e:
             print("AZURE ERROR: {}".format(e))
-
 
     def shutdown(self, modules):
         """
