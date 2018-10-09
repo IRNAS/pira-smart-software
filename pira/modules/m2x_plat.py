@@ -30,12 +30,12 @@ class Module(object):
         self._old_data = []
         
         # get these values under API Keys 
-        self.M2X_KEY = os.environ.get('M2X_KEY', None) # get m2x device key
-        self.M2X_DEVICE_ID = os.environ.get('M2X_DEVICE_ID', None) # get m2x device id
+        self.M2X_KEY = os.environ.get('M2X_KEY', "") # get m2x device key
+        self.M2X_DEVICE_ID = os.environ.get('M2X_DEVICE_ID', "") # get m2x device id
         self.M2X_NAME = os.environ.get('M2X_NAME', 'DEMO_PI') # get m2x device name (default DEMO_PI)
 
-        # Check if nodewatcher push is correctly configured
-        if self.M2X_KEY is None or self.M2X_DEVICE_ID is None:
+        # Check if m2x push is correctly configured
+        if len(self.M2X_KEY) != 32 or len(self.M2X_DEVICE_ID) != 32:
             print("M2X integration not configured, skipping")
             self._enabled = False
             return
