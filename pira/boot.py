@@ -364,7 +364,7 @@ class Boot(object):
         """Perform shutdown."""
         # check if device is ready to shutdown, status of device is Idle and no update is pending TODO
         device_status = self._resin.models.supervisor.get_device_state()
-        print (device_status)
+        #print (device_status)
         if device_status['status'] != 'Idle' or device_status['update_pending']:
             print ("Device not ready to shutdown, its status is : " + str(device_status['status']))
             return
