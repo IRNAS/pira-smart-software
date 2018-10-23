@@ -13,17 +13,14 @@ import os
 import time
 import can
 
-
-
 class MCP2515():
     
     def __init__(self):
         """
         Inits MCP2515 at a baudrate and sets up the bus and the link
         """
-        self._bitrate = os.environ.get('CAN_SPEED', '500000')
+        self._bitrate = os.environ.get('CAN_SPEED', '125000')
         self._enabled = False
-        
         # DEBUG
         #os.system("ifconfig")
         
@@ -48,19 +45,30 @@ class MCP2515():
     def get_enabled(self):
         """ check if enabled """
         return self._enabled
+    
+    def get_raw_data(self):
+        self._message = self._bus.recv(timeout=1.0)
+        if self._message is not None:
+            return self._message
+        return None
+
     def get_data(self):
         """ waits until nothing received """
-        self._message = self._bus.recv()
+        self._message = self._bus.recv(timeout=1.0)
         if self._message is not None:
             c = '{0:f} {1:x} {2:x} '.format(self._message.timestamp, self._message.arbitration_id, self._message.dlc)
             s = ''
             for i in range(self._message.dlc):
                 s += '{0:x} '.format(self._message.data[i])
             
-            print(' {}'.format(c+s))
+            #print(' {}'.format(c+s))
             return self._message
         
         return None
+
+    def flush_buffer(self):
+        """ Discard messages still queued in output buffer """
+        self._bus.flush_tx_buffer()
 
     def send_data(self, ID, DATA, EXTID):
         """ sends data by ID, DATA and if y/n EXTID """
@@ -69,7 +77,7 @@ class MCP2515():
         self._EXTID = EXTID
         self._message = can.Message(arbitration_id=self._ID, data=self._DATA, extended_id=self._EXTID)
         self._bus.send(self._message)
-        print("Sent to {}, data: {}".format(self._ID, self._DATA))
+        #print("CAN: Sent to {}, data: {}".format(hex(self._ID), self._DATA))
 
     def format_data_timestamp(self, msg):
         """ only get timestamp from msg """

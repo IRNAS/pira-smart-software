@@ -1,3 +1,23 @@
+"""
+scheduler.py
+
+It is a module that schedulers RPi turning on and off
+
+ENV VARS:
+    - SCHEDULE_MONTHLY
+    - POWER_THRESHOLD_HALF
+    - POWER_THRESHOLD_QUART
+    - SCHEDULE_START
+    - SCHEDULE_END
+    - SCHEDULE_T_ON
+    - SCHEDULE_T_OFF
+    - SCHEDULE_MONTHx_START
+    - SCHEDULE_MONTHx_END
+    - SCHEDULE_MONTHx_T_ON
+    - SCHEDULE_MONTHx_T_OFF
+
+"""
+
 from __future__ import print_function
 
 import datetime
@@ -15,11 +35,14 @@ class Module(object):
         self._boot = boot
         self._ready = False
 
+        if not self._boot.pira_ok:     # exit module if pira is not connected
+            print("Scheduler: ERROR - Pira is not connected. Exiting...")
+            return
+
         # Initialize schedule.
         if os.environ.get('SCHEDULE_MONTHLY', '0') == '1':
             # Month-dependent schedule.
             month = datetime.date.today().month
-
             schedule_start = self._parse_time(os.environ.get('SCHEDULE_MONTH{}_START'.format(month), '08:00'))
             schedule_end = self._parse_time(os.environ.get('SCHEDULE_MONTH{}_END'.format(month), '18:00'))
             schedule_t_off = self._parse_duration(os.environ.get('SCHEDULE_MONTH{}_T_OFF'.format(month), '35'))
@@ -44,6 +67,9 @@ class Module(object):
         self._on_duration = schedule_t_on
         self._off_duration = schedule_t_off
         self._ready = True
+
+        if schedule_t_on.seconds > self._boot.get_pira_on_timer_set():
+            print("WARNING: p (safety on period) will shutdown Pi before scheduler on duration expires.")
 
     def _parse_time(self, time):
         """Parse time string (HH:MM)."""
@@ -85,13 +111,16 @@ class Module(object):
         if not self._ready:
             return
 
+        if not self._boot.pira_ok:     # exit module if pira is not connected
+            print("Scheduler: ERROR - Pira is not connected. Exiting...")
+            return
+
         """Shutdown is triggered in two ways:
         1) Pira smart on timer expires, safeguarding if pi crashes or similar
         2) Pi completes the operation and goes to sleep
         """
 
         remaining_time_on = datetime.datetime.now() - self._started
-
         print('Scheduler: remaining on time  : {} s'.format(datetime.timedelta.total_seconds(self._on_duration-remaining_time_on)))
 
         # Check if we have been online too long and shutdown.
@@ -99,32 +128,33 @@ class Module(object):
             print("Scheduler: Time to sleep.")
             self._boot.shutdown = True
 
-        # Check pira on timer is about to expire
-        if self._boot.get_pira_on_timer() < 0 and not self._boot.get_pira_on_timer() == None :
-            print("Scheduler: Pira timer about to expire, sleep.")
+        # Check pira on timer is about to expire - o variable
+        if self._boot.get_pira_on_timer_set() < 30 and not self._boot.get_pira_on_timer_set() == None :
+            print("Scheduler: WARNING - Pira safety on timer about to expire.")
             self._boot.shutdown = True
             #here we could reset it as well
 
     def shutdown(self, modules):
         """Compute next alarm before shutdown."""
-        if not self._ready:
+        if not self._ready:  
             return
 
-        # Check voltage to configure boot interval
-        voltage = self._boot.get_voltage()
+        if not self._boot.pira_ok:     # exit module if pira is not connected
+            print("Scheduler: ERROR - Pira is not connected. Exiting...")
+            return
 
-        if not voltage > os.environ.get('POWER_THRESHOLD_HALF', '0'):
-            # Lower voltage then half threshold, doubling the sleep length
-            off_duration = self._off_duration * 2
-            print("Low voltage warning, doubling sleep duration")
-        elif not voltage > os.environ.get('POWER_THRESHOLD_QUART', '0'):
-            # Less voltage then quarter threshold, quadrupling the sleep length
+        # Checking voltage to configure boot interval
+        if self._boot.get_voltage() < float(os.environ.get('POWER_THRESHOLD_QUART', '0')): 
+            # Lower voltage then quarter threshold, quadrupling the sleep length
             off_duration = self._off_duration * 4
             print("Low voltage warning, quadrupling sleep duration")
+        elif self._boot.get_voltage() < float(os.environ.get('POWER_THRESHOLD_HALF', '0')):
+            # Less voltage then half threshold, doubling the sleep length
+            off_duration = self._off_duration * 2
+            print("Low voltage warning, doubling sleep duration")
         else:
             # Sufficient power, continue as planned
             off_duration = self._off_duration
-
 
         current_time = datetime.datetime.now()
         wakeup_time = None
@@ -142,7 +172,15 @@ class Module(object):
                 wakeup_time = current_time + off_duration
                 #print("START > END: wakeup {}.".format(wakeup_time))
 
-        wakeup_in_seconds = datetime.timedelta.total_seconds(wakeup_time - current_time)
 
-        print("Scheduling next wakeup at {} / in {} seconds.".format(wakeup_time.isoformat(),wakeup_in_seconds))
+        wakeup_in_seconds = datetime.timedelta.total_seconds(wakeup_time - current_time)
+        reboot_time = datetime.timedelta(seconds=int(self._boot.get_pira_reboot_timer()))
+        display_next_wakeup = wakeup_time + reboot_time
+
+        if wakeup_in_seconds > self._boot.get_pira_sleep_timer():
+            print("Warning: Safety off period will expire and wake up Pi before next scheduled wakeup.")
+        
+        #Displayed value is: wakeup_time + reboot_time
+        print("Scheduling next wakeup at {} / in {} seconds.".format((str(display_next_wakeup)[:-7]), wakeup_in_seconds + self._boot.get_pira_reboot_timer()))
         self._boot.pirasmart.set_wakeup_time(wakeup_in_seconds)
+

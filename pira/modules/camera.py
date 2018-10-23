@@ -1,12 +1,30 @@
+"""
+camera.py
+
+It is a module that takes photos and records video
+
+ENV VARS:
+    - CAMERA_RESOLUTION
+    - CAMERA_VIDEO_DURATION
+    - CAMERA_MIN_LIGHT_LEVEL
+    - CAMERA_FAIL_SHUTDOWN
+    - CAMERA_SNAPSHOT_INTERVAL
+    - CAMERA_AZURE
+"""
+
 from __future__ import print_function
 
 import datetime
 import io
 import os
 
+from ..hardware.brightpilib import *
 import numpy as np
+#import statistics as np     # statistics module used instead of numpy
+import array
 import picamera
 import picamera.array
+
 # Image storage location.
 CAMERA_STORAGE_PATH = '/data/camera'
 
@@ -17,11 +35,12 @@ class Module(object):
         self._camera = None
         self._recording_start = None
         self._last_snapshot = None
+        self._brightPi = None
 
         self.resolution = os.environ.get('CAMERA_RESOLUTION', '1280x720')
-        self.camera_shutdown = os.environ.get('CAMERA_SHUTDOWN', '0')
+        self.camera_shutdown = os.environ.get('CAMERA_FAIL_SHUTDOWN', '0')
         self.video_duration = os.environ.get('CAMERA_VIDEO_DURATION', 'until-sleep')
-        self.snapshot_interval_conf = os.environ.get('SNAPSHOT_INTERVAL', 'off')
+        self.snapshot_interval_conf = os.environ.get('CAMERA_SNAPSHOT_INTERVAL', 'off')
         self.integrate_azure=os.environ.get('CAMERA_AZURE', 'off')
 
         try:
@@ -69,6 +88,13 @@ class Module(object):
                 self._boot.shutdown()
                 print("Requesting shutdown because of camera initialization fail.")
             return
+        
+        # Create the flash object
+        try:
+            self._brightPi = BrightPi()
+        except:
+            print("ERROR: Failed to initialize flash.")
+            self._brightPi = None
 
         # Check for free space
         if free_space < 1:
@@ -156,11 +182,13 @@ class Module(object):
         image = None
         with picamera.array.PiRGBArray(self._camera) as output:
             self._camera.capture(output, format='rgb')
-            image = output.array.astype(np.float32)
+            #image = array.array('f', output)
+            image = output.array.astype(np.float32) # numpy
 
         # Compute light level.
         light_level = 0.2126 * image[..., 0] + 0.7152 * image[..., 1] + 0.0722 * image[..., 2]
-        light_level = np.average(light_level)
+        #light_level = np.mean(light_level)
+        light_level = np.average(light_level) # numpy
 
         self.light_level = light_level
 
@@ -188,11 +216,22 @@ class Module(object):
                     )
 
             )
-
+            # Turn on flash
+            if self._brightPi:
+                self._brightPi.reset()
+                self._brightPi.set_led_on_off(LED_WHITE, ON)
+                self._brightPi.set_led_on_off(LED_IR, ON)
+            # Take screenshot
             self._camera.capture(
                 self._new_path,
                 format='jpeg'
             )
+            # Turn off flash
+            if self._brightPi:
+                self._brightPi.reset()
+                self._brightPi.set_led_on_off(LED_WHITE, OFF)
+                self._brightPi.set_led_on_off(LED_IR, OFF)
+
             print("Snapshot taken at light level:", self.light_level)
             if self.integrate_azure is "on":
                 return self._new_path

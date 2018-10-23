@@ -39,10 +39,11 @@ class Module(object):
         self._new_files = []
         self._old_files = []
 
-        self.ACCOUNT_NAME = os.environ.get('AZURE_ACCOUNT_NAME', None)                    # get azure account name from env var
-        self.ACCOUNT_KEY = os.environ.get('AZURE_ACCOUNT_KEY', None)                       # get azure account key from env var
+        self.ACCOUNT_NAME = os.environ.get('AZURE_ACCOUNT_NAME', None)                  # get azure account name from env var
+        self.ACCOUNT_KEY = os.environ.get('AZURE_ACCOUNT_KEY', None)                    # get azure account key from env var
         self.container_name = os.environ.get('AZURE_CONTAINER_NAME', 'ImageExample')    # get container name, default is ImageExample
-        self._azure_delete = os.environ.get("AZURE_DELETE_IMAGES", 'off')
+        self._local_delete = os.environ.get('AZURE_DELETE_LOCAL', 'off')                # delete local images
+        self._azure_delete = os.environ.get('AZURE_DELETE_CLOUD', 'off')                # delete images from cloud
 
         # Check if azure push is correctly configured
         if self.ACCOUNT_NAME is None or self.ACCOUNT_KEY is None:
@@ -64,7 +65,7 @@ class Module(object):
 
             # Set the permission so the blobs are public.
             if self.block_blob_service.set_container_acl(self.container_name, public_access=PublicAccess.Container) is None:
-                print("Soemthing went from when setting the container")
+                print("Something went from when setting the container")
                 return
 
             # it is set to True -> all okay
@@ -73,7 +74,7 @@ class Module(object):
             print("AZURE ERROR: {}".format(e))
             self._enabled = False
 
-        if self._azure_delete is "on":
+        if self._local_delete is "on":
             for the_file in os.listdir(images_path):
                 file_path = os.path.join(images_path, the_file)
                 try:
@@ -106,7 +107,7 @@ class Module(object):
             file.close()
 
             # debug
-            print("Uplading to storage file: {} {}".format(_path, filename))
+            print("Uploading to storage file: {} {}".format(_path, filename))
 
             # uploading it
             if self.block_blob_service.create_blob_from_path(self.container_name, filename, _path) is None:
@@ -140,23 +141,27 @@ class Module(object):
             print("WARNING: Azure is not correctly configured, skipping.")
             return
 
-        try:
+        try:     # Get file names from server
+            generator = self.block_blob_service.list_blobs(self.container_name)
+            for blob in generator:
+                self._old_files.append(blob.name)
+            # Check for local files and upload ones not on server
             self._new_files = [f for f in listdir(images_path) if isfile(join(images_path, f))]
-           
             difference = list(set(self._new_files) - set(self._old_files))
-            print(difference)
+            if difference:
+                print("Azure: New files to upload: ")
+                print(difference)
             for item in difference:
                 full_path_item = join(images_path, item)
                 self.upload_via_path(full_path_item)
-            self._old_files = self._new_files
           
         except Exception as e:
             print("AZURE ERROR: {}".format(e))
-
 
     def shutdown(self, modules):
         """
         Shutdown (can delete the container if needed)
         """
-        self.delete_via_container(self.container_name)
+        if self._azure_delete is "on":
+            self.delete_via_container(self.container_name)
         pass

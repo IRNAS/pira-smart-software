@@ -7,16 +7,20 @@ import subprocess
 import time
 import datetime
 import traceback
+import json
+import urllib
 
 import RPi.GPIO as gpio
 import pigpio
 
 # Optional Resin support.
 try:
-    import resin
+    print("Importing resin...")
+    from resin import Resin
     RESIN_ENABLED = True
 except ImportError:
     RESIN_ENABLED = False
+    print("Importing resin failed.")
 
 from .hardware import devices, pirasmartuart
 from .state import State
@@ -28,23 +32,23 @@ class Boot(object):
 
     # Modules that should be loaded.
     enabled_modules = [
-        'pira.modules.scheduler',
+        # Device management modules
+        #'pira.modules.scheduler',
 
         # Sensor modules.
         # 'pira.modules.ultrasonic',
         #'pira.modules.camera',
+        'pira.modules.can',
 
         # Reporting modules should come after all sensor modules, so they can get
         # the latest values.
-        #'pira.modules.lora',
+        # 'pira.modules.lora',
         # 'pira.modules.rockblock',
         # 'pira.modules.nodewatcher',
         'pira.modules.debug',
         #'pira.modules.webserver',
-        #'pira.modules.m2x_plat',
-        #'pira.modules.can',
-        #'pira.modules.azure_images',
-
+        'pira.modules.m2x_plat'
+        #'pira.modules.azure_images'
     ]
 
     def __init__(self):
@@ -76,7 +80,6 @@ class Boot(object):
         #self.pigpio.set_mode(devices.GPIO_LORA_DIO_2_PIN, pigpio.INPUT)
 
         #self.pigpio.set_mode(devices.GPIO_ROCKBLOCK_POWER_PIN, pigpio.OUTPUT)
-
 
     def setup_devices(self):
         """Initialize device drivers."""
@@ -119,6 +122,9 @@ class Boot(object):
 
         self._update_charging()
 
+        # Initialize Resin
+        self._resin = Resin()
+
         # TODO: Monitor status pin from BT
         #self.pigpio.callback(
         #    devices.GPIO_TIMER_STATUS_PIN,
@@ -127,7 +133,19 @@ class Boot(object):
         #)
         self.process()
 
+    def parse_environ(self, env):
+        """Parse environment variable"""
+        try:
+            value = float(env)
+            if (value <= 0.0 or value >= 4294967295.0):
+                return None
+            else:
+                return value
+        except:
+            return None
+
     def process(self):
+        
         self.log.insert(LOG_SYSTEM, 'module_init')
 
         #Determine clock status and perform sync
@@ -135,10 +153,14 @@ class Boot(object):
         # Simplest logic is to take the latest of the system and RTC time
         # This assumes the clock that is behind is always wrong
         # Get latest values from pira smart
-        self.pirasmart.read()
-        rtc_time = self.get_time()
+        
+        self.pira_ok = self.pirasmart.read()
+        if self.pira_ok:
+            rtc_time = self.get_time()
+        else:
+            rtc_time = datetime.datetime.now()
+        
         system_time = datetime.datetime.now()
-
 
         if rtc_time > system_time:
             #write RTC to system
@@ -155,6 +177,29 @@ class Boot(object):
         else:
             #if equal no need to do anything
             pass
+
+        if self.pira_ok:     # If defined set new Pira BLE values
+            pira_on_time = self.parse_environ(os.environ.get('PIRA_POWER', None))
+            pira_off_time = self.parse_environ(os.environ.get('PIRA_SLEEP', None))
+            pira_reboot_time = self.parse_environ(os.environ.get('PIRA_REBOOT', None))
+            pira_wakeup_time = self.parse_environ(os.environ.get('PIRA_WAKEUP', None))
+        
+            if (pira_on_time is not None):
+                print("PIRA BLE: Setting new safety on (p) value.")
+                self.pirasmart.set_on_time(pira_on_time)
+                time.sleep(0.1)
+            if (pira_off_time is not None):
+                print("PIRA BLE: Setting new safety off (s) value.")
+                self.pirasmart.set_off_time(pira_off_time)
+                time.sleep(0.1)
+            if (pira_reboot_time is not None):
+                print("PIRA BLE: Setting new reboot (r) value.")
+                self.pirasmart.set_reboot_time(pira_reboot_time)
+                time.sleep(0.1)
+            if (pira_wakeup_time is not None):
+                print("PIRA BLE: Setting new wakeup (w) value.")
+                self.pirasmart.set_wakeup_time(pira_wakeup_time)
+                time.sleep(0.1)
 
         # Override module list if configured.
         override_modules = os.environ.get('MODULES', None)
@@ -187,21 +232,13 @@ class Boot(object):
 
         self.log.insert(LOG_SYSTEM, 'main_loop')
 
-        #configure pira smart parameters / overrides BT settings
-        self.pirasmart.set_on_time(1200)
-        time.sleep(0.1)
-        self.pirasmart.set_off_time(60*60*4)
-        time.sleep(0.1)
-        self.pirasmart.set_reboot_time(120)
-        time.sleep(0.1)
-        self.pirasmart.set_wakeup_time(60)
 
         # Enter main loop.
         print("Starting processing loop.")
         while True:
 
             # Get latest values from pira smart
-            self.pirasmart.read()
+            self.pira_ok = self.pirasmart.read()
             # Shutdown hold is reset in every loop
             self.shutdown_hold = None
 
@@ -217,10 +254,11 @@ class Boot(object):
                     print("Error while running processing in module '{}'.".format(name))
                     traceback.print_exc()
 
-            # Check if battery voltage is below threshold and shutdown
-            if ((self.get_voltage() is not None) and (self.get_voltage() <= float(os.environ.get('SHUTDOWN_VOLTAGE', '1.5')))):
-                print("Voltage is under the threshold, need to shutdown.")
-                self.shutdown = True
+            # If pira is connected, check if battery voltage is below threshold and shutdown
+            if self.pira_ok:
+                if ((self.get_voltage() is not None) and (self.get_voltage() <= float(os.environ.get('SHUTDOWN_VOLTAGE', '2.6')))):
+                    print("Voltage is under the threshold, need to shutdown.")
+                    self.shutdown = True
 
             # Save state.
             try:
@@ -228,45 +266,60 @@ class Boot(object):
             except:
                 print("Error while saving state.")
                 traceback.print_exc()
-
-            #if self.shutdown:
+            
             # Perform shutdown when requested. This will either request the Resin
             # supervisor to shut down and block forever or the shutdown request will
             # be ignored and we will continue processing.
-            self.shutdown = False
-            #self._perform_shutdown()
-
-            #time.sleep(float(os.environ.get('LOOP_DELAY', "10")))
+            if self.shutdown:
+                self.shutdown = False
+                self._perform_shutdown()
+            
+            time.sleep(float(os.environ.get('LOOP_DELAY', "60")))
 
     def _update_charging(self):
-        """Update charging status."""
+        """Get charging status."""
         # TODO
         self._charging_status.append(False)
 
-    def get_voltage(self):
-        """Update voltage """
+    def get_voltage(self):  # b variable
+        """Get voltage """
         voltage = self.pirasmart.pira_voltage
         return voltage
 
     def get_temperature(self):
-        """Update temeprature """
+        """Get temeprature """
         temperature = None
         return temperature
 
-    def get_time(self):
-        """Update time """
+    def get_time(self): # t variable
+        """Get time """
         t_utc = datetime.datetime.utcfromtimestamp(self.pirasmart.pira_time)
         return t_utc
 
-    def get_pira_on_timer(self):
-        """Update pira on timer """
+    def get_pira_on_timer(self):    # p variable
+        """Get pira on timer """
         timer_pira = self.pirasmart.pira_on_timer_get
         return timer_pira
 
-    def get_pira_on_timer_set(self):
-        """Update pira on timer setting """
+    def get_pira_on_timer_set(self):    # o variable
+        """Get pira overwiev - status value """
         timer_pira = self.pirasmart.pira_on_timer_set
         return timer_pira
+
+    def get_pira_sleep_timer(self): # s variable
+        """Get pira sleep timer"""
+        sleep_timer = self.pirasmart.pira_sleep
+        return sleep_timer
+
+    def get_pira_reboot_timer(self):    # r variable
+        """Get pira reboot period duration"""
+        reboot_timer = self.pirasmart.pira_reboot
+        return reboot_timer
+    
+    def get_pira_wakeup_timer(self):    # w variable
+        """Get pira next scheduled wakeup  """
+        wakeup_timer = self.pirasmart.pira_next_wakeup_get
+        return wakeup_timer
 
     @property
     def is_charging(self):
@@ -309,6 +362,12 @@ class Boot(object):
 
     def _perform_shutdown(self):
         """Perform shutdown."""
+        # check if device is maybe not ready to shutdown (E.g. installing updates)
+        device_status = self._resin.models.supervisor.get_device_state()
+        #print (device_status)
+        if device_status['status'] != 'Idle' or device_status['update_pending']:
+            print ("Device not ready to shutdown...")
+            return
 
         sleep_mode = os.environ.get('SLEEP_ENABLE_MODE', 'sleep')
 
@@ -367,31 +426,17 @@ class Boot(object):
             print("Error while forcing filesystem sync.")
             traceback.print_exc()
 
-        self.shutdown_strategy = os.environ.get('SHUTDOWN_STRATEGY', 'shutdown')
+        # TODO: handle error curl: (7) Failed to connect to 127.0.0.1 port 48484: Connection refused RESIN ERROR
 
-        # Configurable shutdown strategy, shutdown as an option, reboot as default
-        # TODO: handle error curl: (7) Failed to connect to 127.0.0.1 port 48484: Connection refused
-
-        if self.shutdown_strategy == 'shutdown':
-            # Turn off the pira status pin then shutdown
-            print('Shutting down as scheduled with shutdown.')
-            self.pirasmart.set_reboot_time(30)
-            self.pigpio.write(devices.GPIO_PIRA_STATUS_PIN, gpio.LOW)
-            if RESIN_ENABLED:
-                subprocess.call(["/usr/src/app/scripts/resin-shutdown.sh"])
-            else:
-                subprocess.Popen(["/sbin/shutdown", "--poweroff", "now"])
+        # Turn off the pira status pin then shutdown
+        print('Shutting down as scheduled with shutdown.')
+        self.pigpio.write(devices.GPIO_PIRA_STATUS_PIN, gpio.LOW)
+        if RESIN_ENABLED:
+            subprocess.call(["/usr/src/app/scripts/resin-shutdown.sh"])
         else:
-            # Turn off the pira status pin then reboot
-            print('Shutting down as scheduled with reboot.')
-            self.pirasmart.set_reboot_time(120)
-            self.pigpio.write(devices.GPIO_PIRA_STATUS_PIN, gpio.LOW)
-
-            if RESIN_ENABLED:
-                subprocess.call(["/usr/src/app/scripts/resin-reboot.sh"])
-            else:
-                subprocess.Popen(["/sbin/shutdown", "--reboot", "now"])
-
+            subprocess.Popen(["/sbin/shutdown", "--poweroff", "now"])
+        
         # Block.
         while True:
             time.sleep(1)
+
