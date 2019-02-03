@@ -45,7 +45,7 @@ class Module(object):
         try:
             self._base_temp = int(base_temp)
         except:
-            self._base_temp = 50    
+            self._base_temp = 50
 
         # Ensure storage location for calculated file exists.
         try:
@@ -67,7 +67,7 @@ class Module(object):
         # prepare dictionaries of raw and calculated data
         self._raw_data = {}
         self._calculated_data = {}
-        
+
         # prepare list of all csv columns (all possible sensors)
         self._csv_columns = []
         self._csv_columns.append('Timestamp (mmddyyyy-hhmm)')
@@ -85,8 +85,8 @@ class Module(object):
         self._enabled = True
 
     def process_data(self):
-        """ 
-        Processes self._raw_data into hourly lists per value 
+        """
+        Processes self._raw_data into hourly lists per value
         Result is dict self._calculated_data - key: sensor_name, value: dict  (hour_timestamp,avg_value)
         """
         try:
@@ -118,11 +118,11 @@ class Module(object):
                         hour_list.append(self._raw_data[value_name][item])
                     hour_timestamp = max_time.replace(minute=0, second=0, microsecond=0)
                     self.process_hourly_data(value_name, hour_list, hour_timestamp)
-        
+
         except Exception as e:
             print("Processing module error: raw data - {}".format(e))
             #print("Processing module: error when processing raw data!")
-        
+
 
     def process_hourly_data(self, value_name, data, timestamp):
         """
@@ -147,7 +147,7 @@ class Module(object):
             res_min = config_vars['min']
             res_max = config_vars['max']
             for value in data:
-                result = (value + x) * y 
+                result = (value + x) * y
                 after_equ_data.append(result)
 
         # Rain
@@ -160,7 +160,7 @@ class Module(object):
             res_min = config_vars['min']
             res_max = config_vars['max']
             for value in data:
-                result = (value + x) * y 
+                result = (value + x) * y
                 after_equ_data.append(result)
 
         # Wind
@@ -202,7 +202,7 @@ class Module(object):
             else:
                 # if this is the first sensor from the pair - save it to temporary dict
                 self._temp_lux[value_name] = data
-        
+
         # Lux middle 1 - TODO fix calculation
         if value_name == "2_2_1" or value_name == "2_2_2":
              # if this is the second sensor from the pair - perform calculations
@@ -278,7 +278,7 @@ class Module(object):
                 # if this is the first sensor from the pair - save it to temporary list
                 self._temp_lux[value_name] = data
 
-        # CO2       
+        # CO2
         if value_name == "1_6_0":
             calculated_name = self._config_file['co2']['name']
             unit = self._config_file['co2']['unit']
@@ -290,7 +290,7 @@ class Module(object):
             for value in data:
                 result = (value + x) * y
                 after_equ_data.append(result)
-        
+
         # Humidity top
         if value_name == "1_3_2":
             calculated_name = self._config_file['hum_top']['name']
@@ -348,7 +348,7 @@ class Module(object):
                 after_equ_data.append(result)
 
         # Temperature top
-        if value_name == "1_3_1":    
+        if value_name == "1_3_1":
             calculated_name = self._config_file['temp_top']['name']
             unit = self._config_file['temp_top']['unit']
             config_vars = self._config_file['temp_top']['vars']
@@ -359,11 +359,11 @@ class Module(object):
             for value in data:
                 new_val = value / 100
                 result = (new_val + x) * y
-                result = (result * 9 / 5) + 32 
+                result = (result * 9 / 5) + 32
                 after_equ_data.append(result)
-        
+
         # Temperature middle 1
-        if value_name == "2_3_1":    
+        if value_name == "2_3_1":
             calculated_name = self._config_file['temp_mid1']['name']
             unit = self._config_file['temp_mid1']['unit']
             config_vars = self._config_file['temp_mid1']['vars']
@@ -374,11 +374,11 @@ class Module(object):
             for value in data:
                 new_val = value / 100
                 result = (new_val + x) * y
-                result = (result * 9 / 5) + 32 
+                result = (result * 9 / 5) + 32
                 after_equ_data.append(result)
 
         # Temperature middle 2
-        if value_name == "3_3_1":    
+        if value_name == "3_3_1":
             calculated_name = self._config_file['temp_mid2']['name']
             unit = self._config_file['temp_mid2']['unit']
             config_vars = self._config_file['temp_mid2']['vars']
@@ -389,11 +389,11 @@ class Module(object):
             for value in data:
                 new_val = value / 100
                 result = (new_val + x) * y
-                result = (result * 9 / 5) + 32 
+                result = (result * 9 / 5) + 32
                 after_equ_data.append(result)
 
         # Temperature bottom
-        if value_name == "4_3_1":    
+        if value_name == "4_3_1":
             calculated_name = self._config_file['temp_bot']['name']
             unit = self._config_file['temp_bot']['unit']
             config_vars = self._config_file['temp_bot']['vars']
@@ -404,11 +404,11 @@ class Module(object):
             for value in data:
                 result = value / 100
                 result = (result + x) * y
-                result = (result * 9 / 5) + 32 
+                result = (result * 9 / 5) + 32
                 after_equ_data.append(result)
 
         # Air pressure top
-        if value_name == "1_3_4":    
+        if value_name == "1_3_4":
             calculated_name = self._config_file['air_pres_top']['name']
             unit = self._config_file['air_pres_top']['unit']
             config_vars = self._config_file['air_pres_top']['vars']
@@ -419,9 +419,9 @@ class Module(object):
             for value in data:
                 result = (value + x) * y
                 after_equ_data.append(result)
-        
+
         # Air pressure middle 1
-        if value_name == "2_3_4":    
+        if value_name == "2_3_4":
             calculated_name = self._config_file['air_pres_mid1']['name']
             unit = self._config_file['air_pres_middle1']['unit']
             config_vars = self._config_file['air_pres_middle1']['vars']
@@ -434,7 +434,7 @@ class Module(object):
                 after_equ_data.append(result)
 
         # Air pressure middle 2
-        if value_name == "3_3_4":    
+        if value_name == "3_3_4":
             calculated_name = self._config_file['air_pres_mid2']['name']
             unit = self._config_file['air_pres_mid2']['unit']
             config_vars = self._config_file['air_pres_middle2']['vars']
@@ -447,7 +447,7 @@ class Module(object):
                 after_equ_data.append(result)
 
         # Air pressure bottom
-        if value_name == "4_3_4":    
+        if value_name == "4_3_4":
             calculated_name = self._config_file['air_pres_bot']['name']
             unit = self._config_file['air_pres_bot']['unit']
             config_vars = self._config_file['air_pres_bot']['vars']
@@ -471,7 +471,7 @@ class Module(object):
             for value in data:
                 result = (value + x) * y
                 after_equ_data.append(result)
-        
+
         # EC5 - soil water content
         if value_name == "4_10_0":
             calculated_name = self._config_file['ec5']['name']
@@ -510,7 +510,7 @@ class Module(object):
             for value in data:
                 result = (value + x) * y
                 after_equ_data.append(result)
-        
+
         # if we don't have any after equation data
         if not after_equ_data:
             return
@@ -532,10 +532,10 @@ class Module(object):
             num_to_remove = int(round(len(processed_data) * percent / 2))
             del processed_data[-num_to_remove]  # last half
             del processed_data[num_to_remove]   # first half
-        
+
         # calculate average from normalized values
         average = sum(processed_data) / float(len(processed_data))
-        
+
         # DEBUG
         #print("Calculated average: {} - {}".format(calculated_name, average))
 
@@ -556,7 +556,7 @@ class Module(object):
         self._data_ready = True
 
     def append_to_csv_file(self):
-        """ 
+        """
         Function to add new row(s) to .csv file
         First row in day has GDD added (for this day)
         """
@@ -573,7 +573,7 @@ class Module(object):
                     if new_element not in self._header_row:
                         res.append(new_element)
                 self._csv_columns = self._header_row + res
-                
+
                 #DEBUG
                 #print(self._csv_columns)
                 #print("-----------------")
@@ -617,7 +617,7 @@ class Module(object):
             #print("Processing module: error when appending data to csv_file!")
 
     def read_csv_file(self):
-        """ 
+        """
         Function to read csv file to memory
         it processes header, timestamps and temperatures
         """
@@ -626,7 +626,7 @@ class Module(object):
                 self._header_row = []
                 self._file_timestamps = {}
                 return
-            
+
             cur_line = {}
             limit_old_day = datetime.now() - timedelta(days=2)
             with open(self._csv_filename) as fp:    # TODO limit this to read from file only last few lines
@@ -666,21 +666,21 @@ class Module(object):
             if self._header_row[0] != 'Timestamp (mmddyyyy-hhmm)':
                 self._header_row = list(reversed(self._header_row))
             #print("Read header row from file: {}".format(self._header_row))
-            
+
             # check if data in file is from different year than now -> reset total gdd
             if old_timestamp.year != datetime.now().year:
                 self._old_gdd = 0
-            # DEBUG            
+            # DEBUG
             #print("Printing file_timestamps dictionary - read_csv_file function:")
             #print(self._header_row)
 
         except Exception as e:
             print("Processing module error: read csv file - {}".format(e))
             #print("Processing module: error when appending data to csv_file!")
-                    
+
 
     def get_all_gdd(self):
-        """ 
+        """
         Function to divide input data into days
         Input dictionary - self._file_timestamps (containing key: timestamp and value: avg_temperature)
         """
@@ -728,7 +728,7 @@ class Module(object):
             #print("Processing module: error when calculating GDD!")
 
     def calculate_gdd(self, day_list, day_timestamp):
-        """ 
+        """
         Function to calculate GDD for a given day
         Input: day_list (containing average temperatures), day_timestamp
         Output: new entry in dictionary - self._gdd_dict (key: timestamp, value: gdd )
@@ -750,7 +750,7 @@ class Module(object):
         if not self._enabled:
             print("WARNING: Processing module not configured, skipping.")
             return
-        
+
         if 'pira.modules.can' in modules:
             # get all raw filenames
             self._local_files = [f for f in listdir(RAW_DATA_STORAGE_PATH) if isfile(join(RAW_DATA_STORAGE_PATH, f))]
@@ -766,7 +766,7 @@ class Module(object):
             # read raw data file
             with open(RAW_DATA_STORAGE_PATH + '/' + new_file_name, "r") as fp:
                 new_file = json.load(fp)
-            
+
             for i in new_file:  # device
                 for j in new_file[i]:   # sensor
                     for k in new_file[i][j]:    # variable
@@ -790,12 +790,17 @@ class Module(object):
                 # save to csv file
                 self.append_to_csv_file()
                 print("Process module: done")
+
+                # self-disable upon successful completion if so defined
+                if os.environ.get('PROCESSING_RUN', 'cont')=='once':
+                    self._driver.shutdown()
+                    self._enabled = False
+
             else:
                 print("Processing module error: raw data read error.")
-            
+
         else:
             print ("Processing module error: can module is not enabled.")
 
     def shutdown(self, modules):
         """ Shutdown """
-

@@ -114,6 +114,8 @@ The following environment variables can be used to configure the firmware:
   * `AZURE_CONTAINER_NAME` (default `ImageExample`), is the container name in the blob
   * `AZURE_DELETE_LOCAL` (default `off`), if set to `on`, it will delete past files in the /data/camera/ folder
   * `AZURE_DELETE_CLOUD` (default `off`), if set to `on`, it will delete the whole container in cloud
+* PROCESSING
+  * `PROCESSING_RUN` (default `cont`) mode of running the can, once upon boot/until first read or continuously
 
  ### Using without Resin.io
  To use on a standard Raspbian Lite image complete the following steps:
