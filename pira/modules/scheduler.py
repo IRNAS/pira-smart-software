@@ -136,7 +136,7 @@ class Module(object):
 
     def shutdown(self, modules):
         """Compute next alarm before shutdown."""
-        if not self._ready:  
+        if not self._ready:
             return
 
         if not self._boot.pira_ok:     # exit module if pira is not connected
@@ -144,7 +144,7 @@ class Module(object):
             return
 
         # Checking voltage to configure boot interval
-        if self._boot.get_voltage() < float(os.environ.get('POWER_THRESHOLD_QUART', '0')): 
+        if self._boot.get_voltage() < float(os.environ.get('POWER_THRESHOLD_QUART', '0')):
             # Lower voltage then quarter threshold, quadrupling the sleep length
             off_duration = self._off_duration * 4
             print("Low voltage warning, quadrupling sleep duration")
@@ -179,8 +179,7 @@ class Module(object):
 
         if wakeup_in_seconds > self._boot.get_pira_sleep_timer():
             print("Warning: Safety off period will expire and wake up Pi before next scheduled wakeup.")
-        
+
         #Displayed value is: wakeup_time + reboot_time
         print("Scheduling next wakeup at {} / in {} seconds.".format((str(display_next_wakeup)[:-7]), wakeup_in_seconds + self._boot.get_pira_reboot_timer()))
         self._boot.pirasmart.set_wakeup_time(wakeup_in_seconds)
-

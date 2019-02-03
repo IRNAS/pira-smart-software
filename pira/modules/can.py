@@ -18,11 +18,21 @@ import time
 import json
 import datetime
 import struct
+import pickle
+
+# Raw data files storage location.
+RAW_DATA_STORAGE_PATH = '/data/raw'
 
 class Module(object):
     def __init__(self, boot):
-        """ Inits the module and Mcp2515 """
+        """ Inits the module and mcp2515 """
         self._boot = boot
+
+        # Ensure storage location for raw files exists.
+        try:
+            os.makedirs(RAW_DATA_STORAGE_PATH)
+        except OSError:
+            pass
 
         self.devices_json = {}
         self.sensors_list = []
@@ -182,13 +192,14 @@ class Module(object):
                 #print(*self._message.data, sep=", ")
 
                 # dlc represents how many data points are in the received message
-                for i in range(0, self._message.dlc, 2):
-                    # try except because of out of index error
-                    try:
-                        calc = float(self._message.data[i+1] << 8 | self._message.data[i])
-                        delta_list.append(calc/10)
-                    except:
-                        break
+                if self._message:
+                    for i in range(0, self._message.dlc, 2):
+                        # try except because of out of index error
+                        try:
+                            calc = float(self._message.data[i+1] << 8 | self._message.data[i])
+                            delta_list.append(calc/10)
+                        except:
+                            break
                         
             # insert read data into json     
             for i in range(len(data_list)-1, -1, -1):
@@ -216,28 +227,40 @@ class Module(object):
         if not self._enabled:
             print("WARNING: CAN is not connected, skipping.")
             return
-        
-        # Call sensors and get data
-        for j in self.sensors_list:
-            # list of measurements per sensor
-            sensor_data = self.get_data_json(j)
-            if sensor_data:     # if sensor returns some data
-                sensor_json = {}
-                #check if there is an entry for this device yet
-                device = int(j/0x100)
-                if self.devices_json.has_key(str(device)):
-                    # load existing values and add
-                    sensor_json =self.devices_json[str(device)]
-                # store sensor readings                
-                sensor_json[str(j % 256)] = sensor_data 
-                # write the data back to main json
-                self.devices_json[str(device)] = sensor_json
+        try:
+            # Call sensors and get data
+            for j in self.sensors_list:
+                # list of measurements per sensor
+                sensor_data = self.get_data_json(j)
+                if sensor_data:     # if sensor returns some data
+                    sensor_json = {}
+                    #check if there is an entry for this device yet
+                    device = int(j/0x100)
+                    if self.devices_json.has_key(str(device)):
+                        # load existing values and add
+                        sensor_json =self.devices_json[str(device)]
+                    # store sensor readings                
+                    sensor_json[str(j % 256)] = sensor_data 
+                    # write the data back to main json
+                    self.devices_json[str(device)] = sensor_json
 
-            time.sleep(0.1)
-        
-        # DEBUG
-        #dumper = self.return_json_data()
-        #print(dumper) # incorrect values, repeated from last device
+                time.sleep(0.1)
+            
+            # DEBUG
+            #dumper = self.return_json_data()
+            #print(dumper) # incorrect values, repeated from last device
+
+            #save json file to /data folder on device
+            timestr = datetime.datetime.now().strftime("%m%d%Y-%H%M%S")
+            json_file_name = "raw_values-" + timestr + ".json"
+            full_file_path = os.path.join(RAW_DATA_STORAGE_PATH, json_file_name)
+            print("Saved raw file: " + full_file_path)
+
+            with open(full_file_path, "w") as fp:
+                json.dump(self.devices_json, fp)
+
+        except Exception as e:
+            print("Can module error: when processing - {}".format(e))
 
     def shutdown(self, modules):
         """ Shutdown """
