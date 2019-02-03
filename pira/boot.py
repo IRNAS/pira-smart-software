@@ -407,7 +407,7 @@ class Boot(object):
 
         # Turn off the pira status pin then shutdown
         print('Shutting down as scheduled with shutdown.')
-        self.gpio.output(devices.GPIO_PIRA_STATUS_PIN, gpio.LOW)
+        gpio.output(devices.GPIO_PIRA_STATUS_PIN, gpio.LOW)
 
         if RESIN_ENABLED:
             subprocess.call(["/usr/src/app/scripts/resin-shutdown.sh"])
