@@ -186,7 +186,7 @@ class Module(object):
             #image = output.array.astype(np.float32) # numpy
 
         # Compute light level.
-        #light_level = 0.2126 * image[..., 0] + 0.7152 * image[..., 1] + 0.0722 * image[..., 2]
+        light_level = 0.2126 * image[..., 0] + 0.7152 * image[..., 1] + 0.0722 * image[..., 2]
         light_level = np.mean(light_level)
         #light_level = np.average(light_level) # numpy
 
