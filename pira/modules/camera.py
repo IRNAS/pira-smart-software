@@ -19,8 +19,8 @@ import io
 import os
 
 from ..hardware.brightpilib import *
-import numpy as np
-#import statistics as np     # statistics module used instead of numpy
+#import numpy as np
+import statistics as np     # statistics module used instead of numpy
 import array
 import picamera
 import picamera.array
@@ -88,7 +88,7 @@ class Module(object):
                 self._boot.shutdown()
                 print("Requesting shutdown because of camera initialization fail.")
             return
-        
+
         # Create the flash object
         try:
             self._brightPi = BrightPi()
@@ -237,7 +237,7 @@ class Module(object):
                 return self._new_path
 
             return True
-            
+
         else:
             return False
 
