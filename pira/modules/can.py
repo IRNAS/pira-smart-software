@@ -51,7 +51,7 @@ class Module(object):
         try:
             self._num_dev_addrs = int(num_dev_addrs)
         except:
-            self._num_dev_addrs = 4    
+            self._num_dev_addrs = 4
         try:
             self._num_sen_addrs = int(num_sen_addrs)
         except:
@@ -76,13 +76,13 @@ class Module(object):
                 elif can_return<0:
                     break # break out of this loop
                     #note if one sensor does not respond, it will not continue this way
- 
+
         if self.sensors_list:
             print("CAN: Found sensors on addresses:")
             print([hex(x) for x in self.sensors_list])    #Print sensor ids
         else:
             print("CAN: Didn't find any sensors returning proper data.")
-    
+
         self._enabled = True
 
     def scan_for_sensors(self, address):
@@ -94,7 +94,7 @@ class Module(object):
         # send a "wakeup" to the sensor, send 0x02 indicating scan
         self._driver.send_data(address, [0x02], False)
         time.sleep(0.1)
-        
+
         # Sensor returns two zeros for data if not available
         result = self._driver.get_data()
         if result is None:
@@ -107,13 +107,13 @@ class Module(object):
             return 0
 
         # We read the data from sensors only to clear the buffer
-        num_data = result.data[0]   # nr of columns   
+        num_data = result.data[0]   # nr of columns
         num_var = result.data[1]    # nr of variables
         for var in range(0, num_var):
             for dat in range(0, num_data):
                 data_read = self._driver.get_raw_data() # data
                 data_read = self._driver.get_raw_data() # time
-        
+
 
         return 1
 
@@ -138,7 +138,7 @@ class Module(object):
         if (number.dlc == 0 or (len(number.data) < 4)):
             #print("Nothing to read.")
             return
-        
+
         # get how many coloumns there are (coloumn x 8bit)
         num_of_data = number.data[0]
         # get how many variables there are
@@ -183,7 +183,7 @@ class Module(object):
                         data_list.append(calc)
                     except:
                         break
-                    
+
                 # read message TIME
                 self._message = self._driver.get_raw_data()
 
@@ -200,8 +200,8 @@ class Module(object):
                             delta_list.append(calc/10)
                         except:
                             break
-                        
-            # insert read data into json     
+
+            # insert read data into json
             for i in range(len(data_list)-1, -1, -1):
                 data = {}
                 data['data'] = data_list[i]
@@ -211,7 +211,7 @@ class Module(object):
                 calculated_time = read_time - datetime.timedelta(seconds=calculated_delta)
                 data['time'] = str(calculated_time)
                 values[i] = data
-            
+
             variables[var] = values
 
         #sensors_json[str(sensor_ID % 256)] = variables
@@ -239,13 +239,13 @@ class Module(object):
                     if self.devices_json.has_key(str(device)):
                         # load existing values and add
                         sensor_json =self.devices_json[str(device)]
-                    # store sensor readings                
-                    sensor_json[str(j % 256)] = sensor_data 
+                    # store sensor readings
+                    sensor_json[str(j % 256)] = sensor_data
                     # write the data back to main json
                     self.devices_json[str(device)] = sensor_json
 
                 time.sleep(0.1)
-            
+
             # DEBUG
             #dumper = self.return_json_data()
             #print(dumper) # incorrect values, repeated from last device
@@ -259,6 +259,12 @@ class Module(object):
             with open(full_file_path, "w") as fp:
                 json.dump(self.devices_json, fp)
 
+            # self-disable upon successful completion if so defined
+            if os.environ.get('CAN_RUN', 'cont')=='once':
+                self._driver.shutdown()
+                self._enabled = False
+
+
         except Exception as e:
             print("Can module error: when processing - {}".format(e))
 
@@ -266,4 +272,3 @@ class Module(object):
         """ Shutdown """
         if self._enabled:
             self._driver.shutdown()
-

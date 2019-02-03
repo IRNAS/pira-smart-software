@@ -58,7 +58,7 @@ The following environment variables can be used to configure the firmware:
   * `SHUTDOWN_VOLTAGE` (default `2.6`V) to configure when the system should shutdown. At 2.6V hardware shutdown will occur, suggested value is 2.3-3V. When this is triggered, the device will wake up next based on the configured interval, unless the battery voltage continues to fall under the hardware limit, then it will boot again when it charges. Note this shutdown will be aborted if in debug mode.
   * `LATITUDE` (default `0`) to define location, used for sunrise/sunset calculation
   * `LONGITUDE` (default `0`) to define location
-* Pira BLE (can be controled with following values, if set to `None` BLE device settings are not updated): 
+* Pira BLE (can be controled with following values, if set to `None` BLE device settings are not updated):
   * `PIRA_POWER` (default `None`), p - safety on period, in seconds
   * `PIRA_SLEEP` (default `None`), s - safety off period, in seconds
   * `PIRA_REBOOT` (default `None`), r - reboot period duration, in seconds
@@ -83,7 +83,7 @@ The following environment variables can be used to configure the firmware:
   * `CAMERA_MIN_LIGHT_LEVEL` (default `0.0`), minimum required for video to start recording
   * `CAMERA_FAIL_SHUTDOWN` (default `0`), can camera shutdown the device for example if not enough light, set to `1` to enable
   * `CAMERA_SNAPSHOT_INTERVAL` (default `off`), duration in minutes to be configured
-  * `CAMERA_AZURE` (default `off`), take screenshot on every process 
+  * `CAMERA_AZURE` (default `off`), take screenshot on every process
 * Rockblock
   * `ROCKBLOCK_REPORT_INTERVAL` (default `24`), power on interval
   * `ROCKBLOCK_RETRIES` (default `2`), maximum number of retries
@@ -103,12 +103,13 @@ The following environment variables can be used to configure the firmware:
   * `CAN_SPEED` (default `500000`) is the speed of the CAN Bus
   * `CAN_NUM_DEV` (default `4`) number of CAN devices to scan for
   * `CAN_NUM_SEN` (default `16`) number of CAN sensor addresses to scan on each device
+  * `CAN_RUN` (default `cont`) mode of running the can, once upon boot/until first read or continuously
 * M2X
   * `M2X_KEY` (must have) is the key of your M2X account
   * `M2X_DEVICE_ID` (must have) is the device ID you are connecting to
   * `M2X_NAME` (default `DEMO_PI`) is the name of the set of data
 * Azure Images
-  * `AZURE_ACCOUNT_NAME` (must have), is the name 
+  * `AZURE_ACCOUNT_NAME` (must have), is the name
   * `AZURE_ACCOUNT_KEY` (must have), is the account key
   * `AZURE_CONTAINER_NAME` (default `ImageExample`), is the container name in the blob
   * `AZURE_DELETE_LOCAL` (default `off`), if set to `on`, it will delete past files in the /data/camera/ folder
@@ -131,9 +132,9 @@ The following environment variables can be used to configure the firmware:
   * Rename Dockerfile.template to `Dockerfile`
   * Execute ```sudo ./resin local scan``` to scan the local network
   * To push the firmware ```sudo ./resin local push ID_HERE -s LOCATION```
-  
+
  Extra useful things:
-  * Enviroment variables place in: `.resin-sync.yml` like this: 
+  * Enviroment variables place in: `.resin-sync.yml` like this:
 	```
 	environment:
 		- AZURE_ACCOUNT_NAME=rpiimages
