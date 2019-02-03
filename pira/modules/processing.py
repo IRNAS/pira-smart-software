@@ -793,7 +793,6 @@ class Module(object):
 
                 # self-disable upon successful completion if so defined
                 if os.environ.get('PROCESSING_RUN', 'cont')=='once':
-                    self._driver.shutdown()
                     self._enabled = False
 
             else:

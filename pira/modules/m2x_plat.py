@@ -161,7 +161,8 @@ class Module(object):
         else:
             # self-disable upon successful completion if so defined
             if os.environ.get('M2X_RUN', 'cont')=='once':
-                self._driver.shutdown()
+                with open("upload_failed_data.txt", "wb") as fp:
+                    pickle.dump(self._old_data, fp)
                 self._enabled = False
 
 
