@@ -12,8 +12,8 @@ export DBUS_SYSTEM_BUS_ADDRESS=unix:path=/host/run/dbus/system_bus_socket
 # Power off HDMI.
 tvservice -o
 
-# Start the pigpio daemon.
-systemctl start pigpiod
+# Start the pigpio daemon - starting in boot.py
+#systemctl start pigpiod
 
 # make sure the cherger precharge current is sufficiently high
 i2cset -y 1 0x6b 0x03 0x73
