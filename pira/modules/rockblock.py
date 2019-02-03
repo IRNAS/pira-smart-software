@@ -95,14 +95,15 @@ class Module(object):
             return
 
         print("Powering on Rockblock modem.")
-        self._boot.pigpio.write(devices.GPIO_ROCKBLOCK_POWER_PIN, gpio.HIGH)
+
+        gpio.output(devices.GPIO_ROCKBLOCK_POWER_PIN, gpio.HIGH)
         self._power = True
         time.sleep(5)
 
     def power_off_modem(self):
         """Power off modem."""
         print("Powering off Rockblock modem.")
-        self._boot.pigpio.write(devices.GPIO_ROCKBLOCK_POWER_PIN, gpio.LOW)
+        gpio.output(devices.GPIO_ROCKBLOCK_POWER_PIN, gpio.LOW)
         self._power = False
 
     def reset_interval(self):

@@ -11,7 +11,6 @@ import json
 import urllib
 
 import RPi.GPIO as gpio
-import pigpio
 
 # Optional Resin support.
 try:
@@ -59,32 +58,11 @@ class Boot(object):
     def setup_gpio(self):
         """Initialize GPIO."""
         print("Initializing GPIO...")
-        while True:
-            try:
-                os.system("pigpiod") # this will fail if already running
-                time.sleep(3)
-            except:
-                print("Failed to initialize pigpiod.")
-            try:
-                self.pigpio = pigpio.pi('localhost', 8889)
-                self.pigpio.get_pigpio_version()
-                break
-            except:
-                print("Failed to connect to pigpiod. Retrying...")
-                time.sleep(10)
+        gpio.setmode(gpio.BCM)
 
-        self.pigpio.set_mode(devices.GPIO_PIRA_STATUS_PIN, pigpio.OUTPUT)
-        self.pigpio.write(devices.GPIO_PIRA_STATUS_PIN, gpio.HIGH)
-
+        gpio.setup(devices.GPIO_PIRA_STATUS_PIN, gpio.OUT, initial=gpio.HIGH)
         # Power switch output for external loads
-        self.pigpio.set_mode(devices.GPIO_SOFT_POWER_PIN, pigpio.OUTPUT)
-        self.pigpio.write(devices.GPIO_SOFT_POWER_PIN, gpio.LOW)
-
-        #self.pigpio.set_mode(devices.GPIO_LORA_DIO_0_PIN, pigpio.INPUT)
-        #self.pigpio.set_mode(devices.GPIO_LORA_DIO_1_PIN, pigpio.INPUT)
-        #self.pigpio.set_mode(devices.GPIO_LORA_DIO_2_PIN, pigpio.INPUT)
-
-        #self.pigpio.set_mode(devices.GPIO_ROCKBLOCK_POWER_PIN, pigpio.OUTPUT)
+        gpio.setup(devices.GPIO_SOFT_POWER_PIN, gpio.OUT, initial=gpio.LOW)
 
     def setup_devices(self):
         """Initialize device drivers."""
@@ -130,12 +108,6 @@ class Boot(object):
         # Initialize Resin
         self._resin = Resin()
 
-        # TODO: Monitor status pin from BT
-        #self.pigpio.callback(
-        #    devices.GPIO_TIMER_STATUS_PIN,
-        #    pigpio.FALLING_EDGE,
-        #    self.clear_timer
-        #)
         self.process()
 
     def parse_environ(self, env):
@@ -357,8 +329,8 @@ class Boot(object):
                 return True
 
             # Read from given GPIO pin.
-            self.pigpio.set_mode(pin, pigpio.INPUT)
-            return self.pigpio.read(pin) == gpio.LOW
+            gpio.setup(pin, gpio.IN)
+            return self.gpio.input(pin) == gpio.LOW
 
     def shutdown(self):
         """Request shutdown."""
@@ -435,7 +407,8 @@ class Boot(object):
 
         # Turn off the pira status pin then shutdown
         print('Shutting down as scheduled with shutdown.')
-        self.pigpio.write(devices.GPIO_PIRA_STATUS_PIN, gpio.LOW)
+        self.gpio.output(devices.GPIO_PIRA_STATUS_PIN, gpio.LOW)
+
         if RESIN_ENABLED:
             subprocess.call(["/usr/src/app/scripts/resin-shutdown.sh"])
         else:

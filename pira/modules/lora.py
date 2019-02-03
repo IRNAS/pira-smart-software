@@ -5,7 +5,6 @@ import io
 import os
 import struct
 import time
-import pigpio
 import RPi.GPIO as gpio
 
 from ..hardware import devices, lora
@@ -55,12 +54,11 @@ class Module(object):
         try:
             #first reset
             print("LoRa hardware reset.")
-            self._boot.pigpio.set_mode(devices.GPIO_LORA_RESET_PIN, pigpio.OUTPUT)
-            self._boot.pigpio.write(devices.GPIO_LORA_RESET_PIN, gpio.HIGH)
+            gpio.setup(devices.GPIO_LORA_RESET_PIN, gpio.OUT, initial=gpio.HIGH)
             time.sleep(0.01)
-            self._boot.pigpio.write(devices.GPIO_LORA_RESET_PIN, gpio.LOW)
+            gpio.write(devices.GPIO_LORA_RESET_PIN, gpio.LOW)
             time.sleep(0.001)
-            self._boot.pigpio.write(devices.GPIO_LORA_RESET_PIN, gpio.HIGH)
+            gpio.write(devices.GPIO_LORA_RESET_PIN, gpio.HIGH)
             time.sleep(0.006)
 
             self._lora = LoRa(verbose=False)
