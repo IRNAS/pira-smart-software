@@ -11,8 +11,6 @@ sudo apt install vim -y
 sudo apt install python-pip -y
 sudo apt install i2c-tools -y
 sudo apt install python-smbus -y
-sudo apt install pigpio -y
-sudo apt install python-pigpio -y
 sudo apt install libfreetype6-dev -y
 sudo apt install libjpeg-dev -y
 sudo apt install build-essential -y
@@ -45,7 +43,7 @@ sudo mkdir /data/
 
 # manual execute
 echo "---------------------------------------------------"
-echo "Execute raspi-config and enable I2C, SPI and Serial" 
+echo "Execute raspi-config and enable I2C, SPI and Serial"
 echo "Serial: when asked to enable shell: NO, hardware: YES"
 echo "---------------------------------------------------"
 echo "Edit /boot/config and paste the following:         "

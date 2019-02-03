@@ -1,5 +1,5 @@
 import time
-import pigpio
+import RPi.GPIO as gpio
 import serial
 import datetime
 import struct
@@ -52,7 +52,7 @@ class PIRASMARTUART(object):
         self.pira_reboot = None # r
         self.pira_next_wakeup_get = None # w
         self.pira_rpi_gpio = None # a
-        
+
         read_timeout = 0    # handles when pira ble is not connected
 
         try:

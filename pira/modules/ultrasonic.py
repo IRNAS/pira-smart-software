@@ -16,7 +16,7 @@ class Module(object):
 
     def __init__(self, boot):
         self._boot = boot
-        self._driver = ultrasonic.MB7092XL(boot.pigpio, devices.GPIO_ULTRASONIC_RX_PIN)
+        self._driver = ultrasonic.MB7092XL(None, devices.GPIO_ULTRASONIC_RX_PIN)
 
     def process(self, modules):
         """Measure distance."""

@@ -1,6 +1,5 @@
 [Unit]
 Description=pira
-After=pigpiod.service
 
 [Service]
 Environment=PYTHONUNBUFFERED=1
@@ -11,4 +10,3 @@ Restart=on-failure
 
 [Install]
 WantedBy=multi-user.target
-

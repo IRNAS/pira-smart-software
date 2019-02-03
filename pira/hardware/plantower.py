@@ -1,5 +1,4 @@
 import time
-import pigpio
 import serial
 import statistics as np     # statistics module used instead of numpy
 #import numpy as np

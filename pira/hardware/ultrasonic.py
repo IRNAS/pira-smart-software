@@ -1,7 +1,5 @@
 import time
 
-import pigpio
-
 
 class MB7092XL(object):
     """MB7092XL driver."""
@@ -11,8 +9,9 @@ class MB7092XL(object):
         self._pin = pin
 
         # Initialize.
-        self._gpio.set_mode(pin, pigpio.INPUT)
-        self._gpio.bb_serial_read_open(pin, 9600, 8)
+        gpio.setup(pin, gpio.IN)
+        #TODO - this requires different implementaiton
+        #self._gpio.bb_serial_read_open(pin, 9600, 8)
 
     def read(self, timeout=10):
         """Read distance from ultrasonic sensor.
