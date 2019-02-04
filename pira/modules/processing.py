@@ -71,15 +71,21 @@ class Module(object):
         # prepare list of all csv columns (all possible sensors)
         self._csv_columns = []
         self._csv_columns.append('Timestamp (mmddyyyy-hhmm)')
+        for sensor in self._config_file:
+            name = self._config_file[sensor]['name']
+            unit = self._config_file[sensor]['unit']
+            self._csv_columns.append(name + " (" + unit + ")")
+        self._csv_columns.append('Total accumulation (GDD)')
 
         # prepare temp lists, dicts and vars for combined calculations
         self._temp_lux = {}
-        self._header_row = []
+        #self._header_row = []  # not needed
         self._file_timestamps = {}
         self._gdd_dict = {}
         self._min_day = 0
         self._old_gdd = 0
         self._data_ready = False
+        self._write_header = False
 
         # everything is ok, enable this module
         self._enabled = True
@@ -87,7 +93,7 @@ class Module(object):
     def process_data(self):
         """
         Processes self._raw_data into hourly lists per value
-        Result is dict self._calculated_data - key: sensor_name, value: dict  (hour_timestamp,avg_value)
+        Result is dict self._calculated_data - key: sensor_name, value: dict (hour_timestamp,avg_value)
         """
         try:
             for value_name in self._raw_data:
@@ -564,14 +570,14 @@ class Module(object):
         if not str_timestamp in self._calculated_data:
             self._calculated_data[str_timestamp] = {}
         self._calculated_data[str_timestamp][calculated_name + " (" + unit + ")"] = round(average,2)
-        if calculated_name + " (" + unit + ")" not in self._csv_columns:
-            self._csv_columns.append(calculated_name + " (" + unit + ")")
+        #if calculated_name + " (" + unit + ")" not in self._csv_columns:
+        #    self._csv_columns.append(calculated_name + " (" + unit + ")")
 
         # calculate required extra data
         if "air_pres" in calculated_name:
             inhg = average * 0.029529983071445
             self._calculated_data[str_timestamp][calculated_name + " (inhg)"] = round(inhg,2)
-            self._csv_columns.append(calculated_name + " (inhg)")
+            #self._csv_columns.append(calculated_name + " (inhg)")
 
         self._data_ready = True
 
@@ -584,25 +590,22 @@ class Module(object):
         try:
             with open(self._csv_filename, 'a') as fp:
                 #writer = csv.DictWriter(fp, fieldnames=self._csv_columns)
-                if not self._data_ready or (self._csv_columns.count < 3 and not self._header_row):
-                    # if csv is empty and we don't have new data -> exit without editing csv
+                if not self._data_ready:
+                    # if we don't have new data -> exit without editing csv
                     return
-                # fix csv list
+                '''
+                # fix csv list - not needed
                 res = []
                 for new_element in self._csv_columns:
                     if new_element not in self._header_row:
                         res.append(new_element)
                 self._csv_columns = self._header_row + res
-
-                #DEBUG
-                #print(self._csv_columns)
-                #print("-----------------")
-                #print(self._header_row)
-
+                '''
                 writer = csv.DictWriter(fp, fieldnames=self._csv_columns)
-                # write header if sensor change
-                if (self._csv_columns != self._header_row):
+                # write header if file is empty
+                if self._write_header:
                     writer.writeheader()
+                    self._write_header = False
                 #print("calculated data is: {}".format(self._calculated_data))
                 for tstamp in self._calculated_data:
                     dict_to_write = self._calculated_data[tstamp]
@@ -643,20 +646,21 @@ class Module(object):
         """
         try:
             if not os.path.isfile(self._csv_filename):
-                self._header_row = []
+                #self._header_row = []
                 self._file_timestamps = {}
+                self._write_header = True
                 return
 
-            cur_line = {}
+            #cur_line = {}
             limit_old_day = datetime.now() - timedelta(days=2)
-            with open(self._csv_filename) as fp:    # TODO limit this to read from file only last few lines
+            with open(self._csv_filename) as fp:    # TODO limit this to read even less
                 reader = csv.DictReader(fp)
                 self._file_timestamps = {}
                 old_timestamp = datetime.strptime("01012019-0100", "%m%d%Y-%H%M")
                 for line in reader:
                     #print("csv line read: {}".format(line))
-                    if not cur_line:
-                        cur_line = line
+                    #if not cur_line:
+                    #    cur_line = line
                     # first we need to check that we are not reading header line
                     if 'Timestamp (mmddyyyy-hhmm)' not in line.values() and line['Timestamp (mmddyyyy-hhmm)'] != '':
                         # read timestamp
@@ -676,17 +680,15 @@ class Module(object):
                             # not containing calculated gdd -> check if we already found gdd from this day, otherwise save avg. temperature
                             elif old_timestamp.day != cur_timestamp.day:
                                 self._file_timestamps[str_tstamp] = line[self._gdd_sensor]
-                    else:
-                        # reading header line, skip it
-                        pass
 
+            ''' # header is made once, directly from config.json file
             # fill headers from dict of values
             self._header_row = cur_line.keys()
             # if timestamp is not first value in header, reverse the list
             if self._header_row[0] != 'Timestamp (mmddyyyy-hhmm)':
                 self._header_row = list(reversed(self._header_row))
             #print("Read header row from file: {}".format(self._header_row))
-
+            '''
             # check if data in file is from different year than now -> reset total gdd
             if old_timestamp.year != datetime.now().year:
                 self._old_gdd = 0
@@ -705,9 +707,6 @@ class Module(object):
         Input dictionary - self._file_timestamps (containing key: timestamp and value: avg_temperature)
         """
         try:
-            # if not there, write GDD header to list of headers
-            if 'Total accumulation (GDD)' not in self._csv_columns:
-                self._csv_columns.append('Total accumulation (GDD)')
             # get timestamps that have temperatures
             timestamps = []
             for tstamp in self._file_timestamps:
