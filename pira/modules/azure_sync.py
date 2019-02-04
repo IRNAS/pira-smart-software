@@ -62,7 +62,7 @@ class Module(object):
         try:
 
             # create object for the servise
-            self.block_blob_service = BlockBlobService(account_name=self.ACCOUNT_NAME, account_key=self.ACCOUNT_KEY)
+            self.block_blob_service = BlockBlobService(account_name=self.ACCOUNT_NAME, account_key=self.ACCOUNT_KEY, socket_timeout=3)
 
             # create our container
             self.create_container()
@@ -74,35 +74,35 @@ class Module(object):
 
             # it is set to True -> all okay
             self._enabled = True
+
+            # Azure sync with local sync folder -> get files from server
+            local_files = []
+            local_files = [f for f in listdir(sync_folder_path) if isfile(join(sync_folder_path, f))]
+            # get list of server files - max 100 files
+            server_files = []
+            generator = self.block_blob_service.list_blobs(self.container_name, num_results=100, timeout=3)
+            for blob in generator:
+                # we are syncing only files not our subfolders
+                if (camera_folder_path not in blob.name) and (raw_data_folder_path not in blob.name) and (calculated_data_folder_path not in blob.name):
+                    server_files.append(blob.name)
+            # make list of files that are not on device
+            difference = list(set(server_files) - set(local_files))
+            # make list of files that are on server and on device
+            files_on_both = list(set(server_files) - set(difference))
+            # sync files that are on both locations
+            for item in files_on_both:
+                self.down_update_via_path(item, sync_folder_path)
+            # download files that are not on device
+            if difference:
+                print("Azure: New files to sync - download: ")
+                print(difference)   
+            for item in difference:
+                self.download_via_path(item, sync_folder_path)
+
         except Exception as e:
             print("AZURE ERROR: {}".format(e))
             self._enabled = False
         
-        # Azure sync with local sync folder -> get files from server
-        local_files = []
-        local_files = [f for f in listdir(sync_folder_path) if isfile(join(sync_folder_path, f))]
-        # get list of server files
-        server_files = []
-        generator = self.block_blob_service.list_blobs(self.container_name)
-        for blob in generator:
-            # we are syncing only files not our subfolders
-            if (camera_folder_path not in blob.name) and (raw_data_folder_path not in blob.name) and (calculated_data_folder_path not in blob.name):
-                server_files.append(blob.name)
-        # make list of files that are not on device
-        difference = list(set(server_files) - set(local_files))
-        # make list of files that are on server and on device
-        files_on_both = list(set(server_files) - set(difference))
-        # sync files that are on both locations
-        for item in files_on_both:
-            self.down_update_via_path(item, sync_folder_path)
-        # download files that are not on device
-        if difference:
-            print("Azure: New files to sync - download: ")
-            print(difference)   
-        for item in difference:
-            self.download_via_path(item, sync_folder_path)
-
-
     def create_container(self):
         """
         Inits the container under self.container_name name
@@ -265,9 +265,9 @@ class Module(object):
         # local folder sync with Azure -> upload files to server
         local_files = []
         local_files = [f for f in listdir(sync_folder_path) if isfile(join(sync_folder_path, f))]
-        # get list of server files
+        # get list of server files - max 100 files
         server_files = []
-        generator = self.block_blob_service.list_blobs(self.container_name)
+        generator = self.block_blob_service.list_blobs(self.container_name, num_results=100, timeout=3)
         for blob in generator:
             # we are syncing only files not our subfolders
             if (camera_folder_path not in blob.name) and (raw_data_folder_path not in blob.name) and (calculated_data_folder_path not in blob.name):

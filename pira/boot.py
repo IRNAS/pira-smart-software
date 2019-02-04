@@ -20,6 +20,10 @@ try:
 except ImportError:
     RESIN_ENABLED = False
     print("Importing resin failed.")
+'''
+RESIN_ENABLED = False
+print("resin commented out")
+'''
 
 from .hardware import devices, pirasmartuart
 from .state import State
@@ -46,7 +50,8 @@ class Boot(object):
         # 'pira.modules.nodewatcher',
         'pira.modules.debug',
         #'pira.modules.webserver',
-        'pira.modules.m2x_plat'
+        #'pira.modules.m2x_plat',
+        'pira.modules.azure_sync'
         #'pira.modules.azure_images'
     ]
 
@@ -106,7 +111,8 @@ class Boot(object):
         self._update_charging()
 
         # Initialize Resin
-        self._resin = Resin()
+        if RESIN_ENABLED:
+            self._resin = Resin()
 
         self.process()
 
