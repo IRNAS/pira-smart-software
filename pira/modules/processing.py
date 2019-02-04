@@ -100,6 +100,7 @@ class Module(object):
                 timestamps = list(self._raw_data[value_name].keys())
                 if not timestamps:
                     break
+                timestamps.sort()   # we sort timestamps, so that the first entry is the oldest
                 min_time = min(timestamps)
                 max_time = max(timestamps)
                 # find out how many hourly intervals we have in current value
