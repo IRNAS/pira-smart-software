@@ -181,8 +181,13 @@ class Module(object):
         if value_name == "1_2_1" or value_name == "1_2_2":
             # if this is the second sensor from the pair - perform calculations
             if value_name not in self._temp_lux and self._temp_lux:
-                temp_list = [value for key, value in self._temp_lux.items() if "1_2" in key].pop()
-                temp_index = [key for key, value in self._temp_lux.items() if "1_2" in key].pop()
+                keys = [key for key, value in self._temp_lux.items() if "1_2" in key]
+                if not keys:
+                    # this is the first sensor from the pair - save it to temporary dict
+                    self._temp_lux[value_name] = data
+                    return
+                temp_index = keys.pop()
+                temp_list = self._temp_lux[temp_index]
                 #print("temp lux index: {}".format(temp_list))
                 calculated_name = self._config_file['lux_top']['name']
                 unit = self._config_file['lux_top']['unit']
@@ -200,15 +205,20 @@ class Module(object):
                 # remove current value since we processed it
                 del self._temp_lux[temp_index]
             else:
-                # if this is the first sensor from the pair - save it to temporary dict
+                # if this is the first sensor - save it to temporary dict
                 self._temp_lux[value_name] = data
 
         # Lux middle 1 - TODO fix calculation
         if value_name == "2_2_1" or value_name == "2_2_2":
              # if this is the second sensor from the pair - perform calculations
             if value_name not in self._temp_lux and self._temp_lux:
-                temp_list = [value for key, value in self._temp_lux.items() if "2_2" in key].pop()
-                temp_index = [key for key, value in self._temp_lux.items() if "2_2" in key].pop()
+                keys = [key for key, value in self._temp_lux.items() if "2_2" in key]
+                if not keys:
+                    # this is the first sensor from the pair - save it to temporary dict
+                    self._temp_lux[value_name] = data
+                    return
+                temp_index = keys.pop()
+                temp_list = self._temp_lux[temp_index]
                 calculated_name = self._config_file['lux_mid1']['name']
                 unit = self._config_file['lux_mid1']['unit']
                 config_vars = self._config_file['lux_mid1']['vars']
@@ -232,8 +242,13 @@ class Module(object):
         if value_name == "3_2_1" or value_name == "3_2_2":
              # if this is the second sensor from the pair - perform calculations
             if value_name not in self._temp_lux and self._temp_lux:
-                temp_list = [value for key, value in self._temp_lux.items() if "3_2" in key].pop()
-                temp_index = [key for key, value in self._temp_lux.items() if "3_2" in key].pop()
+                keys = [key for key, value in self._temp_lux.items() if "3_2" in key]
+                if not keys:
+                    # this is the first sensor from the pair - save it to temporary dict
+                    self._temp_lux[value_name] = data
+                    return
+                temp_index = keys.pop()
+                temp_list = self._temp_lux[temp_index]
                 calculated_name = self._config_file['lux_mid2']['name']
                 unit = self._config_file['lux_mid2']['unit']
                 config_vars = self._config_file['lux_mid2']['vars']
@@ -257,8 +272,13 @@ class Module(object):
         if value_name == "4_2_1" or value_name == "4_2_2":
              # if this is the second sensor from the pair - perform calculations
             if value_name not in self._temp_lux and self._temp_lux:
-                temp_list = [value for key, value in self._temp_lux.items() if "4_2" in key].pop()
-                temp_index = [key for key, value in self._temp_lux.items() if "4_2" in key].pop()
+                keys = [key for key, value in self._temp_lux.items() if "4_2" in key]
+                if not keys:
+                    # this is the first sensor from the pair - save it to temporary dict
+                    self._temp_lux[value_name] = data
+                    return
+                temp_index = keys.pop()
+                temp_list = self._temp_lux[temp_index]
                 calculated_name = self._config_file['lux_bot']['name']
                 unit = self._config_file['lux_bot']['unit']
                 config_vars = self._config_file['lux_bot']['vars']
