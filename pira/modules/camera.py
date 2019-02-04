@@ -192,7 +192,6 @@ class Module(object):
             light_level = np.average(light_level) # numpy
         except:
             print("Error calculating light level:")
-            traceback.print_exc()
 
         self.light_level = light_level
 
