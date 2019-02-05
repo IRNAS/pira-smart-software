@@ -7,6 +7,7 @@ ENV VARS:
     - PROCESS_CSV_FILENAME (default is 'processed.csv')
     - GDD_SENSOR_NAME (default is 'Temperature Middle 1 (F)')
     - GDD_BASE_TEMP (default is 50 F)
+    - PROCESSING_RUN (default is cont)
 """
 from __future__ import print_function
 
