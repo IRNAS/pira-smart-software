@@ -35,10 +35,6 @@ class Module(object):
         self._boot = boot
         self._ready = False
 
-        if not self._boot.pira_ok:     # exit module if pira is not connected
-            print("Scheduler: ERROR - Pira is not connected. Exiting...")
-            return
-
         # Initialize schedule.
         if os.environ.get('SCHEDULE_MONTHLY', '0') == '1':
             # Month-dependent schedule.
@@ -67,6 +63,10 @@ class Module(object):
         self._on_duration = schedule_t_on
         self._off_duration = schedule_t_off
         self._ready = True
+
+        if not self._boot.pira_ok:     # exit module if pira is not connected
+            print("Scheduler: ERROR - Pira is not connected. Exiting...")
+            return
 
         if schedule_t_on.seconds > self._boot.get_pira_on_timer_set():
             print("WARNING: p (safety on period) will shutdown Pi before scheduler on duration expires.")
