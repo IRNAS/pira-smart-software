@@ -83,7 +83,6 @@ The following environment variables can be used to configure the firmware:
   * `CAMERA_MIN_LIGHT_LEVEL` (default `0.0`), minimum required for video to start recording
   * `CAMERA_FAIL_SHUTDOWN` (default `0`), can camera shutdown the device for example if not enough light, set to `1` to enable
   * `CAMERA_SNAPSHOT_INTERVAL` (default `off`), duration in minutes to be configured
-  * `CAMERA_AZURE` (default `off`), take screenshot on every process
 * Rockblock
   * `ROCKBLOCK_REPORT_INTERVAL` (default `24`), power on interval
   * `ROCKBLOCK_RETRIES` (default `2`), maximum number of retries
@@ -108,14 +107,16 @@ The following environment variables can be used to configure the firmware:
   * `M2X_KEY` (must have) is the key of your M2X account
   * `M2X_DEVICE_ID` (must have) is the device ID you are connecting to
   * `M2X_NAME` (default `DEMO_PI`) is the name of the set of data
-* Azure Images
+* Azure Images and Azure Sync
   * `AZURE_ACCOUNT_NAME` (must have), is the name
   * `AZURE_ACCOUNT_KEY` (must have), is the account key
-  * `AZURE_CONTAINER_NAME` (default `ImageExample`), is the container name in the blob
+  * `AZURE_CONTAINER_NAME` (default Images: `ImageExample`, default Sync: `azuresync`), is the container name in the blob
   * `AZURE_DELETE_LOCAL` (default `off`), if set to `on`, it will delete past files in the /data/camera/ folder
   * `AZURE_DELETE_CLOUD` (default `off`), if set to `on`, it will delete the whole container in cloud
-* PROCESSING
+* Processing
   * `PROCESSING_RUN` (default `cont`) mode of running the can, once upon boot/until first read or continuously
+  * `PROCESS_GDD_SENSOR_NAME` (default `Temperature Middle 1 (F)`) which sensor is used to calculate growing degree days (total accumulation)
+  * `PROCESS_GDD_BASE_TEMP` (default `50`) base temperature for growing degree days calculation, in Fahrenheit
 
  ### Using without Resin.io
  To use on a standard Raspbian Lite image complete the following steps:
