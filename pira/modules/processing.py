@@ -7,6 +7,7 @@ ENV VARS:
     - PROCESS_CSV_FILENAME (default is 'processed.csv')
     - GDD_SENSOR_NAME (default is 'Temperature Middle 1 (F)')
     - GDD_BASE_TEMP (default is 50 F)
+    - PROCESSING_RUN (default is cont)
 """
 from __future__ import print_function
 
@@ -40,8 +41,8 @@ class Module(object):
         # Read environs
         filename = os.environ.get('PROCESS_CSV_FILENAME', 'processed.csv')
         self._csv_filename = CSV_DATA_STORAGE_PATH  + '/' + filename
-        self._gdd_sensor = os.environ.get('GDD_SENSOR_NAME', 'Temperature middle 1 (F)')
-        base_temp = os.environ.get('GDD_BASE_TEMP', 50)
+        self._gdd_sensor = os.environ.get('PROCESS_GDD_SENSOR_NAME', 'Temperature middle 1 (F)')
+        base_temp = os.environ.get('PROCESS_GDD_BASE_TEMP', 50)
         try:
             self._base_temp = int(base_temp)
         except:

@@ -9,7 +9,6 @@ ENV VARS:
     - CAMERA_MIN_LIGHT_LEVEL
     - CAMERA_FAIL_SHUTDOWN
     - CAMERA_SNAPSHOT_INTERVAL
-    - CAMERA_AZURE
 """
 
 from __future__ import print_function
@@ -41,7 +40,6 @@ class Module(object):
         self.camera_shutdown = os.environ.get('CAMERA_FAIL_SHUTDOWN', '0')
         self.video_duration = os.environ.get('CAMERA_VIDEO_DURATION', 'until-sleep')
         self.snapshot_interval_conf = os.environ.get('CAMERA_SNAPSHOT_INTERVAL', 'off')
-        self.integrate_azure=os.environ.get('CAMERA_AZURE', 'off')
 
         try:
             self.video_duration_min = datetime.timedelta(minutes=int(self.video_duration))
@@ -142,10 +140,6 @@ class Module(object):
         self._recording_start = now
 
     def process(self, modules):
-        if self.integrate_azure is "on" and self._camera:
-            print(self._snapshot())
-            return
-
         # This runs if camera is initialized
         if self._camera:
             now = datetime.datetime.now()
@@ -236,8 +230,6 @@ class Module(object):
                 self._brightPi.set_led_on_off(LED_IR, OFF)
 
             print("Snapshot taken at light level:", self.light_level)
-            if self.integrate_azure is "on":
-                return self._new_path
 
             return True
 

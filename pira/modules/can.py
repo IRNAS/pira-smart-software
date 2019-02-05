@@ -4,9 +4,10 @@ can.py
 It is a module that controls the CAN interface
 
 ENV VARS:
+    - CAN_SPEED
     - CAN_NUM_DEV
     - CAN_NUM_SEN
-
+    - CAN_RUN
 """
 from __future__ import print_function
 
