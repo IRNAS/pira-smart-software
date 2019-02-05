@@ -114,9 +114,10 @@ The following environment variables can be used to configure the firmware:
   * `AZURE_DELETE_LOCAL` (default `off`), if set to `on`, it will delete past files in the /data/camera/ folder
   * `AZURE_DELETE_CLOUD` (default `off`), if set to `on`, it will delete the whole container in cloud
 * Processing
-  * `PROCESSING_RUN` (default `cont`) mode of running the can, once upon boot/until first read or continuously
-  * `PROCESS_GDD_SENSOR_NAME` (default `Temperature Middle 1 (F)`) which sensor is used to calculate growing degree days (total accumulation)
-  * `PROCESS_GDD_BASE_TEMP` (default `50`) base temperature for growing degree days calculation, in Fahrenheit
+  * `PROCESSING_RUN` (default `cont`), mode of running the can, once upon boot/until first read or continuously
+  * `PROCESS_CSV_FILENAME` (default is `processed.csv`), filename for processed data file
+  * `PROCESS_GDD_SENSOR_NAME` (default `Temperature Middle 1 (F)`), which sensor is used to calculate growing degree days (total accumulation)
+  * `PROCESS_GDD_BASE_TEMP` (default `50`), base temperature for growing degree days calculation, in Fahrenheit
 
  ### Using without Resin.io
  To use on a standard Raspbian Lite image complete the following steps:
