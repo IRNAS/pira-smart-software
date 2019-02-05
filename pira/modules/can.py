@@ -251,13 +251,16 @@ class Module(object):
             #print(dumper) # incorrect values, repeated from last device
 
             #save json file to /data folder on device
-            timestr = datetime.datetime.now().strftime("%m%d%Y-%H%M%S")
-            json_file_name = "raw_values-" + timestr + ".json"
-            full_file_path = os.path.join(RAW_DATA_STORAGE_PATH, json_file_name)
-            print("Saved raw file: " + full_file_path)
+            if self.devices_json:
+                timestr = datetime.datetime.now().strftime("%m%d%Y-%H%M%S")
+                json_file_name = "raw_values-" + timestr + ".json"
+                full_file_path = os.path.join(RAW_DATA_STORAGE_PATH, json_file_name)
+                print("Saved raw file: " + full_file_path)
 
-            with open(full_file_path, "w") as fp:
-                json.dump(self.devices_json, fp)
+                with open(full_file_path, "w") as fp:
+                    json.dump(self.devices_json, fp)
+            else:
+                print("CAN: no new values have been read.")
 
             # self-disable upon successful completion if so defined
             if os.environ.get('CAN_RUN', 'cont')=='once':
