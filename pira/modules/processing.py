@@ -133,9 +133,9 @@ class Module(object):
 
     def process_hourly_data(self, value_name, data, timestamp):
         """
-        Processes list of values from value_name for an hour
-        each value_name is processed with variables from config file
-        Result is new entry in dictionary - pair: calculated_name, value
+        Processes list of values from value_name for an hour.
+        Each value_name is processed with variables from config file.
+        Result is new entry in dictionary self._calculated_data - pair: calculated_name, value
         """
         after_equ_data = []
 
@@ -587,7 +587,8 @@ class Module(object):
         Function to add new row(s) to .csv file
         First row in day has GDD added (for this day)
         """
-        old_cur_day = 0
+        
+        old_cur_day = datetime.strptime("01012019", "%m%d%Y")
         try:
             with open(self._csv_filename, 'a') as fp:
                 #writer = csv.DictWriter(fp, fieldnames=self._csv_columns)
@@ -616,7 +617,7 @@ class Module(object):
                     # remove time from timestamp
                     cur_day_timestamp = cur_timestamp.replace(hour=0, minute=0)
                     # check if data is in new day -> then add GDD
-                    if old_cur_day != cur_day_timestamp.day:
+                    if old_cur_day != cur_day_timestamp:
                         cur_str_day = datetime.strftime(cur_day_timestamp, "%m%d%Y-%H%M")
                         # first we check if previous day has gdd calculated and not in the file -> add new row with just gdd
                         if old_cur_day in self._gdd_dict and self._gdd_dict[old_cur_day] != self._old_gdd:
@@ -626,7 +627,7 @@ class Module(object):
                         # check if gdd data exists for current day
                         if cur_str_day in self._gdd_dict:
                             dict_to_write['Total accumulation (GDD)'] = self._gdd_dict[cur_str_day]
-                        old_cur_day = cur_day_timestamp.day
+                        old_cur_day = cur_day_timestamp
                     #print("self._file_timestamps: {}".format(self._file_timestamps))
                     #print("dict_to_write: {}".format(dict_to_write))
                     # check if data timestamp is in the file
@@ -670,17 +671,19 @@ class Module(object):
                         if cur_timestamp < limit_old_day:
                             # if current line is older than 2 days from now -> too old to process
                             break
-                        self._file_timestamps[str_tstamp] = 9000
                         # try to read gdd or temperatures from specified sensor (self._gdd_sensor)
                         if self._gdd_sensor in line.keys():
                             # we need to get last (newest total gdd)
-                            if 'Total accumulation (GDD)' in line.keys() and cur_timestamp > old_timestamp:
+                            if 'Total accumulation (GDD)' in line.keys() and line['Total accumulation (GDD)'] and cur_timestamp > old_timestamp:
                                 # if gdd is found, save it to variable for use in function calculate_gdd
                                 self._old_gdd = line['Total accumulation (GDD)']
                                 old_timestamp = cur_timestamp
                             # not containing calculated gdd -> check if we already found gdd from this day, otherwise save avg. temperature
                             elif old_timestamp.day != cur_timestamp.day:
                                 self._file_timestamps[str_tstamp] = line[self._gdd_sensor]
+                        # we don't have sensor for gdd calculations in current line
+                        else:
+                            self._file_timestamps[str_tstamp] = 9000
 
             ''' # header is made once, directly from config.json file
             # fill headers from dict of values
@@ -695,7 +698,7 @@ class Module(object):
                 self._old_gdd = 0
             # DEBUG
             #print("Printing file_timestamps dictionary - read_csv_file function:")
-            #print(self._header_row)
+            #print(self._file_timestamps)
 
         except Exception as e:
             print("Processing module error: read csv file - {}".format(e))
@@ -711,13 +714,16 @@ class Module(object):
             # get timestamps that have temperatures
             timestamps = []
             for tstamp in self._file_timestamps:
-                if self._file_timestamps[tstamp] != 9000:
+                #print(self._file_timestamps[tstamp])
+                if self._file_timestamps[tstamp] and self._file_timestamps[tstamp] != 9000:
                     timestamp = datetime.strptime(tstamp, "%m%d%Y-%H%M")
                     timestamps.append(timestamp)
             if not timestamps:
                 #print("GDD: No data found in timestamps")
                 return
+            
             # we get lowest and biggest time
+            timestamps.sort()
             min_time = min(timestamps)
             max_time = max(timestamps)
             # find out how many daily intervals we have in current value
@@ -730,7 +736,8 @@ class Module(object):
                     for tstamp in timestamps:
                         max_tstamp = min_time
                         if tstamp.day == (min_time + timedelta(days=day)).day:
-                            day_list.append(self._file_timestamps[tstamp])
+                            str_time = datetime.strftime(tstamp, "%m%d%Y-%H%M")
+                            day_list.append(self._file_timestamps[str_time])
                             if max_tstamp.day < tstamp.day:
                                 max_tstamp = tstamp
                     if day_list:
@@ -761,6 +768,7 @@ class Module(object):
             gdd = self._old_gdd + round(day_gdd,2)
             self._gdd_dict[day_timestamp] = gdd
             self._old_gdd = gdd
+            #print("New old gdd: {}".format(self._old_gdd))
         except Exception as e:
             print("Processing module error: calculating GDD - {}".format(e))
             #print("Processing module: error when calculating GDD!")
