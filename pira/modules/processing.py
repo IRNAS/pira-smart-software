@@ -788,6 +788,9 @@ class Module(object):
             for file_name in self._local_files:
                 s_timestamp = file_name.replace("raw_values-", "")
                 timestamps.append(datetime.strptime(s_timestamp.replace(".json", ""), "%m%d%Y-%H%M%S"))
+            if not timestamps:
+                print("No raw files found...")
+                return
             newest_timestamp = max(timestamps)
             new_file_name = "raw_values-" + newest_timestamp.strftime("%m%d%Y-%H%M%S") + ".json"
             print ("Processing module: processing file: {}".format(new_file_name))
