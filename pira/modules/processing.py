@@ -17,6 +17,8 @@ import json
 import struct
 import pickle
 import csv
+import tailer as tl #TODO add to requirements
+import io
 
 from os import listdir
 from os.path import isfile, join
@@ -83,7 +85,6 @@ class Module(object):
         #self._header_row = []  # not needed
         self._file_timestamps = {}
         self._gdd_dict = {}
-        self._min_day = 0
         self._old_gdd = 0
         self._data_ready = False
         self._write_header = False
@@ -105,17 +106,20 @@ class Module(object):
                 min_time = min(timestamps)
                 max_time = max(timestamps)
                 # find out how many hourly intervals we have in current value
-                delta_hours = max_time.hour - min_time.hour
+                delta_time = max_time - min_time
+                delta_hours = int(delta_time.total_seconds() / 3600) + 1
                 hour_list = []
                 if delta_hours > 0:
                     #make list of values per hour
                     for hour in range(0, delta_hours+1):
                         hour_list = []
+                        max_tstamp = min_time
                         for tstamp in timestamps:
-                            max_tstamp = min_time
-                            if tstamp.hour == (min_time + timedelta(hours=hour)).hour:
+                            test_tstamp = tstamp.replace(minute=0, second=0, microsecond=0)
+                            test_delta = (min_time + timedelta(hours=hour)).replace(minute=0, second=0, microsecond=0)
+                            if test_tstamp == test_delta:
                                 hour_list.append(self._raw_data[value_name][tstamp])
-                                if max_tstamp.hour < tstamp.hour:
+                                if max_tstamp < tstamp:
                                     max_tstamp = tstamp
                         if hour_list:
                             hour_timestamp = max_tstamp.replace(minute=0, second=0, microsecond=0)
@@ -143,6 +147,7 @@ class Module(object):
         #DEBUG
         #print("value name: {}".format(value_name))
         #print("Hourly input data: {}".format(data))
+        #print("Current timestamp: {}".format(timestamp))
 
         # Battery - TODO fix calculation
         if value_name == "4_8_0":
@@ -572,14 +577,11 @@ class Module(object):
         if not str_timestamp in self._calculated_data:
             self._calculated_data[str_timestamp] = {}
         self._calculated_data[str_timestamp][calculated_name + " (" + unit + ")"] = round(average,2)
-        #if calculated_name + " (" + unit + ")" not in self._csv_columns:
-        #    self._csv_columns.append(calculated_name + " (" + unit + ")")
 
         # calculate required extra data
         if "air_pres" in calculated_name:
             inhg = average * 0.029529983071445
             self._calculated_data[str_timestamp][calculated_name + " (inhg)"] = round(inhg,2)
-            #self._csv_columns.append(calculated_name + " (inhg)")
 
         self._data_ready = True
 
@@ -592,25 +594,24 @@ class Module(object):
         old_cur_day = datetime.strptime("01012019", "%m%d%Y")
         try:
             with open(self._csv_filename, 'a') as fp:
-                #writer = csv.DictWriter(fp, fieldnames=self._csv_columns)
                 if not self._data_ready:
                     # if we don't have new data -> exit without editing csv
                     return
-                '''
-                # fix csv list - not needed
-                res = []
-                for new_element in self._csv_columns:
-                    if new_element not in self._header_row:
-                        res.append(new_element)
-                self._csv_columns = self._header_row + res
-                '''
+                
                 writer = csv.DictWriter(fp, fieldnames=self._csv_columns)
                 # write header if file is empty
                 if self._write_header:
                     writer.writeheader()
                     self._write_header = False
                 #print("calculated data is: {}".format(self._calculated_data))
+                calculated_timestamps = []
+                # we sort new calculated data from oldest to newest timestamp
                 for tstamp in self._calculated_data:
+                    # we check if timestamp is older than current hour (since current hour isn't over yet)
+                    if datetime.strptime(tstamp, "%m%d%Y-%H%M") < datetime.now().replace(minute=0, second=0, microsecond=0):
+                        calculated_timestamps.append(tstamp)
+                calculated_timestamps.sort()
+                for tstamp in calculated_timestamps:
                     dict_to_write = self._calculated_data[tstamp]
                     #print ("dict_to_write: {}".format(dict_to_write))
                     dict_to_write['Timestamp (mmddyyyy-hhmm)'] = tstamp
@@ -633,7 +634,6 @@ class Module(object):
                     #print("dict_to_write: {}".format(dict_to_write))
                     # check if data timestamp is in the file
                     if self._file_timestamps and tstamp in self._file_timestamps.keys():
-                        #TODO overwrite ???
                         #print("data timestamp is in the file.")
                         pass
                     else:
@@ -649,63 +649,54 @@ class Module(object):
         """
         try:
             if not os.path.isfile(self._csv_filename):
-                #self._header_row = []
                 self._file_timestamps = {}
                 self._write_header = True
-                return
+                return -1
 
-            #cur_line = {}
-            limit_old_day = datetime.now() - timedelta(days=2)
-            with open(self._csv_filename) as fp:    # TODO limit this to read even less
-                reader = csv.DictReader(fp)
-                self._file_timestamps = {}
-                old_timestamp = datetime.strptime("01012019-0100", "%m%d%Y-%H%M")
-                for line in reader:
-                    #print("csv line read: {}".format(line))
-                    #if not cur_line:
-                    #    cur_line = line
-                    # first we need to check that we are not reading header line
-                    if 'Timestamp (mmddyyyy-hhmm)' not in line.values() and line['Timestamp (mmddyyyy-hhmm)'] != '':
-                        # read timestamp
-                        str_tstamp = line['Timestamp (mmddyyyy-hhmm)']
-                        cur_timestamp = datetime.strptime(line['Timestamp (mmddyyyy-hhmm)'], "%m%d%Y-%H%M")
-                        if cur_timestamp < limit_old_day:
-                            # if current line is older than 2 days from now -> too old to process
-                            break
-                        # try to read gdd or temperatures from specified sensor (self._gdd_sensor)
-                        if self._gdd_sensor in line.keys():
-                            # we need to get last (newest total gdd)
-                            if 'Total accumulation (GDD)' in line.keys() and line['Total accumulation (GDD)'] and cur_timestamp > old_timestamp:
-                                # if gdd is found, save it to variable for use in function calculate_gdd
-                                self._old_gdd = line['Total accumulation (GDD)']
-                                old_timestamp = cur_timestamp
-                            # not containing calculated gdd -> check if we already found gdd from this day, otherwise save avg. temperature
-                            elif old_timestamp.day != cur_timestamp.day:
-                                self._file_timestamps[str_tstamp] = line[self._gdd_sensor]
-                        # we don't have sensor for gdd calculations in current line
-                        else:
-                            self._file_timestamps[str_tstamp] = 9000
+            file = open(self._csv_filename)
+            # we need to read last 25 entries so we get the whole day
+            last_lines = tl.tail(file,25) 
+            file.close()
+            if ','.join(self._csv_columns) in last_lines:
+                del last_lines[last_lines.index(','.join(self._csv_columns))]
 
-            ''' # header is made once, directly from config.json file
-            # fill headers from dict of values
-            self._header_row = cur_line.keys()
-            # if timestamp is not first value in header, reverse the list
-            if self._header_row[0] != 'Timestamp (mmddyyyy-hhmm)':
-                self._header_row = list(reversed(self._header_row))
-            #print("Read header row from file: {}".format(self._header_row))
-            '''
+            old_timestamp = datetime.strptime("01012019-0100", "%m%d%Y-%H%M")
+            newest_csv_timestamp = old_timestamp
+
+            reader = csv.DictReader(last_lines, fieldnames=self._csv_columns)
+            for line in reader:
+                str_tstamp = line['Timestamp (mmddyyyy-hhmm)']
+                cur_timestamp = datetime.strptime(line['Timestamp (mmddyyyy-hhmm)'], "%m%d%Y-%H%M")
+                if cur_timestamp > newest_csv_timestamp:
+                    newest_csv_timestamp = cur_timestamp
+                if self._gdd_sensor in line.keys():
+                    # we need to get last (newest total gdd)
+                    if 'Total accumulation (GDD)' in line.keys() and line['Total accumulation (GDD)'] and cur_timestamp > old_timestamp:
+                        # if gdd is found, save it to variable for use in function calculate_gdd
+                        self._old_gdd = line['Total accumulation (GDD)']
+                        old_timestamp = cur_timestamp
+                    # not containing calculated gdd -> check if we already found gdd from this day, otherwise save avg. temperature
+                    elif old_timestamp.day != cur_timestamp.day:
+                        self._file_timestamps[str_tstamp] = line[self._gdd_sensor]
+                # we don't have sensor for gdd calculations in current line
+                else:
+                    self._file_timestamps[str_tstamp] = 9000
+
             # check if data in file is from different year than now -> reset total gdd
             if old_timestamp.year != datetime.now().year:
                 self._old_gdd = 0
+
             # DEBUG
             #print("Printing file_timestamps dictionary - read_csv_file function:")
             #print(self._file_timestamps)
-
+            
+            return newest_csv_timestamp
+        
         except Exception as e:
             print("Processing module error: read csv file - {}".format(e))
             #print("Processing module: error when appending data to csv_file!")
-
-
+            return -1
+        
     def get_all_gdd(self):
         """
         Function to divide input data into days
@@ -781,42 +772,51 @@ class Module(object):
             return
 
         if 'pira.modules.can' in modules:
+            # read csv file
+            newest_csv_timestamp = self.read_csv_file()
+            if newest_csv_timestamp == -1:
+                #print("Csv file is empty...")
+                newest_csv_timestamp = datetime.strptime("01012019-0100", "%m%d%Y-%H%M")
+
             # get all raw filenames
             self._local_files = [f for f in listdir(RAW_DATA_STORAGE_PATH) if isfile(join(RAW_DATA_STORAGE_PATH, f))]
             # find the newest - local files names are made like this: "raw_values-" + dt.strftime("%m%d%Y-%H%M%S")
             timestamps = []
             for file_name in self._local_files:
                 s_timestamp = file_name.replace("raw_values-", "")
-                timestamps.append(datetime.strptime(s_timestamp.replace(".json", ""), "%m%d%Y-%H%M%S"))
+                this_timestamp = datetime.strptime(s_timestamp.replace(".json", ""), "%m%d%Y-%H%M%S")
+                # save timestamps that are newer than last entry in the file and older than current hour
+                if this_timestamp >= newest_csv_timestamp and this_timestamp < datetime.now().replace(minute=0, second=0, microsecond=0):
+                    timestamps.append(this_timestamp)
             if not timestamps:
-                print("No raw files found...")
+                print("No new raw files found...")
                 return
-            newest_timestamp = max(timestamps)
-            new_file_name = "raw_values-" + newest_timestamp.strftime("%m%d%Y-%H%M%S") + ".json"
-            print ("Processing module: processing file: {}".format(new_file_name))
+            
+            timestamps.sort()
+            for timestamp in timestamps:
+                new_file_name = "raw_values-" + timestamp.strftime("%m%d%Y-%H%M%S") + ".json"
+                print ("Processing module: processing file: {}".format(new_file_name))
 
-            # read raw data file
-            with open(RAW_DATA_STORAGE_PATH + '/' + new_file_name, "r") as fp:
-                new_file = json.load(fp)
+                # read raw data file
+                with open(RAW_DATA_STORAGE_PATH + '/' + new_file_name, "r") as fp:
+                    new_file = json.load(fp)
 
-            for i in new_file:  # device
-                for j in new_file[i]:   # sensor
-                    for k in new_file[i][j]:    # variable
-                        value_name = str(i) + "_" + str(j) + "_" + str(k)
-                        #print("Value name: "+  str(value_name))
-                        if value_name not in self._raw_data:
-                            self._raw_data[value_name] = {}
-                        for l in new_file[i][j][k]:
-                            data = new_file[i][j][k][l]['data']
-                            time = new_file[i][j][k][l]['time']
-                            formated_time = datetime.strptime(time, "%Y-%m-%d %H:%M:%S.%f")
-                            self._raw_data[value_name][formated_time] = data
+                for i in new_file:  # device
+                    for j in new_file[i]:   # sensor
+                        for k in new_file[i][j]:    # variable
+                            value_name = str(i) + "_" + str(j) + "_" + str(k)
+                            #print("Value name: "+  str(value_name))
+                            if value_name not in self._raw_data:
+                                self._raw_data[value_name] = {}
+                            for l in new_file[i][j][k]:
+                                data = new_file[i][j][k][l]['data']
+                                time = new_file[i][j][k][l]['time']
+                                formated_time = datetime.strptime(time, "%Y-%m-%d %H:%M:%S.%f")
+                                self._raw_data[value_name][formated_time] = data
 
             if self._raw_data:
                 # calculate data
                 self.process_data()
-                # read csv file
-                self.read_csv_file()
                 # calculate gdd
                 self.get_all_gdd()
                 # save to csv file
