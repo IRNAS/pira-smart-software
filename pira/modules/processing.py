@@ -17,7 +17,7 @@ import json
 import struct
 import pickle
 import csv
-import tailer as tl #TODO add to requirements
+import tailer as tl
 import io
 
 from os import listdir
@@ -149,11 +149,39 @@ class Module(object):
         #print("Hourly input data: {}".format(data))
         #print("Current timestamp: {}".format(timestamp))
 
-        # Battery - TODO fix calculation
-        if value_name == "4_8_0":
+        # Battery state of charge - TODO fix calculation
+        if value_name == "4_8_3":
             calculated_name = self._config_file['bat']['name']
             unit = self._config_file['bat']['unit']
             config_vars = self._config_file['bat']['vars']
+            x = config_vars['offset']
+            y = config_vars['multiply']
+            z = config_vars['convert']
+            res_min = config_vars['min']
+            res_max = config_vars['max']
+            for value in data:
+                result = (value + x) * y
+                after_equ_data.append(result)
+        
+        # Battery voltage
+        if value_name == "4_8_0":
+            calculated_name = self._config_file['bat_vol']['name']
+            unit = self._config_file['bat_vol']['unit']
+            config_vars = self._config_file['bat_vol']['vars']
+            x = config_vars['offset']
+            y = config_vars['multiply']
+            z = config_vars['convert']
+            res_min = config_vars['min']
+            res_max = config_vars['max']
+            for value in data:
+                result = (value + x) * y
+                after_equ_data.append(result)
+
+        # Battery current
+        if value_name == "4_8_2":
+            calculated_name = self._config_file['bat_cur']['name']
+            unit = self._config_file['bat_cur']['unit']
+            config_vars = self._config_file['bat_cur']['vars']
             x = config_vars['offset']
             y = config_vars['multiply']
             z = config_vars['convert']
@@ -666,21 +694,22 @@ class Module(object):
             reader = csv.DictReader(last_lines, fieldnames=self._csv_columns)
             for line in reader:
                 str_tstamp = line['Timestamp (mmddyyyy-hhmm)']
-                cur_timestamp = datetime.strptime(line['Timestamp (mmddyyyy-hhmm)'], "%m%d%Y-%H%M")
-                if cur_timestamp > newest_csv_timestamp:
-                    newest_csv_timestamp = cur_timestamp
-                if self._gdd_sensor in line.keys():
-                    # we need to get last (newest total gdd)
-                    if 'Total accumulation (GDD)' in line.keys() and line['Total accumulation (GDD)'] and cur_timestamp > old_timestamp:
-                        # if gdd is found, save it to variable for use in function calculate_gdd
-                        self._old_gdd = line['Total accumulation (GDD)']
-                        old_timestamp = cur_timestamp
-                    # not containing calculated gdd -> check if we already found gdd from this day, otherwise save avg. temperature
-                    elif old_timestamp.day != cur_timestamp.day:
-                        self._file_timestamps[str_tstamp] = line[self._gdd_sensor]
-                # we don't have sensor for gdd calculations in current line
-                else:
-                    self._file_timestamps[str_tstamp] = 9000
+                if 'Timestamp' not in str_tstamp:
+                    cur_timestamp = datetime.strptime(line['Timestamp (mmddyyyy-hhmm)'], "%m%d%Y-%H%M")
+                    if cur_timestamp > newest_csv_timestamp:
+                        newest_csv_timestamp = cur_timestamp
+                    if self._gdd_sensor in line.keys():
+                        # we need to get last (newest total gdd)
+                        if 'Total accumulation (GDD)' in line.keys() and line['Total accumulation (GDD)'] and cur_timestamp > old_timestamp:
+                            # if gdd is found, save it to variable for use in function calculate_gdd
+                            self._old_gdd = line['Total accumulation (GDD)']
+                            old_timestamp = cur_timestamp
+                        # not containing calculated gdd -> check if we already found gdd from this day, otherwise save avg. temperature
+                        elif old_timestamp.day != cur_timestamp.day:
+                            self._file_timestamps[str_tstamp] = line[self._gdd_sensor]
+                    # we don't have sensor for gdd calculations in current line
+                    else:
+                        self._file_timestamps[str_tstamp] = 9000
 
             # check if data in file is from different year than now -> reset total gdd
             if old_timestamp.year != datetime.now().year:
@@ -691,7 +720,7 @@ class Module(object):
             #print(self._file_timestamps)
             
             return newest_csv_timestamp
-        
+    
         except Exception as e:
             print("Processing module error: read csv file - {}".format(e))
             #print("Processing module: error when appending data to csv_file!")
@@ -786,7 +815,7 @@ class Module(object):
                 s_timestamp = file_name.replace("raw_values-", "")
                 this_timestamp = datetime.strptime(s_timestamp.replace(".json", ""), "%m%d%Y-%H%M%S")
                 # save timestamps that are newer than last entry in the file and older than current hour
-                if this_timestamp >= newest_csv_timestamp and this_timestamp < datetime.now().replace(minute=0, second=0, microsecond=0):
+                if this_timestamp.replace(minute=0, second=0, microsecond=0) > newest_csv_timestamp and this_timestamp < datetime.now().replace(minute=0, second=0, microsecond=0):
                     timestamps.append(this_timestamp)
             if not timestamps:
                 print("No new raw files found...")
