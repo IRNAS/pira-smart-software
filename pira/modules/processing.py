@@ -630,8 +630,8 @@ class Module(object):
                 return -1
 
             file = open(self._csv_filename)
-            # we need to read last 25 entries so we get the whole day
-            last_lines = tl.tail(file,25) 
+            # we need to read last 30 entries so we get atleast the whole day
+            last_lines = tl.tail(file,30) 
             file.close()
             if ','.join(self._csv_columns) in last_lines:
                 del last_lines[last_lines.index(','.join(self._csv_columns))]
