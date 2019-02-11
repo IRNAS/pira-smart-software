@@ -485,8 +485,8 @@ class Module(object):
             # Air pressure middle 1
             if value_name == "2_3_0":
                 calculated_name = self._config_file['air_pres_mid1']['name']
-                unit = self._config_file['air_pres_middle1']['unit']
-                config_vars = self._config_file['air_pres_middle1']['vars']
+                unit = self._config_file['air_pres_mid1']['unit']
+                config_vars = self._config_file['air_pres_mid1']['vars']
                 x = config_vars['offset']
                 y = config_vars['multiply']
                 res_min = config_vars['min']
@@ -499,7 +499,7 @@ class Module(object):
             if value_name == "3_3_0":
                 calculated_name = self._config_file['air_pres_mid2']['name']
                 unit = self._config_file['air_pres_mid2']['unit']
-                config_vars = self._config_file['air_pres_middle2']['vars']
+                config_vars = self._config_file['air_pres_mid2']['vars']
                 x = config_vars['offset']
                 y = config_vars['multiply']
                 res_min = config_vars['min']
