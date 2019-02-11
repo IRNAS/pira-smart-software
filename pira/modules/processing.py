@@ -470,7 +470,7 @@ class Module(object):
                     after_equ_data.append(result)
 
             # Air pressure top
-            if value_name == "1_3_4":
+            if value_name == "1_3_0":
                 calculated_name = self._config_file['air_pres_top']['name']
                 unit = self._config_file['air_pres_top']['unit']
                 config_vars = self._config_file['air_pres_top']['vars']
@@ -483,7 +483,7 @@ class Module(object):
                     after_equ_data.append(result)
 
             # Air pressure middle 1
-            if value_name == "2_3_4":
+            if value_name == "2_3_0":
                 calculated_name = self._config_file['air_pres_mid1']['name']
                 unit = self._config_file['air_pres_middle1']['unit']
                 config_vars = self._config_file['air_pres_middle1']['vars']
@@ -496,7 +496,7 @@ class Module(object):
                     after_equ_data.append(result)
 
             # Air pressure middle 2
-            if value_name == "3_3_4":
+            if value_name == "3_3_0":
                 calculated_name = self._config_file['air_pres_mid2']['name']
                 unit = self._config_file['air_pres_mid2']['unit']
                 config_vars = self._config_file['air_pres_middle2']['vars']
@@ -509,7 +509,7 @@ class Module(object):
                     after_equ_data.append(result)
 
             # Air pressure bottom
-            if value_name == "4_3_4":
+            if value_name == "4_3_0":
                 calculated_name = self._config_file['air_pres_bot']['name']
                 unit = self._config_file['air_pres_bot']['unit']
                 config_vars = self._config_file['air_pres_bot']['vars']
