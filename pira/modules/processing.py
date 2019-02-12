@@ -147,10 +147,10 @@ class Module(object):
         try:
             #DEBUG
             #print("value name: {}".format(value_name))
-            #print("Hourly input data: {}".format(data))
             #print("Current timestamp: {}".format(timestamp))
+            #print("Hourly input data: {}".format(data))
 
-            # Battery state of charge - TODO fix calculation
+            # Battery state of charge
             if value_name == "4_8_3":
                 calculated_name = self._config_file['bat']['name']
                 unit = self._config_file['bat']['unit']
@@ -219,17 +219,25 @@ class Module(object):
                     result = (value + x) * y * z
                     after_equ_data.append(result)
 
-            # Lux top - TODO fix calculation
+            # Lux top, 1_2_1 -> fullspectrum, 1_2_2 -> infrared
             if value_name == "1_2_1" or value_name == "1_2_2":
                 # if this is the second sensor from the pair - perform calculations
                 if value_name not in self._temp_lux and self._temp_lux:
                     keys = [key for key, value in self._temp_lux.items() if "1_2" in key]
                     if not keys:
                         # this is the first sensor from the pair - save it to temporary dict
-                        self._temp_lux[value_name] = data
+                        temp_dict = {}
+                        temp_dict[timestamp] = data
+                        self._temp_lux[value_name] = temp_dict
                         return
-                    temp_index = keys.pop()
-                    temp_list = self._temp_lux[temp_index]
+                    temp_index = keys[0]
+                    if timestamp not in self._temp_lux[temp_index]:
+                        # check if we don't have current hour in temp list - save it to temporary dict
+                        temp_dict = self._temp_lux[value_name]
+                        temp_dict[timestamp] = data
+                        self._temp_lux[value_name] = temp_dict
+                        return
+                    temp_list = self._temp_lux[temp_index][timestamp]
                     #print("temp lux index: {}".format(temp_list))
                     calculated_name = self._config_file['lux_top']['name']
                     unit = self._config_file['lux_top']['unit']
@@ -242,25 +250,42 @@ class Module(object):
                         length = len(temp_list)
                         data = data[:length]
                     for index, value in enumerate(data):
-                        result = value + temp_list[index]
+                        com_value = (value + x) * y
+                        com_temp = (temp_list[index] + x) * y
+                        if value_name == "1_2_1":
+                            result = self.calculate_lux(com_value, com_temp)
+                        else:
+                            result = self.calculate_lux(com_temp, com_value)
                         after_equ_data.append(result)
                     # remove current value since we processed it
-                    del self._temp_lux[temp_index]
+                    del self._temp_lux[temp_index][timestamp]
                 else:
                     # if this is the first sensor - save it to temporary dict
-                    self._temp_lux[value_name] = data
+                    temp_dict = {}
+                    if value_name in self._temp_lux:
+                        temp_dict = self._temp_lux[value_name]
+                    temp_dict[timestamp] = data
+                    self._temp_lux[value_name] = temp_dict
 
-            # Lux middle 1 - TODO fix calculation
+            # Lux middle 1
             if value_name == "2_2_1" or value_name == "2_2_2":
                 # if this is the second sensor from the pair - perform calculations
                 if value_name not in self._temp_lux and self._temp_lux:
                     keys = [key for key, value in self._temp_lux.items() if "2_2" in key]
                     if not keys:
                         # this is the first sensor from the pair - save it to temporary dict
-                        self._temp_lux[value_name] = data
+                        temp_dict = {}
+                        temp_dict[timestamp] = data
+                        self._temp_lux[value_name] = temp_dict
                         return
-                    temp_index = keys.pop()
-                    temp_list = self._temp_lux[temp_index]
+                    temp_index = keys[0]
+                    if timestamp not in self._temp_lux[temp_index]:
+                        # check if we don't have current hour in temp list - save it to temporary dict
+                        temp_dict = self._temp_lux[value_name]
+                        temp_dict[timestamp] = data
+                        self._temp_lux[value_name] = temp_dict
+                        return
+                    temp_list = self._temp_lux[temp_index][timestamp]
                     calculated_name = self._config_file['lux_mid1']['name']
                     unit = self._config_file['lux_mid1']['unit']
                     config_vars = self._config_file['lux_mid1']['vars']
@@ -272,25 +297,42 @@ class Module(object):
                         length = len(temp_list)
                         data = data[:length]
                     for index, value in enumerate(data):
-                        result = value + temp_list[index]
+                        com_value = (value + x) * y
+                        com_temp = (temp_list[index] + x) * y
+                        if value_name == "2_2_1":
+                            result = self.calculate_lux(com_value, com_temp)
+                        else:
+                            result = self.calculate_lux(com_temp, com_value)
                         after_equ_data.append(result)
                     # remove current value since we processed it
-                    del self._temp_lux[temp_index]
+                    del self._temp_lux[temp_index][timestamp]
                 else:
                     # if this is the first sensor from the pair - save it to temporary dict
-                    self._temp_lux[value_name] = data
+                    temp_dict = {}
+                    if value_name in self._temp_lux:
+                        temp_dict = self._temp_lux[value_name]
+                    temp_dict[timestamp] = data
+                    self._temp_lux[value_name] = temp_dict
 
-            # Lux middle 2 - TODO fix calculation
+            # Lux middle 2
             if value_name == "3_2_1" or value_name == "3_2_2":
                 # if this is the second sensor from the pair - perform calculations
                 if value_name not in self._temp_lux and self._temp_lux:
                     keys = [key for key, value in self._temp_lux.items() if "3_2" in key]
                     if not keys:
                         # this is the first sensor from the pair - save it to temporary dict
-                        self._temp_lux[value_name] = data
+                        temp_dict = {}
+                        temp_dict[timestamp] = data
+                        self._temp_lux[value_name] = temp_dict
                         return
-                    temp_index = keys.pop()
-                    temp_list = self._temp_lux[temp_index]
+                    temp_index = keys[0]
+                    if timestamp not in self._temp_lux[temp_index]:
+                        # check if we don't have current hour in temp list - save it to temporary dict
+                        temp_dict = self._temp_lux[value_name]
+                        temp_dict[timestamp] = data
+                        self._temp_lux[value_name] = temp_dict
+                        return
+                    temp_list = self._temp_lux[temp_index][timestamp]
                     calculated_name = self._config_file['lux_mid2']['name']
                     unit = self._config_file['lux_mid2']['unit']
                     config_vars = self._config_file['lux_mid2']['vars']
@@ -302,25 +344,42 @@ class Module(object):
                         length = len(temp_list)
                         data = data[:length]
                     for index, value in enumerate(data):
-                        result = value + temp_list[index]
+                        com_value = (value + x) * y
+                        com_temp = (temp_list[index] + x) * y
+                        if value_name == "3_2_1":
+                            result = self.calculate_lux(com_value, com_temp)
+                        else:
+                            result = self.calculate_lux(com_temp, com_value)
                         after_equ_data.append(result)
                     # remove current value since we processed it
-                    del self._temp_lux[temp_index]
+                    del self._temp_lux[temp_index][timestamp]
                 else:
                     # if this is the first sensor from the pair - save it to temporary list
-                    self._temp_lux[value_name] = data
+                    temp_dict = {}
+                    if value_name in self._temp_lux:
+                        temp_dict = self._temp_lux[value_name]
+                    temp_dict[timestamp] = data
+                    self._temp_lux[value_name] = temp_dict
 
-            # Lux bottom - TODO fix calculation
+            # Lux bottom
             if value_name == "4_2_1" or value_name == "4_2_2":
                 # if this is the second sensor from the pair - perform calculations
                 if value_name not in self._temp_lux and self._temp_lux:
                     keys = [key for key, value in self._temp_lux.items() if "4_2" in key]
                     if not keys:
                         # this is the first sensor from the pair - save it to temporary dict
-                        self._temp_lux[value_name] = data
+                        temp_dict = {}
+                        temp_dict[timestamp] = data
+                        self._temp_lux[value_name] = temp_dict
                         return
-                    temp_index = keys.pop()
-                    temp_list = self._temp_lux[temp_index]
+                    temp_index = keys[0]
+                    if timestamp not in self._temp_lux[temp_index]:
+                        # check if we don't have current hour in temp list - save it to temporary dict
+                        temp_dict = self._temp_lux[value_name]
+                        temp_dict[timestamp] = data
+                        self._temp_lux[value_name] = temp_dict
+                        return
+                    temp_list = self._temp_lux[temp_index][timestamp]
                     calculated_name = self._config_file['lux_bot']['name']
                     unit = self._config_file['lux_bot']['unit']
                     config_vars = self._config_file['lux_bot']['vars']
@@ -332,13 +391,22 @@ class Module(object):
                         length = len(temp_list)
                         data = data[:length]
                     for index, value in enumerate(data):
-                        result = value + temp_list[index]
+                        com_value = (value + x) * y
+                        com_temp = (temp_list[index] + x) * y
+                        if value_name == "4_2_1":
+                            result = self.calculate_lux(com_value, com_temp)
+                        else:
+                            result = self.calculate_lux(com_temp, com_value)
                         after_equ_data.append(result)
                     # remove current value since we processed it
-                    del self._temp_lux[temp_index]
+                    del self._temp_lux[temp_index][timestamp]
                 else:
                     # if this is the first sensor from the pair - save it to temporary list
-                    self._temp_lux[value_name] = data
+                    temp_dict = {}
+                    if value_name in self._temp_lux:
+                        temp_dict = self._temp_lux[value_name]
+                    temp_dict[timestamp] = data
+                    self._temp_lux[value_name] = temp_dict
 
             # CO2
             if value_name == "1_6_0":
@@ -782,7 +850,7 @@ class Module(object):
         """
         Function to calculate GDD for a given day
         Input: day_list (containing average temperatures), day_timestamp
-        Output: new entry in dictionary - self._gdd_dict (key: timestamp, value: gdd )
+        Output: new entry in dictionary - self._gdd_dict (key: timestamp, value: gdd)
         uses base temp variable - self._base_temp in F
         """
         try:
@@ -796,6 +864,23 @@ class Module(object):
         except Exception as e:
             print("Processing module error: calculating GDD - {}".format(e))
             #print("Processing module: error when calculating GDD!")
+
+    def calculate_lux(self, ch0, ch1):
+        """
+        Function to calculate illuminance value (in lux)
+        Input: ch0 and ch1 -> raw values
+        Output: from two calculations (lux1 and lux2) returns highest value
+        Equation and constants used from https://electronics.stackexchange.com/questions/146519/tsl2591-sensor-value-calculation
+        """
+        gain = 25.0     # GAIN_MED
+        integration_time = 300.0    # 300 MS
+        cpl = integration_time * gain / 408.0
+        lux1 = (ch0 - (1.64 * ch1)) / cpl
+        lux2 = ((0.59 * ch0) - (0.86 * ch1)) / cpl
+        if lux1 > lux2:
+            return lux1
+        else:
+            return lux2
 
     def append_to_csv_file(self, newest_csv_timestamp):
         """
