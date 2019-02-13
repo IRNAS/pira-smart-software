@@ -54,6 +54,7 @@ class PIRASMARTUART(object):
         self.pira_rpi_gpio = None # a
 
         read_timeout = 0    # handles when pira ble is not connected
+        value = 0.0         # float that pira ble will use
 
         try:
             self.ser.flushInput()
