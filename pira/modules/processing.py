@@ -972,21 +972,26 @@ class Module(object):
                 print ("Processing module: processing file: {}".format(new_file_name))
 
                 # read raw data file
-                with open(RAW_DATA_STORAGE_PATH + '/' + new_file_name, "r") as fp:
-                    new_file = json.load(fp)
+                try:
+                    with open(RAW_DATA_STORAGE_PATH + '/' + new_file_name, "r") as fp:
+                        new_file = json.load(fp)
 
-                for i in new_file:  # device
-                    for j in new_file[i]:   # sensor
-                        for k in new_file[i][j]:    # variable
-                            value_name = str(i) + "_" + str(j) + "_" + str(k)
-                            #print("Value name: "+  str(value_name))
-                            if value_name not in self._raw_data:
-                                self._raw_data[value_name] = {}
-                            for l in new_file[i][j][k]:
-                                data = new_file[i][j][k][l]['data']
-                                time = new_file[i][j][k][l]['time']
-                                formated_time = datetime.strptime(time, "%Y-%m-%d %H:%M:%S.%f")
-                                self._raw_data[value_name][formated_time] = data
+                    for i in new_file:  # device
+                        for j in new_file[i]:   # sensor
+                            for k in new_file[i][j]:    # variable
+                                value_name = str(i) + "_" + str(j) + "_" + str(k)
+                                #print("Value name: "+  str(value_name))
+                                if value_name not in self._raw_data:
+                                    self._raw_data[value_name] = {}
+                                for l in new_file[i][j][k]:
+                                    data = new_file[i][j][k][l]['data']
+                                    time = new_file[i][j][k][l]['time']
+                                    formated_time = datetime.strptime(time, "%Y-%m-%d %H:%M:%S.%f")
+                                    self._raw_data[value_name][formated_time] = data
+
+                except Exception as e:
+                    print("Processing module error when processing new file- {}".format(e))
+                    #print("Processing module: error when appending data to csv_file!")
 
             if self._raw_data:
                 # calculate new data from raw
