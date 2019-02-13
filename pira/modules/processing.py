@@ -990,7 +990,7 @@ class Module(object):
                                     self._raw_data[value_name][formated_time] = data
 
                 except Exception as e:
-                    print("Processing module error when processing new file- {}".format(e))
+                    print("Processing module error: processing new file- {}".format(e))
                     #print("Processing module: error when appending data to csv_file!")
 
             if self._raw_data:
