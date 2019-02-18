@@ -24,8 +24,9 @@ TODO
  4. Measure distance with MB7092XL-MaxSonar-WRMA1
  5. Send data to TheThingsNetwork
  6. Send data over RockBlock Iridium modem
- 7. Send images to Azure cloud
+ 7. Send images and data to Azure cloud storage
  8. Send data to M2X IoT platform
+ 9. Capture and process sensor data from CAN bus
 
 ## RESIN - Fleet configuration variables
 The following fleet configuration variables must be defined for correct operation:
@@ -54,7 +55,7 @@ The following environment variables can be used to configure the firmware:
   * `WIFI_SSID` (default `pira-01`), on non-resin ONLY for now
   * `WIFI_PASSWORD` (default `pirapira`), on non-resin ONLY for now
   * `DEBUG_ENABLE_MODE` (default `none`), read from given pin, can be `gpio:5` where number can be any BCM pin to turn on debug
-  * `MODULES` a comma separated list of modules to load, the following is a list of all modules currently available `pira.modules.scheduler,pira.modules.ultrasonic,pira.modules.camera,pira.modules.lora,pira.modules.rockblock,pira.modules.nodewatcher,pira.modules.debug,pira.modules.webserver,pira.modules.m2x_plat,pira.modules.can,pira.modules.azure_images`, delete the ones you do not wish to use.
+  * `MODULES` a comma separated list of modules to load, the following is a list of all modules currently available `pira.modules.scheduler,pira.modules.ultrasonic,pira.modules.camera,pira.modules.lora,pira.modules.rockblock,pira.modules.nodewatcher,pira.modules.debug,pira.modules.webserver,pira.modules.m2x_plat,pira.modules.can,pira.modules.azure_images,pira.modules.azure_sync`, delete the ones you do not wish to use.
   * `SHUTDOWN_VOLTAGE` (default `2.6`V) to configure when the system should shutdown. At 2.6V hardware shutdown will occur, suggested value is 2.3-3V. When this is triggered, the device will wake up next based on the configured interval, unless the battery voltage continues to fall under the hardware limit, then it will boot again when it charges. Note this shutdown will be aborted if in debug mode.
   * `LATITUDE` (default `0`) to define location, used for sunrise/sunset calculation
   * `LONGITUDE` (default `0`) to define location
@@ -78,11 +79,12 @@ The following environment variables can be used to configure the firmware:
     * `SCHEDULE_MONTHx_T_ON` (default `35`), remains on for specified time in minutes
     * `SCHEDULE_MONTHx_T_OFF` (default `15`), remains off for specified time in minutes
 * Camera
-  * `CAMERA_RESOLUTION` (default `1280x720`), options are `1280x720`, `1920x1080`, `2592x1952` and some others. Mind fi copying resolution that you use the letter `x` not a multiply character.
+  * `CAMERA_RESOLUTION` (default `1280x720`), options are `1280x720`, `1920x1080`, `2592x1952` and some others. Mind if copying resolution that you use the letter `x` not a multiply character.
   * `CAMERA_VIDEO_DURATION` (default `until-sleep`), duration in minutes or `off`
   * `CAMERA_MIN_LIGHT_LEVEL` (default `0.0`), minimum required for video to start recording
   * `CAMERA_FAIL_SHUTDOWN` (default `0`), can camera shutdown the device for example if not enough light, set to `1` to enable
-  * `CAMERA_SNAPSHOT_INTERVAL` (default `off`), duration in minutes to be configured
+  * `CAMERA_SNAPSHOT_INTERVAL` (default `off`), duration in minutes to be configured or `daily`
+  * `CAMERA_SNAPSHOT_HOUR` (default `12`), at which hour (24h UTC format) snapshot should be taken, `CAMERA_SNAPSHOT_INTERVAL` is required to be set to `daily`
 * Rockblock
   * `ROCKBLOCK_REPORT_INTERVAL` (default `24`), power on interval
   * `ROCKBLOCK_RETRIES` (default `2`), maximum number of retries
