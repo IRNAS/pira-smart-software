@@ -9,6 +9,7 @@ ENV VARS:
     - CAMERA_MIN_LIGHT_LEVEL
     - CAMERA_FAIL_SHUTDOWN
     - CAMERA_SNAPSHOT_INTERVAL
+    - CAMERA_SNAPSHOT_HOUR
 """
 
 from __future__ import print_function
@@ -16,10 +17,11 @@ from __future__ import print_function
 import datetime
 import io
 import os
+from os import listdir
+from os.path import isfile, join
 
 from ..hardware.brightpilib import *
 import numpy as np
-#import statistics as np     # statistics module used instead of numpy
 import array
 import picamera
 import picamera.array
@@ -40,22 +42,31 @@ class Module(object):
         self.camera_shutdown = os.environ.get('CAMERA_FAIL_SHUTDOWN', '0')
         self.video_duration = os.environ.get('CAMERA_VIDEO_DURATION', 'until-sleep')
         self.snapshot_interval_conf = os.environ.get('CAMERA_SNAPSHOT_INTERVAL', 'off')
+        self.snapshot_hour_conf = os.environ.get('CAMERA_SNAPSHOT_HOUR', '12')
 
         try:
             self.video_duration_min = datetime.timedelta(minutes=int(self.video_duration))
         except ValueError:
             self.video_duration_min = None
 
-        try:
-            self.snapshot_interval= datetime.timedelta(minutes=int(self.snapshot_interval_conf))
-        except ValueError:
-            self.snapshot_interval = None
+        if self.snapshot_interval_conf == 'daily':
+            self.snapshot_interval = 'daily'
+        else:
+            try:
+                self.snapshot_interval = datetime.timedelta(minutes=int(self.snapshot_interval_conf))
+            except ValueError:
+                self.snapshot_interval = None
 
         self.light_level = 0.0
         try:
             self.minimum_light_level = float(os.environ.get('CAMERA_MIN_LIGHT_LEVEL', 0.0))
         except ValueError:
             self.minimum_light_level = 0.0
+
+        try:
+            self.snapshot_hour = int(self.snapshot_hour_conf)
+        except:
+            self.snapshot_hour = 12
 
         # Ensure storage location exists.
         try:
@@ -98,7 +109,8 @@ class Module(object):
         if free_space < 1:
             print("Not enough free space (less than 1 GiB), do not save snapshots or record")
             return
-        else:
+        # check if interval is set to daily -> snapshot will be taken in process loop
+        elif self.snapshot_interval != 'daily':
             # Store single snapshot only if above threshold, else do not record
             if not self._snapshot():
                 # turn off video recording
@@ -166,9 +178,29 @@ class Module(object):
                 except:
                     pass
 
+            # if we need daily snapshot
+            if self.snapshot_interval == 'daily':
+                # get all raw filenames
+                self._local_files = [f for f in listdir(CAMERA_STORAGE_PATH) if isfile(join(CAMERA_STORAGE_PATH, f))]
+                # find the newest - local files names are made like this: "snapshot-2019-02-06--11-44-46--0.00-10.000V-0.00C.jpg")
+                newest_timestamp = datetime.datetime.strptime("01012019-0100", "%m%d%Y-%H%M")
+                for file_name in self._local_files:
+                    if 'snapshot' in file_name:
+                        s_timestamp = file_name.replace("snapshot-", "")
+                        time_index = len(s_timestamp) - s_timestamp.rfind("--")
+                        this_timestamp = datetime.datetime.strptime(s_timestamp[:-time_index], "%Y-%m-%d--%H-%M-%S")
+                        if this_timestamp > newest_timestamp:
+                            newest_timestamp = this_timestamp
+                time_now = datetime.datetime.now()
+                # if we are in a new day and specified hour to take snapshot is now or in the past -> take snapshot
+                if newest_timestamp.day != time_now.day and self.snapshot_hour <= time_now.hour:
+                    print("Taking daily snapshot...")
+                    self._snapshot()
+
             # make snapshots if so defined and not recording
-            if self.video_duration == 'off' and self.snapshot_interval is not None and now - self._last_snapshot >= self.snapshot_interval:
+            elif self.video_duration == 'off' and self.snapshot_interval is not None and now - self._last_snapshot >= self.snapshot_interval:
                 self._snapshot()
+            
         return
 
     def _check_light_conditions(self):
