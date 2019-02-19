@@ -46,8 +46,6 @@ class Module(object):
         self.container_name = os.environ.get('AZURE_CONTAINER_NAME', 'azuresync')    # get container name, default is azuresync
         self._local_delete = os.environ.get('AZURE_DELETE_LOCAL', 'off')                # delete local files
         self._azure_delete = os.environ.get('AZURE_DELETE_CLOUD', 'off')                # delete from cloud
-        # get csv filename
-        self._csv_filename = os.environ.get('PROCESS_CSV_FILENAME', 'processed')
 
         # Check if azure push is correctly configured
         if self.ACCOUNT_NAME is None or self.ACCOUNT_KEY is None:
