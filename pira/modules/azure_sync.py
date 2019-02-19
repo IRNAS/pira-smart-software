@@ -47,7 +47,7 @@ class Module(object):
         self._local_delete = os.environ.get('AZURE_DELETE_LOCAL', 'off')                # delete local files
         self._azure_delete = os.environ.get('AZURE_DELETE_CLOUD', 'off')                # delete from cloud
         # get csv filename
-        self._csv_filename = os.environ.get('PROCESS_CSV_FILENAME', 'processed.csv')
+        self._csv_filename = os.environ.get('PROCESS_CSV_FILENAME', 'processed')
 
         # Check if azure push is correctly configured
         if self.ACCOUNT_NAME is None or self.ACCOUNT_KEY is None:
@@ -113,7 +113,7 @@ class Module(object):
             print("Something went wrong when creating container, error: {}".format(e))
             return
 
-    def upload_via_path(self,_path, _subfolder):
+    def upload_via_path(self, _path, _subfolder):
         """
         It uploads the file to the self.container_name via _path
         _subfolder argument can be None, file then gets uploaded to root of blob storage - which is sync storage
@@ -244,8 +244,12 @@ class Module(object):
             print("Warning: Azure is not correctly configured, skipping.")
             return
         
-        # upload updated csv
-        self.upload_via_path(sync_folder_path + calculated_data_folder_path + self._csv_filename, calculated_data_folder_path)
+        # upload csv files from calculated directory
+        local_files = []
+        local_files = [f for f in listdir(sync_folder_path + calculated_data_folder_path) if isfile(join(sync_folder_path + calculated_data_folder_path, f))]
+        for item in local_files:
+            full_path_item = join(sync_folder_path + calculated_data_folder_path, item)
+            self.upload_via_path(full_path_item, calculated_data_folder_path)
         
         # upload new files from subdirectories
         result = self.upload_only_folder(raw_data_folder_path)
