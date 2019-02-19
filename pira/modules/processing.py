@@ -700,8 +700,9 @@ class Module(object):
             if not os.path.isfile(self._csv_filename):
                 self._file_timestamps = {}
                 self._write_header = True
-                if any(File.endswith(".csv") for File in os.listdir(".")):
-                    return -2
+                for fname in os.listdir(CSV_DATA_STORAGE_PATH):
+                    if fname.endswith(".csv"):
+                        return -2
                 else:
                     return -1
 
@@ -961,6 +962,7 @@ class Module(object):
                 newest_csv_timestamp = datetime.strptime("01012019-0100", "%m%d%Y-%H%M")
             elif newest_csv_timestamp == -2:
                 # csv file is empty, but previous versions exist
+                print("csv file is empty, but previous versions exist")
                 newest_csv_timestamp = datetime.now().replace(second=0, microsecond=0)
 
             # get all raw filenames
