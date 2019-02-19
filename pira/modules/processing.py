@@ -65,7 +65,10 @@ class Module(object):
         with open(config_full_path, "rb") as fp:
             self._config_file = json.load(fp)
         #print(self._config_file)
-        config_file_version = str(self._config_file['version'])
+        try:
+            config_file_version = str(self._config_file['version'])
+        except:
+            config_file_version = 1
         self._csv_filename = CSV_DATA_STORAGE_PATH  + '/' + filename + "-v" + config_file_version + ".csv"
 
         # prepare dictionaries of raw and calculated data
