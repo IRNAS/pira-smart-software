@@ -700,7 +700,10 @@ class Module(object):
             if not os.path.isfile(self._csv_filename):
                 self._file_timestamps = {}
                 self._write_header = True
-                return -1
+                if any(File.endswith(".csv") for File in os.listdir(".")):
+                    return -2
+                else:
+                    return -1
 
             file = open(self._csv_filename)
             # we need to read last 30 entries so we get atleast the whole day
@@ -954,8 +957,11 @@ class Module(object):
             # read csv file
             newest_csv_timestamp = self.read_csv_file()
             if newest_csv_timestamp == -1:
-                #print("Csv file is empty...")
+                # Csv file is empty
                 newest_csv_timestamp = datetime.strptime("01012019-0100", "%m%d%Y-%H%M")
+            elif newest_csv_timestamp == -2:
+                # csv file is empty, but previous versions exist
+                newest_csv_timestamp = datetime.now().replace(second=0, microsecond=0)
 
             # get all raw filenames
             self._local_files = [f for f in listdir(RAW_DATA_STORAGE_PATH) if isfile(join(RAW_DATA_STORAGE_PATH, f))]
