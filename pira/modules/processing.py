@@ -963,7 +963,7 @@ class Module(object):
             elif newest_csv_timestamp == -2:
                 # csv file is empty, but previous versions exist
                 print("csv file is empty, but previous versions exist")
-                newest_csv_timestamp = datetime.now().replace(second=0, microsecond=0)
+                newest_csv_timestamp = datetime.now().replace(hour=0, second=0, microsecond=0)
 
             # get all raw filenames
             self._local_files = [f for f in listdir(RAW_DATA_STORAGE_PATH) if isfile(join(RAW_DATA_STORAGE_PATH, f))]
