@@ -4,7 +4,7 @@ processing.py
 It is a module that processes sensor data from raw to calculated .csv with lookup table /data/config.json
 
 ENV VARS:
-    - PROCESS_CSV_FILENAME (default is 'processed.csv')
+    - PROCESS_CSV_FILENAME (default is 'processed')
     - GDD_SENSOR_NAME (default is 'Temperature Middle 1 (F)')
     - GDD_BASE_TEMP (default is 50 F)
     - PROCESSING_RUN (default is cont)
@@ -41,8 +41,7 @@ class Module(object):
         self._boot = boot
 
         # Read environs
-        filename = os.environ.get('PROCESS_CSV_FILENAME', 'processed.csv')
-        self._csv_filename = CSV_DATA_STORAGE_PATH  + '/' + filename
+        filename = os.environ.get('PROCESS_CSV_FILENAME', 'processed')
         self._gdd_sensor = os.environ.get('PROCESS_GDD_SENSOR_NAME', 'Temperature middle 1 (F)')
         base_temp = os.environ.get('PROCESS_GDD_BASE_TEMP', 50)
         try:
@@ -66,6 +65,10 @@ class Module(object):
         with open(config_full_path, "rb") as fp:
             self._config_file = json.load(fp)
         #print(self._config_file)
+        config_file_version = str(self._config_file['version'])
+        self._csv_filename = CSV_DATA_STORAGE_PATH  + '/' + filename + "-v" + config_file_version + ".csv"
+        print(self._csv_filename)
+        # TODO probaj + spremeni readme glede na header tega fajla
 
         # prepare dictionaries of raw and calculated data
         self._raw_data = {}
@@ -75,9 +78,10 @@ class Module(object):
         self._csv_columns = []
         self._csv_columns.append('Timestamp (mmddyyyy-hhmm)')
         for sensor in self._config_file:
-            name = self._config_file[sensor]['name']
-            unit = self._config_file[sensor]['unit']
-            self._csv_columns.append(name + " (" + unit + ")")
+            if sensor != "version":
+                name = self._config_file[sensor]['name']
+                unit = self._config_file[sensor]['unit']
+                self._csv_columns.append(name + " (" + unit + ")")
         self._csv_columns.append('Total accumulation (GDD)')
 
         # prepare temp lists, dicts and vars for combined calculations
