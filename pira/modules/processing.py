@@ -67,8 +67,6 @@ class Module(object):
         #print(self._config_file)
         config_file_version = str(self._config_file['version'])
         self._csv_filename = CSV_DATA_STORAGE_PATH  + '/' + filename + "-v" + config_file_version + ".csv"
-        print(self._csv_filename)
-        # TODO probaj + spremeni readme glede na header tega fajla
 
         # prepare dictionaries of raw and calculated data
         self._raw_data = {}
