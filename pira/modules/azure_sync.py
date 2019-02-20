@@ -83,6 +83,9 @@ class Module(object):
                 # we are syncing only files not our subfolders
                 if (camera_folder_path not in blob.name) and (raw_data_folder_path not in blob.name) and (calculated_data_folder_path not in blob.name):
                     server_files.append(blob.name)
+            # we ensure that config.json file is always synced
+            if 'config.json' not in server_files:
+                server_files.append('config.json')
             # make list of files that are not on device
             difference = list(set(server_files) - set(local_files))
             # make list of files that are on server and on device
