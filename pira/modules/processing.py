@@ -206,9 +206,10 @@ class Module(object):
                 y = config_vars['multiply']
                 res_min = config_vars['min']
                 res_max = config_vars['max']
+                result = 0.0
                 for value in data:
-                    result = (value + x) * y
-                    after_equ_data.append(result)
+                    result += (value + x) * y
+                after_equ_data.append(result)
 
             # Wind
             if value_name == "1_4_0":
