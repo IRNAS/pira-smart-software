@@ -926,12 +926,13 @@ class Module(object):
                 print("File gdd: " + str(self._file_gdd))
                 print("Old gdd: " +  str(self._old_gdd))
                 '''
-                # if second new data is in new day and read part of csv doesn't have gdd or has lower gdd-> write line with only timestamp and gdd
-                if newest_csv_timestamp.day != datetime.strptime(calculated_timestamps[1], "%m%d%Y-%H%M").day and newest_csv_timestamp.replace(hour=0) in self._gdd_dict and self._file_gdd < self._gdd_dict[newest_csv_timestamp.replace(hour=0)]:
-                    dict_to_write = {}
-                    dict_to_write['Timestamp (mmddyyyy-hhmm)'] = datetime.strftime(newest_csv_timestamp + timedelta(minutes=1), "%m%d%Y-%H%M")
-                    dict_to_write['Total accumulation (GDD)'] = self._gdd_dict[newest_csv_timestamp.replace(hour=0)]
-                    writer.writerow(dict_to_write)
+                # if first or second new data is in new day and read part of csv doesn't have gdd or has lower gdd-> write line with only timestamp and gdd
+                if newest_csv_timestamp.day != datetime.strptime(calculated_timestamps[0], "%m%d%Y-%H%M").day or newest_csv_timestamp.day != datetime.strptime(calculated_timestamps[1], "%m%d%Y-%H%M").day:
+                    if newest_csv_timestamp.replace(hour=0) in self._gdd_dict and (self._file_gdd == 0 or self._file_gdd < self._gdd_dict[newest_csv_timestamp.replace(hour=0)]):
+                        dict_to_write = {}
+                        dict_to_write['Timestamp (mmddyyyy-hhmm)'] = datetime.strftime(newest_csv_timestamp + timedelta(minutes=1), "%m%d%Y-%H%M")
+                        dict_to_write['Total accumulation (GDD)'] = self._gdd_dict[newest_csv_timestamp.replace(hour=0)]
+                        writer.writerow(dict_to_write)
                 for tstamp in calculated_timestamps:
                     dict_to_write = self._calculated_data[tstamp]
                     #print ("dict_to_write: {}".format(dict_to_write))
