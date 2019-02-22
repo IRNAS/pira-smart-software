@@ -916,7 +916,7 @@ class Module(object):
                     if datetime.strptime(tstamp, "%m%d%Y-%H%M") < datetime.now().replace(minute=0, second=0, microsecond=0):
                         calculated_timestamps.append(tstamp)
                 calculated_timestamps.sort()
-                
+                '''
                 print("Calculated timestamps:") # testing prints
                 print(calculated_timestamps)
                 print("Newest csv timestamp:")
@@ -925,7 +925,7 @@ class Module(object):
                 print(self._gdd_dict)
                 print("File gdd: " + str(self._file_gdd))
                 print("Old gdd: " +  str(self._old_gdd))
-                
+                '''
                 # if first or second new data is in new day and read part of csv doesn't have gdd or has lower gdd-> write line with only timestamp and gdd
                 new_day = False
                 first_data = datetime.strptime(calculated_timestamps[0], "%m%d%Y-%H%M").day
