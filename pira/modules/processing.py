@@ -817,6 +817,8 @@ class Module(object):
             for tstamp in self._calculated_data:
                 if self._calculated_data[tstamp] and self._gdd_sensor in self._calculated_data[tstamp]:
                     timestamp = datetime.strptime(tstamp, "%m%d%Y-%H%M")
+                    #TODO avoid calculating gdd for current day?
+                    #if timestamp.replace(hour=0, minute=0, second=0, microsecond=0) != datetime.now().replace(hour=0, minute=0, second=0, microsecond=0):
                     timestamps.append(timestamp)
             if not timestamps:
                 #print("GDD: No data found in timestamps")
@@ -916,7 +918,7 @@ class Module(object):
                     if datetime.strptime(tstamp, "%m%d%Y-%H%M") < datetime.now().replace(minute=0, second=0, microsecond=0):
                         calculated_timestamps.append(tstamp)
                 calculated_timestamps.sort()
-                '''
+                
                 print("Calculated timestamps:") # testing prints
                 print(calculated_timestamps)
                 print("Newest csv timestamp:")
@@ -925,22 +927,23 @@ class Module(object):
                 print(self._gdd_dict)
                 print("File gdd: " + str(self._file_gdd))
                 print("Old gdd: " +  str(self._old_gdd))
-                '''
-                # if first or second new data is in new day and read part of csv doesn't have gdd or has lower gdd-> write line with only timestamp and gdd
+                
+                # we check first three data timestamps if any is in new day
                 new_day = False
-                first_data = datetime.strptime(calculated_timestamps[0], "%m%d%Y-%H%M").day
-                if newest_csv_timestamp.day != first_data:
+                first_data = datetime.strptime(calculated_timestamps[0], "%m%d%Y-%H%M")
+                if newest_csv_timestamp.day != first_data.day and first_data > newest_csv_timestamp:
                     new_day = True
                 second_data = 0
                 third_data = 0
-                if len(calculated_timestamps) > 1:
-                    second_data = datetime.strptime(calculated_timestamps[1], "%m%d%Y-%H%M").day
-                    if newest_csv_timestamp.day != second_data:
+                if len(calculated_timestamps) > 1 and not new_day:
+                    second_data = datetime.strptime(calculated_timestamps[1], "%m%d%Y-%H%M")
+                    if newest_csv_timestamp.day != second_data.day and second_data > newest_csv_timestamp:
                         new_day = True
-                if len(calculated_timestamps) > 2:
-                    third_data = datetime.strptime(calculated_timestamps[2], "%m%d%Y-%H%M").day
-                    if newest_csv_timestamp.day != third_data:
+                if len(calculated_timestamps) > 2 and not new_day:
+                    third_data = datetime.strptime(calculated_timestamps[2], "%m%d%Y-%H%M")
+                    if newest_csv_timestamp.day != third_data.day and third_data > newest_csv_timestamp:
                         new_day = True
+                # if new day is confirmed and read part of csv doesn't have gdd or has lower gdd-> write line with only timestamp and gdd
                 if new_day and newest_csv_timestamp.replace(hour=0) in self._gdd_dict and (self._file_gdd == 0 or self._file_gdd < self._gdd_dict[newest_csv_timestamp.replace(hour=0)]):
                     dict_to_write = {}
                     dict_to_write['Timestamp (mmddyyyy-hhmm)'] = datetime.strftime(newest_csv_timestamp + timedelta(minutes=1), "%m%d%Y-%H%M")
