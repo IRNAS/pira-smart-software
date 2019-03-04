@@ -107,36 +107,38 @@ class Module(object):
             for value_name in self._raw_data:
                 timestamps = list(self._raw_data[value_name].keys())
                 if not timestamps:
-                    break
-                timestamps.sort()   # we sort timestamps, so that the first entry is the oldest
-                min_time = min(timestamps)
-                max_time = max(timestamps)
-                # find out how many hourly intervals we have in current value
-                delta_time = max_time - min_time
-                delta_hours = int(delta_time.total_seconds() / 3600) + 1
-                hour_list = []
-                if delta_hours > 0:
-                    #make list of values per hour
-                    for hour in range(0, delta_hours+1):
-                        hour_list = []
-                        max_tstamp = min_time
-                        for tstamp in timestamps:
-                            test_tstamp = tstamp.replace(minute=0, second=0, microsecond=0)
-                            test_delta = (min_time + timedelta(hours=hour)).replace(minute=0, second=0, microsecond=0)
-                            if test_tstamp == test_delta:
-                                hour_list.append(self._raw_data[value_name][tstamp])
-                                if max_tstamp < tstamp:
-                                    max_tstamp = tstamp
-                        if hour_list:
-                            hour_timestamp = max_tstamp.replace(minute=0, second=0, microsecond=0)
-                            self.process_hourly_data(value_name, hour_list, hour_timestamp)
+                    # we don't have data to process for current value_name
+                    pass
                 else:
-                    #if we have all data in an hour
-                    for item in self._raw_data[value_name]:
-                        hour_list.append(self._raw_data[value_name][item])
-                    hour_timestamp = max_time.replace(minute=0, second=0, microsecond=0)
-                    self.process_hourly_data(value_name, hour_list, hour_timestamp)
-
+                    timestamps.sort()   # we sort timestamps, so that the first entry is the oldest
+                    min_time = min(timestamps)
+                    max_time = max(timestamps)
+                    # find out how many hourly intervals we have in current value
+                    delta_time = max_time - min_time
+                    delta_hours = int(delta_time.total_seconds() / 3600) + 1
+                    hour_list = []
+                    if delta_hours > 0:
+                        #make list of values per hour
+                        for hour in range(0, delta_hours+1):
+                            hour_list = []
+                            max_tstamp = min_time
+                            for tstamp in timestamps:
+                                test_tstamp = tstamp.replace(minute=0, second=0, microsecond=0)
+                                test_delta = (min_time + timedelta(hours=hour)).replace(minute=0, second=0, microsecond=0)
+                                if test_tstamp == test_delta:
+                                    hour_list.append(self._raw_data[value_name][tstamp])
+                                    if max_tstamp < tstamp:
+                                        max_tstamp = tstamp
+                            if hour_list:
+                                hour_timestamp = max_tstamp.replace(minute=0, second=0, microsecond=0)
+                                self.process_hourly_data(value_name, hour_list, hour_timestamp)
+                    else:
+                        #if we have all data in an hour
+                        for item in self._raw_data[value_name]:
+                            hour_list.append(self._raw_data[value_name][item])
+                        hour_timestamp = max_time.replace(minute=0, second=0, microsecond=0)
+                        self.process_hourly_data(value_name, hour_list, hour_timestamp)
+                
         except Exception as e:
             print("Processing module error: raw data - {}".format(e))
             #print("Processing module: error when processing raw data!")
