@@ -83,6 +83,8 @@ class Module(object):
                 name = self._config_file[sensor]['name']
                 unit = self._config_file[sensor]['unit']
                 self._csv_columns.append(name + " (" + unit + ")")
+                if "air_pres" in sensor:
+                    self._csv_columns.append(name + " (inhg)")
         self._csv_columns.append('Total accumulation (GDD)')
 
         # prepare temp lists, dicts and vars for combined calculations
@@ -684,7 +686,7 @@ class Module(object):
             self._calculated_data[str_timestamp][calculated_name + " (" + unit + ")"] = round(average,2)
 
             # calculate required extra data
-            if "air_pres" in calculated_name:
+            if "hPa" in unit:
                 inhg = average * 0.029529983071445
                 self._calculated_data[str_timestamp][calculated_name + " (inhg)"] = round(inhg,2)
 
