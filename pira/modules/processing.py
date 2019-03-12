@@ -1004,8 +1004,8 @@ class Module(object):
             for file_name in self._local_files:
                 s_timestamp = file_name.replace("raw_values-", "")
                 this_timestamp = datetime.strptime(s_timestamp.replace(".json", ""), "%m%d%Y-%H%M%S")
-                # save timestamps that are newer than last entry in the file and older than current hour
-                if this_timestamp.replace(minute=0, second=0, microsecond=0) > newest_csv_timestamp and this_timestamp < datetime.now().replace(minute=0, second=0, microsecond=0):
+                # save timestamps that are newer than last entry in the file
+                if this_timestamp.replace(minute=0, second=0, microsecond=0) > newest_csv_timestamp:
                     timestamps.append(this_timestamp)
             if not timestamps:
                 print("No new raw files found...")
@@ -1014,7 +1014,7 @@ class Module(object):
             timestamps.sort()
             for timestamp in timestamps:
                 new_file_name = "raw_values-" + timestamp.strftime("%m%d%Y-%H%M%S") + ".json"
-                print ("Processing module: processing file: {}".format(new_file_name))
+                print("Processing module: processing file: {}".format(new_file_name))
 
                 # read raw data file
                 try:
@@ -1032,7 +1032,9 @@ class Module(object):
                                     data = new_file[i][j][k][l]['data']
                                     time = new_file[i][j][k][l]['time']
                                     formated_time = datetime.strptime(time, "%Y-%m-%d %H:%M:%S.%f")
-                                    self._raw_data[value_name][formated_time] = data
+                                    # we only process data older than current hour
+                                    if formated_time < datetime.now().replace(minute=0, second=0, microsecond=0):
+                                        self._raw_data[value_name][formated_time] = data
 
                 except Exception as e:
                     print("Processing module error: processing new file- {}".format(e))
