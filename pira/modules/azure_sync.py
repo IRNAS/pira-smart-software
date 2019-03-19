@@ -281,7 +281,9 @@ class Module(object):
         difference = list(set(local_files) - set(server_files))
         # make list of files that are on server and on device
         files_on_both = list(set(local_files) - set(difference))
-        # sync files that are on both locations
+        # sync files that are on both locations, except config.json (which is only downloaded)
+        if 'config.json' in files_on_both:
+            files_on_both.remove('config.json')
         for item in files_on_both:
             self.up_update_via_path(item, sync_folder_path)
         # upload files that are not on server

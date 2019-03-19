@@ -58,12 +58,20 @@ class Module(object):
         # read config file
         config_full_path = sync_folder_path + "config.json"
         if not os.path.isfile(config_full_path):
-            print("Processing ERROR: config.json file not found in data directory! Exiting...")
+            print("WARNING processing: config.json file not found in data directory! Exiting...")
             self._enabled = False
             return
 
-        with open(config_full_path, "rb") as fp:
-            self._config_file = json.load(fp)
+        # check if config file is empty -> delete it, Azure module will download it in next iteration
+        if os.path.getsize(config_full_path) > 0:
+            with open(config_full_path, "rb") as fp:
+                self._config_file = json.load(fp)
+        else:
+            print("WARNING processing: config.json file is empty, deleting it and exiting...")
+            os.remove(config_full_path)
+            self._enabled = False
+            return
+        
         #print(self._config_file)
         try:
             config_file_version = str(self._config_file['version'])
@@ -142,7 +150,7 @@ class Module(object):
                         self.process_hourly_data(value_name, hour_list, hour_timestamp)
                 
         except Exception as e:
-            print("Processing module error: raw data - {}".format(e))
+            print("ERROR processing: all new data - {}".format(e))
             #print("Processing module: error when processing raw data!")
 
 
@@ -693,7 +701,7 @@ class Module(object):
             self._data_ready = True
         
         except Exception as e:
-            print("Processing module error: when processing new data - {}".format(e))
+            print("ERROR processing - hourly new data - {}".format(e))
             #print("Processing module: error when appending data to csv_file!")
 
     def read_csv_file(self):
@@ -754,7 +762,7 @@ class Module(object):
             return newest_csv_timestamp
 
         except Exception as e:
-            print("Processing module error: read csv file - {}".format(e))
+            print("ERROR processing - read csv file - {}".format(e))
             #print("Processing module: error when appending data to csv_file!")
             return -1
         
@@ -807,7 +815,7 @@ class Module(object):
                 self.calculate_gdd(day_list, day_timestamp)
 
         except Exception as e:
-            print("Processing module error: function get_all_gdd - {}".format(e))
+            print("ERROR processing - function get_all_gdd - {}".format(e))
             #print("Processing module: error when calculating GDD!")
 
     def get_new_gdd(self):
@@ -859,7 +867,7 @@ class Module(object):
                 day_timestamp = max_time.replace(hour=0, minute=0, second=0, microsecond=0)
                 self.calculate_gdd(day_list, day_timestamp)
         except Exception as e:
-            print("Processing module error: calculating new GDD - {}".format(e))
+            print("ERROR processing - calculating new GDD - {}".format(e))
             #print("Processing module: error when calculating GDD!")
     
     def calculate_gdd(self, day_list, day_timestamp):
@@ -878,7 +886,7 @@ class Module(object):
             self._old_gdd = gdd
             #print("New old gdd: {}".format(self._old_gdd))
         except Exception as e:
-            print("Processing module error: calculating GDD - {}".format(e))
+            print("ERROR processing - calculating GDD - {}".format(e))
             #print("Processing module: error when calculating GDD!")
 
     def calculate_lux(self, ch0, ch1):
@@ -977,7 +985,7 @@ class Module(object):
                     else:
                         writer.writerow(dict_to_write)
         except Exception as e:
-            print("Processing module error: append to csv- {}".format(e))
+            print("ERROR processing - append to csv - {}".format(e))
             #print("Processing module: error when appending data to csv_file!")
 
     def process(self, modules):
@@ -1037,7 +1045,7 @@ class Module(object):
                                         self._raw_data[value_name][formated_time] = data
 
                 except Exception as e:
-                    print("Processing module error: processing new file- {}".format(e))
+                    print("ERROR processing - new raw file - {}".format(e))
                     #print("Processing module: error when appending data to csv_file!")
 
             if self._raw_data:
@@ -1056,10 +1064,10 @@ class Module(object):
                     self._enabled = False
 
             else:
-                print("Processing module error: raw data read error.")
+                print("ERROR processing - raw data read error.")
 
         else:
-            print ("Processing module error: can module is not enabled.")
+            print ("ERROR processing - can module is not enabled.")
 
     def shutdown(self, modules):
         """ Shutdown """
