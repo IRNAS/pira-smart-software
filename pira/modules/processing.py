@@ -896,6 +896,13 @@ class Module(object):
         Output: from two calculations (lux1 and lux2) returns highest value
         Equation and constants used from https://electronics.stackexchange.com/questions/146519/tsl2591-sensor-value-calculation
         """
+        # handle the number wrapping
+        if ch0 < 0:
+            ch0 += 65535.0
+        if ch1 < 0:
+            ch1 += 65535.0
+
+        # perform calculation
         gain = 25.0     # GAIN_MED
         integration_time = 300.0    # 300 MS
         cpl = integration_time * gain / 408.0
