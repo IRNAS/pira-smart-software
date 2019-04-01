@@ -105,6 +105,10 @@ class Module(object):
         self._data_ready = False
         self._write_header = False
 
+        # calculate max value for lux - when sensor is saturated
+        self.max_lux = 0
+        self.max_lux = self.calculate_lux(-1.0, 0.0)
+
         # everything is ok, enable this module
         self._enabled = True
 
@@ -896,6 +900,10 @@ class Module(object):
         Output: from two calculations (lux1 and lux2) returns highest value
         Equation and constants used from https://electronics.stackexchange.com/questions/146519/tsl2591-sensor-value-calculation
         """
+        # handle sensor saturation
+        if ch0 == -1.0 and self.max_lux != 0:
+            return self.max_lux
+        
         # handle the number wrapping
         if ch0 < 0:
             ch0 += 65535.0
