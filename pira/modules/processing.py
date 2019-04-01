@@ -663,6 +663,19 @@ class Module(object):
                     result = (value + x) * y
                     after_equ_data.append(result)
 
+            # TDR - soil electrical conductivity
+            if value_name == "4_7_3":
+                calculated_name = self._config_file['tdr_ec']['name']
+                unit = self._config_file['tdr_ec']['unit']
+                config_vars = self._config_file['tdr_ec']['vars']
+                x = config_vars['offset']
+                y = config_vars['multiply']
+                res_min = config_vars['min']
+                res_max = config_vars['max']
+                for value in data:
+                    result = (value + x) * y
+                    after_equ_data.append(result)
+
             # if we don't have any after equation data
             if not after_equ_data:
                 return
