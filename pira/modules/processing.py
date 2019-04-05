@@ -742,10 +742,17 @@ class Module(object):
             file.close()
             if ','.join(self._csv_columns) in last_lines:
                 del last_lines[last_lines.index(','.join(self._csv_columns))]
+            # we check for any lines containing NULL chars and proceed to delete them
+            for line in last_lines:
+                new_line = line.replace('\0', '')
+                if new_line:
+                    last_lines[last_lines.index(line)] = new_line
+                else:
+                    del last_lines[last_lines.index(line)]
 
             old_timestamp = datetime.strptime("01012019-0100", "%m%d%Y-%H%M")
             newest_csv_timestamp = old_timestamp
-            
+
             reader = csv.DictReader(last_lines, fieldnames=self._csv_columns)
             for line in reader:
                 str_tstamp = line['Timestamp (mmddyyyy-hhmm)']
@@ -777,11 +784,11 @@ class Module(object):
             #print("Printing file_timestamps dictionary - read_csv_file function:")
             #print(self._file_timestamps)
             return newest_csv_timestamp
-
+        
         except Exception as e:
             print("ERROR processing - read csv file - {}".format(e))
             #print("Processing module: error when appending data to csv_file!")
-            return -1
+            return -3
         
     def get_all_gdd(self):
         """
@@ -1026,11 +1033,19 @@ class Module(object):
             # read csv file
             newest_csv_timestamp = self.read_csv_file()
             if newest_csv_timestamp == -1:
-                # Csv file is empty
+                # Csv file is empty - process all raw files
                 newest_csv_timestamp = datetime.strptime("01012019-0100", "%m%d%Y-%H%M")
             elif newest_csv_timestamp == -2:
-                # csv file is empty, but previous versions exist
+                # csv file is empty, but previous versions exist - process raw files for current day
                 print("csv file is empty, but previous versions exist")
+                newest_csv_timestamp = datetime.now().replace(hour=0, second=0, microsecond=0)
+            elif newest_csv_timestamp == -3:
+                # csv file was not read due to some error
+                print("csv file read error, renaming it and generating new one...")
+                # rename current file, new one with the same name will be generated
+                new_filename = self._csv_filename.replace('.csv', '') + "-old.csv"
+                os.rename(self._csv_filename, new_filename)
+                # process raw files for current day
                 newest_csv_timestamp = datetime.now().replace(hour=0, second=0, microsecond=0)
 
             # get all raw filenames
