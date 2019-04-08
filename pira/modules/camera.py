@@ -40,9 +40,10 @@ class Module(object):
 
         self.resolution = os.environ.get('CAMERA_RESOLUTION', '1280x720')
         self.camera_shutdown = os.environ.get('CAMERA_FAIL_SHUTDOWN', '0')
-        self.video_duration = os.environ.get('CAMERA_VIDEO_DURATION', 'until-sleep')
+        self.video_duration = os.environ.get('CAMERA_VIDEO_DURATION', 'off')
         self.snapshot_interval_conf = os.environ.get('CAMERA_SNAPSHOT_INTERVAL', 'off')
         self.snapshot_hour_conf = os.environ.get('CAMERA_SNAPSHOT_HOUR', '12')
+        self.camera_rotation_conf = os.environ.get('CAMERA_ROTATE', '0')
 
         try:
             self.video_duration_min = datetime.timedelta(minutes=int(self.video_duration))
@@ -67,6 +68,11 @@ class Module(object):
             self.snapshot_hour = int(self.snapshot_hour_conf)
         except:
             self.snapshot_hour = 12
+
+        try:
+            self.camera_rotation = int(self.camera_rotation_conf)
+        except:
+            self.camera_rotation = 0
 
         # Ensure storage location exists.
         try:
@@ -250,6 +256,11 @@ class Module(object):
                 self._brightPi.reset()
                 self._brightPi.set_led_on_off(LED_WHITE, ON)
                 self._brightPi.set_led_on_off(LED_IR, ON)
+
+            # rotate camera if env value specified
+            if self.camera_rotation > 0:
+                self._camera.rotation = self.camera_rotation
+
             # Take screenshot
             self._camera.capture(
                 self._new_path,

@@ -80,8 +80,9 @@ The following environment variables can be used to configure the firmware:
     * `SCHEDULE_MONTHx_T_OFF` (default `15`), remains off for specified time in minutes
 * Camera
   * `CAMERA_RESOLUTION` (default `1280x720`), options are `1280x720`, `1920x1080`, `2592x1952` and some others. Mind if copying resolution that you use the letter `x` not a multiply character.
-  * `CAMERA_VIDEO_DURATION` (default `until-sleep`), duration in minutes or `off`
+  * `CAMERA_VIDEO_DURATION` (default `off`), duration in minutes or `until-sleep`
   * `CAMERA_MIN_LIGHT_LEVEL` (default `0.0`), minimum required for video to start recording
+  * `CAMERA_ROTATE` (default `0`), set rotation, options are `90`, `180` or `270` degrees
   * `CAMERA_FAIL_SHUTDOWN` (default `0`), can camera shutdown the device for example if not enough light, set to `1` to enable
   * `CAMERA_SNAPSHOT_INTERVAL` (default `off`), duration in minutes to be configured or `daily`
   * `CAMERA_SNAPSHOT_HOUR` (default `12`), at which hour (24h UTC format) snapshot should be taken, `CAMERA_SNAPSHOT_INTERVAL` is required to be set to `daily`
