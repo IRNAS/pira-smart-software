@@ -611,11 +611,11 @@ class Module(object):
                     result = (value + x) * y
                     after_equ_data.append(result)
 
-            # TDR - soil water content
-            if value_name == "4_7_0":
-                calculated_name = self._config_file['tdr_water']['name']
-                unit = self._config_file['tdr_water']['unit']
-                config_vars = self._config_file['tdr_water']['vars']
+            # EC5 - soil water content
+            if value_name == "4_10_0":
+                calculated_name = self._config_file['ec5']['name']
+                unit = self._config_file['ec5']['unit']
+                config_vars = self._config_file['ec5']['vars']
                 x = config_vars['offset']
                 y = config_vars['multiply']
                 res_min = config_vars['min']
@@ -624,11 +624,11 @@ class Module(object):
                     result = (value + x) * y
                     after_equ_data.append(result)
 
-            # EC5 - soil water content
-            if value_name == "4_10_0":
-                calculated_name = self._config_file['ec5']['name']
-                unit = self._config_file['ec5']['unit']
-                config_vars = self._config_file['ec5']['vars']
+            # TDR - soil water content
+            if value_name == "4_7_0":
+                calculated_name = self._config_file['tdr_water']['name']
+                unit = self._config_file['tdr_water']['unit']
+                config_vars = self._config_file['tdr_water']['vars']
                 x = config_vars['offset']
                 y = config_vars['multiply']
                 res_min = config_vars['min']
@@ -675,6 +675,59 @@ class Module(object):
                 for value in data:
                     result = (value + x) * y
                     after_equ_data.append(result)
+
+            # TDR 2 - soil water content
+            if value_name == "4_7_5":
+                calculated_name = self._config_file['tdr_water2']['name']
+                unit = self._config_file['tdr_water2']['unit']
+                config_vars = self._config_file['tdr_water2']['vars']
+                x = config_vars['offset']
+                y = config_vars['multiply']
+                res_min = config_vars['min']
+                res_max = config_vars['max']
+                for value in data:
+                    result = (value + x) * y
+                    after_equ_data.append(result)
+
+            # TDR 2 - soil temperature
+            if value_name == "4_7_6":
+                calculated_name = self._config_file['tdr_temp2']['name']
+                unit = self._config_file['tdr_temp2']['unit']
+                config_vars = self._config_file['tdr_temp2']['vars']
+                x = config_vars['offset']
+                y = config_vars['multiply']
+                res_min = config_vars['min']
+                res_max = config_vars['max']
+                for value in data:
+                    result = (value + x) * y
+                    after_equ_data.append(result)
+
+            # TDR 2 - permittivity
+            if value_name == "4_7_7":
+                calculated_name = self._config_file['tdr_perm2']['name']
+                unit = self._config_file['tdr_perm2']['unit']
+                config_vars = self._config_file['tdr_perm2']['vars']
+                x = config_vars['offset']
+                y = config_vars['multiply']
+                res_min = config_vars['min']
+                res_max = config_vars['max']
+                for value in data:
+                    result = (value + x) * y
+                    after_equ_data.append(result)
+
+            # TDR 2 - soil electrical conductivity
+            if value_name == "4_7_8":
+                calculated_name = self._config_file['tdr_ec2']['name']
+                unit = self._config_file['tdr_ec2']['unit']
+                config_vars = self._config_file['tdr_ec2']['vars']
+                x = config_vars['offset']
+                y = config_vars['multiply']
+                res_min = config_vars['min']
+                res_max = config_vars['max']
+                for value in data:
+                    result = (value + x) * y
+                    after_equ_data.append(result)
+
 
             # if we don't have any after equation data
             if not after_equ_data:
