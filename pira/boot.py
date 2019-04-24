@@ -21,6 +21,7 @@ except ImportError:
     RESIN_ENABLED = False
     print("Importing resin failed.")
 '''
+# DEBUG
 RESIN_ENABLED = False
 print("resin commented out")
 '''
@@ -45,7 +46,7 @@ class Boot(object):
 
         # Reporting modules should come after all sensor modules, so they can get
         # the latest values.
-        # 'pira.modules.processing',
+        #'pira.modules.processing',
         # 'pira.modules.lora',
         # 'pira.modules.rockblock',
         # 'pira.modules.nodewatcher',
@@ -346,13 +347,15 @@ class Boot(object):
 
     def _perform_shutdown(self):
         """Perform shutdown."""
-        # check if device is maybe not ready to shutdown (E.g. installing updates)
-        device_status = self._resin.models.supervisor.get_device_state()
-        #print (device_status)
-        if device_status['status'] != 'Idle' or device_status['update_pending']:
-            print ("Device not ready to shutdown...")
-            return
-
+        
+        if RESIN_ENABLED:
+            # check if device is maybe not ready to shutdown (E.g. installing updates)
+            device_status = self._resin.models.supervisor.get_device_state()
+            #print (device_status)
+            if device_status['status'] != 'Idle' or device_status['update_pending']:
+                print ("Device not ready to shutdown...")
+                return
+        
         sleep_mode = os.environ.get('SLEEP_ENABLE_MODE', 'sleep')
 
         if sleep_mode == 'charging' and self.is_charging == 1:
