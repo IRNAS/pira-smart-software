@@ -1,5 +1,5 @@
 import time
-import pigpio
+import RPi.GPIO as gpio
 import serial
 import datetime
 import struct
@@ -52,8 +52,9 @@ class PIRASMARTUART(object):
         self.pira_reboot = None # r
         self.pira_next_wakeup_get = None # w
         self.pira_rpi_gpio = None # a
-        
+
         read_timeout = 0    # handles when pira ble is not connected
+        value = 0.0         # float that pira ble will use
 
         try:
             self.ser.flushInput()
@@ -81,7 +82,7 @@ class PIRASMARTUART(object):
                 print("ERROR: read from Pira BLE the following: " + str(x[2:6]))
                 time.sleep(1)
                 read_timeout += 1
-                if read_timeout >= 3:   # after failing 3 or more times stop Pira BLE reading
+                if read_timeout >= 5:   # after failing 5 or more times stop Pira BLE reading
                     return False
 
             if x.startswith(str('t:')):

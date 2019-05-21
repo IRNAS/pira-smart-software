@@ -7,6 +7,8 @@ ENV VARS:
     - AZURE_ACCOUNT_NAME
     - AZURE_ACCOUNT_KEY
     - AZURE_CONTAINER_NAME
+    - AZURE_DELETE_LOCAL
+    - AZURE_DELETE_CLOUD
 
 Tutorials: https://docs.microsoft.com/en-us/azure/storage/blobs/storage-quickstart-blobs-python
 """

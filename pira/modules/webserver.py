@@ -21,12 +21,15 @@ class Module(object):
 
     def _server(self):
         """Server thread entry point."""
-        os.chdir(WEBSERVER_DIRECTORY)
-        httpd = SocketServer.TCPServer(
-            ("", WEBSERVER_PORT),
-            SimpleHTTPServer.SimpleHTTPRequestHandler
-        )
-        httpd.serve_forever()
+        try:
+            os.chdir(WEBSERVER_DIRECTORY)
+            httpd = SocketServer.TCPServer(
+                ("", WEBSERVER_PORT),
+                SimpleHTTPServer.SimpleHTTPRequestHandler
+            )
+            httpd.serve_forever()
+        except Exception as e:
+            print("Webserver error: {}".format(e))
 
     def process(self, modules):
         pass

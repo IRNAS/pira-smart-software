@@ -1,0 +1,318 @@
+{
+  "version" : 1,
+  
+  "bat": {
+    "name": "Baterry charge",
+    "unit": "%",
+    "vars": {
+      "offset": 0,
+      "multiply": 1,
+	  "convert": 1,
+      "min": 0,
+      "max": 100
+    }
+  },
+  "bat_vol": {
+    "name": "Baterry voltage",
+    "unit": "V",
+    "vars": {
+      "offset": 0,
+      "multiply": 0.001,
+	  "convert": 1,
+      "min": 0,
+      "max": 13000
+    }
+  },
+  "bat_cur": {
+    "name": "Baterry current",
+    "unit": "mA",
+    "vars": {
+      "offset": 0,
+      "multiply": 1,
+	  "convert": 1,
+      "min": 0,
+      "max": 2000
+    }
+  },
+  "rain": {
+    "name": "Rain",
+    "unit": "inch",
+    "vars": {
+      "offset": 0,
+	  "multiply": 0.2,
+      "min": 0,
+      "max": 13000
+    }
+  },
+  "wind": {
+    "name": "Wind",
+    "unit": "mph",
+    "vars": {
+      "offset": -398,
+	  "multiply": 0.02025,
+	  "convert": 2.237,
+      "min": 0,
+      "max": 80
+    }
+  },
+  "lux_top": {
+    "name": "Luminosity top",
+    "unit": "lux",
+    "vars": {
+      "offset": 0,
+	  "multiply": 1,
+      "min": 0,
+      "max": 100000
+    }
+  },
+  "lux_mid1": {
+    "name": "Luminosity middle 1",
+    "unit": "lux",
+    "vars": {
+      "offset": 0,
+	  "multiply": 1,
+      "min": 0,
+      "max": 100000
+    }
+  },
+  "lux_mid2": {
+    "name": "Luminosity middle 2",
+    "unit": "lux",
+    "vars": {
+      "offset": 0,
+	  "multiply": 1,
+      "min": 0,
+      "max": 100000
+    }
+  },
+  "lux_bot": {
+    "name": "Luminosity bottom",
+    "unit": "lux",
+    "vars": {
+      "offset": 0,
+	  "multiply": 1,
+      "min": 0,
+      "max": 100000
+    }
+  },
+  "co2": {
+    "name": "CO2",
+    "unit": "ppm",
+    "vars": {
+      "offset": 0,
+	  "multiply": 1,
+      "min": 0,
+      "max": 5000
+    }
+  },
+  "hum_top": {
+    "name": "Humidity top",
+    "unit": "%",
+    "vars": {
+      "offset": 0,
+	  "multiply": 1,
+      "min": 0,
+      "max": 100
+    }
+  },
+  "hum_mid1": {
+    "name": "Humidity middle 1",
+    "unit": "%",
+    "vars": {
+      "offset": 0,
+	  "multiply": 1,
+      "min": 0,
+      "max": 100
+    }
+  },
+  "hum_mid2": {
+    "name": "Humidity middle 2",
+    "unit": "%",
+    "vars": {
+      "offset": 0,
+	  "multiply": 1,
+      "min": 0,
+      "max": 100
+    }
+  },
+  "hum_bot": {
+    "name": "Humidity bottom",
+    "unit": "%",
+    "vars": {
+      "offset": 0,
+	  "multiply": 1,
+      "min": 0,
+      "max": 100
+    }
+  },
+  "temp_top": {
+    "name": "Temperature top",
+    "unit": "F",
+    "vars": {
+      "offset": 0,
+	  "multiply": 1,
+      "min": -40,
+      "max": 150
+    }
+  },
+  "temp_mid1": {
+    "name": "Temperature middle 1",
+    "unit": "F",
+    "vars": {
+      "offset": 0,
+	  "multiply": 1,
+      "min": -40,
+      "max": 150
+    }
+  },
+  "temp_mid2": {
+    "name": "Temperature middle 2",
+    "unit": "F",
+    "vars": {
+      "offset": 0,
+	  "multiply": 1,
+      "min": -40,
+      "max": 150
+    }
+  },
+  "temp_bot": {
+    "name": "Temperature bottom",
+    "unit": "F",
+    "vars": {
+      "offset": 0,
+	  "multiply": 1,
+      "min": -40,
+      "max": 150
+    }
+  },
+  "air_pres_top": {
+    "name": "Air pressure top",
+    "unit": "hPa",
+    "vars": {
+      "offset": 0,
+	  "multiply": 1,
+      "min": 300,
+      "max": 1100
+    }
+  },
+  "air_pres_mid1": {
+    "name": "Air pressure middle 1",
+    "unit": "hPa",
+    "vars": {
+      "offset": 0,
+	  "multiply": 1,
+      "min": 300,
+      "max": 1100
+    }
+  },
+  "air_pres_mid2": {
+    "name": "Air pressure middle 2",
+    "unit": "hPa",
+    "vars": {
+      "offset": 0,
+	  "multiply": 1,
+      "min": 300,
+      "max": 1100
+    }
+  },
+  "air_pres_bot": {
+    "name": "Air pressure bottom",
+    "unit": "hPa",
+    "vars": {
+      "offset": 0,
+	  "multiply": 1,
+      "min": 300,
+      "max": 1100
+    }
+  },
+  "ec5": {
+    "name": "Soil water content - EC5",
+    "unit": "%",
+    "vars": {
+      "offset": 0,
+	  "multiply": 0.01,
+      "min": 0,
+      "max": 100
+    }
+  },
+  "tdr_water": {
+    "name": "Soil water content - TDR",
+    "unit": "%",
+    "vars": {
+      "offset": 0,
+	  "multiply": 0.01,
+      "min": 0,
+      "max": 100
+    }
+  },
+  "tdr_temp": {
+    "name": "Soil temperature",
+    "unit": "C",
+    "vars": {
+      "offset": 0,
+	  "multiply": 0.01,
+      "min": -40,
+      "max": 60
+    }
+  },
+  "tdr_perm": {
+    "name": "Permittivity",
+    "unit": "absolute",
+    "vars": {
+      "offset": 0,
+	  "multiply": 0.01,
+      "min": 1,
+      "max": 80
+    }
+  },
+  "tdr_ec": {
+    "name": "Soil electrical conductivity",
+    "unit": " microS/cm",
+    "vars": {
+      "offset": 0,
+	  "multiply": 1,
+      "min": 0,
+      "max": 5000
+    }
+  },
+    "tdr_water2": {
+    "name": "Soil water content - TDR",
+    "unit": "%",
+    "vars": {
+      "offset": 0,
+	  "multiply": 0.01,
+      "min": 0,
+      "max": 100
+    }
+  },
+  "tdr_temp2": {
+    "name": "Soil temperature",
+    "unit": "C",
+    "vars": {
+      "offset": 0,
+	  "multiply": 0.01,
+      "min": -40,
+      "max": 60
+    }
+  },
+  "tdr_perm2": {
+    "name": "Permittivity",
+    "unit": "absolute",
+    "vars": {
+      "offset": 0,
+	  "multiply": 0.01,
+      "min": 1,
+      "max": 80
+    }
+  },
+  "tdr_ec2": {
+    "name": "Soil electrical conductivity",
+    "unit": " microS/cm",
+    "vars": {
+      "offset": 0,
+	  "multiply": 1,
+      "min": 0,
+      "max": 5000
+    }
+  }
+}

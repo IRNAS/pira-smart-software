@@ -28,8 +28,8 @@ class Module(object):
         self._enabled = False
         self._first_run = True
         self._old_data = []
-        
-        # get these values under API Keys 
+
+        # get these values under API Keys
         self.M2X_KEY = os.environ.get('M2X_KEY', "") # get m2x device key
         self.M2X_DEVICE_ID = os.environ.get('M2X_DEVICE_ID', "") # get m2x device id
         self.M2X_NAME = os.environ.get('M2X_NAME', 'DEMO_PI') # get m2x device name (default DEMO_PI)
@@ -114,7 +114,7 @@ class Module(object):
                         #print("Data: " + str(data) + " Time: " + str(time))
                         formated_time = datetime.datetime.strptime(time, "%Y-%m-%d %H:%M:%S.%f")
                         self.upload_data(value_name, formated_time, data)
-        
+
 
     def process(self, modules):
         """ Main process, uploading data """
@@ -130,7 +130,7 @@ class Module(object):
                 json_data = modules['pira.modules.can'].return_json_data()
                 can_data = json.loads(json_data)
                 self.process_json(can_data)
-                    
+
         # if first run, read can module and generate needed streams
         if self._first_run and 'pira.modules.can' in modules:
             stream_list = []
@@ -143,7 +143,7 @@ class Module(object):
                         stream_list.append(value_name)
             self.generate_streams(stream_list)
             self.process_json(can_data)
-        
+
         # check if we have old data to upload
         if self._old_data:
             print("Uploading old data...")
@@ -158,10 +158,12 @@ class Module(object):
             print("Some data has failed to upload...")
             with open("upload_failed_data.txt", "wb") as fp:
                 pickle.dump(self._old_data, fp)
-    
+        else:
+            # self-disable upon successful completion if so defined
+            if os.environ.get('M2X_RUN', 'cont')=='once':
+                self._enabled = False
+
 
     def shutdown(self, modules):
         """ Shutdown """
-        # save old data to disk
-        with open("upload_failed_data.txt", "wb") as fp:
-            pickle.dump(self._old_data, fp)
+        pass

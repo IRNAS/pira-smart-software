@@ -24,8 +24,9 @@ TODO
  4. Measure distance with MB7092XL-MaxSonar-WRMA1
  5. Send data to TheThingsNetwork
  6. Send data over RockBlock Iridium modem
- 7. Send images to Azure cloud
+ 7. Send images and data to Azure cloud storage
  8. Send data to M2X IoT platform
+ 9. Capture and process sensor data from CAN bus
 
 ## RESIN - Fleet configuration variables
 The following fleet configuration variables must be defined for correct operation:
@@ -54,11 +55,11 @@ The following environment variables can be used to configure the firmware:
   * `WIFI_SSID` (default `pira-01`), on non-resin ONLY for now
   * `WIFI_PASSWORD` (default `pirapira`), on non-resin ONLY for now
   * `DEBUG_ENABLE_MODE` (default `none`), read from given pin, can be `gpio:5` where number can be any BCM pin to turn on debug
-  * `MODULES` a comma separated list of modules to load, the following is a list of all modules currently available `pira.modules.scheduler,pira.modules.ultrasonic,pira.modules.camera,pira.modules.lora,pira.modules.rockblock,pira.modules.nodewatcher,pira.modules.debug,pira.modules.webserver,pira.modules.m2x_plat,pira.modules.can,pira.modules.azure_images`, delete the ones you do not wish to use.
+  * `MODULES` a comma separated list of modules to load, the following is a list of all modules currently available `pira.modules.scheduler,pira.modules.ultrasonic,pira.modules.camera,pira.modules.lora,pira.modules.rockblock,pira.modules.nodewatcher,pira.modules.debug,pira.modules.webserver,pira.modules.m2x_plat,pira.modules.can,pira.modules.azure_images,pira.modules.azure_sync`, delete the ones you do not wish to use.
   * `SHUTDOWN_VOLTAGE` (default `2.6`V) to configure when the system should shutdown. At 2.6V hardware shutdown will occur, suggested value is 2.3-3V. When this is triggered, the device will wake up next based on the configured interval, unless the battery voltage continues to fall under the hardware limit, then it will boot again when it charges. Note this shutdown will be aborted if in debug mode.
   * `LATITUDE` (default `0`) to define location, used for sunrise/sunset calculation
   * `LONGITUDE` (default `0`) to define location
-* Pira BLE (can be controled with following values, if set to `None` BLE device settings are not updated): 
+* Pira BLE (can be controled with following values, if set to `None` BLE device settings are not updated):
   * `PIRA_POWER` (default `None`), p - safety on period, in seconds
   * `PIRA_SLEEP` (default `None`), s - safety off period, in seconds
   * `PIRA_REBOOT` (default `None`), r - reboot period duration, in seconds
@@ -78,12 +79,13 @@ The following environment variables can be used to configure the firmware:
     * `SCHEDULE_MONTHx_T_ON` (default `35`), remains on for specified time in minutes
     * `SCHEDULE_MONTHx_T_OFF` (default `15`), remains off for specified time in minutes
 * Camera
-  * `CAMERA_RESOLUTION` (default `1280x720`), options are `1280x720`, `1920x1080`, `2592x1952` and some others. Mind fi copying resolution that you use the letter `x` not a multiply character.
-  * `CAMERA_VIDEO_DURATION` (default `until-sleep`), duration in minutes or `off`
+  * `CAMERA_RESOLUTION` (default `1280x720`), options are `1280x720`, `1920x1080`, `2592x1952` and some others. Mind if copying resolution that you use the letter `x` not a multiply character.
+  * `CAMERA_VIDEO_DURATION` (default `off`), duration in minutes or `until-sleep`
   * `CAMERA_MIN_LIGHT_LEVEL` (default `0.0`), minimum required for video to start recording
+  * `CAMERA_ROTATE` (default `0`), set rotation, options are `90`, `180` or `270` degrees
   * `CAMERA_FAIL_SHUTDOWN` (default `0`), can camera shutdown the device for example if not enough light, set to `1` to enable
-  * `CAMERA_SNAPSHOT_INTERVAL` (default `off`), duration in minutes to be configured
-  * `CAMERA_AZURE` (default `off`), take screenshot on every process 
+  * `CAMERA_SNAPSHOT_INTERVAL` (default `off`), duration in minutes to be configured or `daily`
+  * `CAMERA_SNAPSHOT_HOUR` (default `12`), at which hour (24h UTC format) snapshot should be taken, `CAMERA_SNAPSHOT_INTERVAL` is required to be set to `daily`
 * Rockblock
   * `ROCKBLOCK_REPORT_INTERVAL` (default `24`), power on interval
   * `ROCKBLOCK_RETRIES` (default `2`), maximum number of retries
@@ -103,16 +105,22 @@ The following environment variables can be used to configure the firmware:
   * `CAN_SPEED` (default `500000`) is the speed of the CAN Bus
   * `CAN_NUM_DEV` (default `4`) number of CAN devices to scan for
   * `CAN_NUM_SEN` (default `16`) number of CAN sensor addresses to scan on each device
+  * `CAN_RUN` (default `cont`) mode of running the can, once upon boot/until first read or continuously
 * M2X
   * `M2X_KEY` (must have) is the key of your M2X account
   * `M2X_DEVICE_ID` (must have) is the device ID you are connecting to
   * `M2X_NAME` (default `DEMO_PI`) is the name of the set of data
-* Azure Images
-  * `AZURE_ACCOUNT_NAME` (must have), is the name 
+* Azure Images and Azure Sync
+  * `AZURE_ACCOUNT_NAME` (must have), is the name
   * `AZURE_ACCOUNT_KEY` (must have), is the account key
-  * `AZURE_CONTAINER_NAME` (default `ImageExample`), is the container name in the blob
+  * `AZURE_CONTAINER_NAME` (default Images: `ImageExample`, default Sync: `azuresync`), is the container name in the blob
   * `AZURE_DELETE_LOCAL` (default `off`), if set to `on`, it will delete past files in the /data/camera/ folder
   * `AZURE_DELETE_CLOUD` (default `off`), if set to `on`, it will delete the whole container in cloud
+* Processing
+  * `PROCESSING_RUN` (default `cont`), mode of running the can, once upon boot/until first read or continuously
+  * `PROCESS_CSV_FILENAME` (default is `processed`), filename for processed data file, version and type will be automatically added (ex. `processed-v1.csv`)
+  * `PROCESS_GDD_SENSOR_NAME` (default `Temperature Middle 1 (F)`), which sensor is used to calculate growing degree days (total accumulation)
+  * `PROCESS_GDD_BASE_TEMP` (default `50`), base temperature for growing degree days calculation, in Fahrenheit
 
  ### Using without Resin.io
  To use on a standard Raspbian Lite image complete the following steps:
@@ -131,9 +139,9 @@ The following environment variables can be used to configure the firmware:
   * Rename Dockerfile.template to `Dockerfile`
   * Execute ```sudo ./resin local scan``` to scan the local network
   * To push the firmware ```sudo ./resin local push ID_HERE -s LOCATION```
-  
+
  Extra useful things:
-  * Enviroment variables place in: `.resin-sync.yml` like this: 
+  * Enviroment variables place in: `.resin-sync.yml` like this:
 	```
 	environment:
 		- AZURE_ACCOUNT_NAME=rpiimages
