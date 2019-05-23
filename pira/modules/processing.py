@@ -624,6 +624,19 @@ class Module(object):
                     result = (value + x) * y
                     after_equ_data.append(result)
 
+            # EC5-2 - soil water content
+            if value_name == "4_11_0":
+                calculated_name = self._config_file['ec5-2']['name']
+                unit = self._config_file['ec5-2']['unit']
+                config_vars = self._config_file['ec5-2']['vars']
+                x = config_vars['offset']
+                y = config_vars['multiply']
+                res_min = config_vars['min']
+                res_max = config_vars['max']
+                for value in data:
+                    result = (value + x) * y
+                    after_equ_data.append(result)
+
             # TDR - soil water content
             if value_name == "4_7_0":
                 calculated_name = self._config_file['tdr_water']['name']
