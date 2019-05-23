@@ -42,8 +42,8 @@ class Module(object):
         self._boot = boot
         self._enabled = False
 
-        enable_logging = os.environ.get('AZURE_LOGGING', 'no')
-        if enable_logging == 'yes':
+        enable_logging = os.environ.get('AZURE_LOGGING', 'off')
+        if enable_logging == 'on':
             logging.basicConfig(format='%(asctime)s %(name)-20s %(levelname)-5s %(message)s', level=logging.INFO)
 
         self.ACCOUNT_NAME = os.environ.get('AZURE_ACCOUNT_NAME', None)                  # get azure account name from env var
