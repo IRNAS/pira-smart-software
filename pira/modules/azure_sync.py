@@ -9,6 +9,7 @@ ENV VARS:
     - AZURE_CONTAINER_NAME
     - AZURE_DELETE_LOCAL
     - AZURE_DELETE_CLOUD
+    - AZURE_LOGGING
 
 Tutorials: https://docs.microsoft.com/en-us/azure/storage/blobs/storage-quickstart-blobs-python
 """
@@ -41,7 +42,9 @@ class Module(object):
         self._boot = boot
         self._enabled = False
 
-        logging.basicConfig(format='%(asctime)s %(name)-20s %(levelname)-5s %(message)s', level=logging.INFO)
+        enable_logging = os.environ.get('AZURE_LOGGING', 'no')
+        if enable_logging == 'yes':
+            logging.basicConfig(format='%(asctime)s %(name)-20s %(levelname)-5s %(message)s', level=logging.INFO)
 
         self.ACCOUNT_NAME = os.environ.get('AZURE_ACCOUNT_NAME', None)                  # get azure account name from env var
         self.ACCOUNT_KEY = os.environ.get('AZURE_ACCOUNT_KEY', None)                    # get azure account key from env var
