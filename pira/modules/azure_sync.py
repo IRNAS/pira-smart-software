@@ -60,15 +60,12 @@ class Module(object):
         try:
 
             # create object for the servise
-            #self.block_blob_service = BlockBlobService(account_name=self.ACCOUNT_NAME, account_key=self.ACCOUNT_KEY, socket_timeout=3)
-            self.block_blob_service = BlockBlobService(account_name="heh", account_key=self.ACCOUNT_KEY, socket_timeout=3)  # TESTING
-            print(self.block_blob_service)
-            if self.block_blob_service is None:
-                print("Error when connecting to azure block blob service")
-                return
+            self.block_blob_service = BlockBlobService(account_name=self.ACCOUNT_NAME, account_key=self.ACCOUNT_KEY, socket_timeout=3)
 
             # create our container
-            self.create_container()
+            creating_result = self.create_container()
+            if creating_result is False:
+                return
 
             # Set the permission so the blobs are public.
             if self.block_blob_service.set_container_acl(self.container_name, public_access=PublicAccess.Container) is None:
@@ -115,9 +112,10 @@ class Module(object):
         """
         try:
             self.block_blob_service.create_container(self.container_name)
+            return True
         except Exception as e:
             print("Something went wrong when creating container, error: {}".format(e))
-            return
+            return False
 
     def upload_via_path(self, _path, _subfolder):
         """
@@ -173,7 +171,7 @@ class Module(object):
 
             # we download the file if on server is newer 
             if server_last_modified > local_last_modified:
-                #print("Updating local file: {}".format(_filename))
+                print("Updating local file: {}".format(_filename))
                 self.block_blob_service.get_blob_to_path(self.container_name, _filename, full_path)
             
         except Exception as e:
