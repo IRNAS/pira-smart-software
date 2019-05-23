@@ -62,6 +62,10 @@ class Module(object):
             # create object for the servise
             #self.block_blob_service = BlockBlobService(account_name=self.ACCOUNT_NAME, account_key=self.ACCOUNT_KEY, socket_timeout=3)
             self.block_blob_service = BlockBlobService(account_name="heh", account_key=self.ACCOUNT_KEY, socket_timeout=3)  # TESTING
+            print(self.block_blob_service)
+            if self.block_blob_service is None:
+                print("Error when connecting to azure block blob service")
+                return
 
             # create our container
             self.create_container()
