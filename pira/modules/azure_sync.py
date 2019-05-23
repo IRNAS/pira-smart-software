@@ -152,7 +152,7 @@ class Module(object):
         """
         try:
             full_path = os.path.join(_path, _filename)
-            self.block_blob_service.get_blob_to_path(self.container_name, _filename, full_path)
+            self.block_blob_service.get_blob_to_path(self.container_name, _filename, full_path, timeout=5)
         except Exception as e:
             print("AZURE download new file failed: {}".format(e))
 
@@ -172,7 +172,7 @@ class Module(object):
             # we download the file if on server is newer 
             if server_last_modified > local_last_modified:
                 print("Updating local file: {}".format(_filename))
-                self.block_blob_service.get_blob_to_path(self.container_name, _filename, full_path)
+                self.block_blob_service.get_blob_to_path(self.container_name, _filename, full_path, timeout=5)
             
         except Exception as e:
             print("AZURE download sync file failed: {}".format(e))
@@ -193,7 +193,7 @@ class Module(object):
             # we upload the file to azure if on device is newer
             if server_last_modified < local_last_modified:
                 #print("Updating azure file: {}".format(_filename))
-                self.block_blob_service.create_blob_from_path(self.container_name, _filename, full_path)
+                self.block_blob_service.create_blob_from_path(self.container_name, _filename, full_path, timeout=5)
             
         except Exception as e:
             print("AZURE upload sync file failed: {}".format(e))
@@ -217,7 +217,7 @@ class Module(object):
         """
         try:     # Get file names from server
             old_files = []
-            generator = self.block_blob_service.list_blobs(self.container_name)
+            generator = self.block_blob_service.list_blobs(self.container_name, timeout=3)
             for blob in generator:
                  # we are syncing only files in _path
                 if _path in blob.name:
@@ -270,6 +270,9 @@ class Module(object):
         Local sync folder syncing with Azure -> upload files to server 
         module can also delete files from device or server if needed (set environmental vars)
         """
+        if not self._enabled:
+            return
+
         # local folder sync with Azure -> upload files to server
         local_files = []
         local_files = [f for f in listdir(sync_folder_path) if isfile(join(sync_folder_path, f))]
