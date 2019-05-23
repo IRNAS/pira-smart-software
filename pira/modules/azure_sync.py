@@ -18,6 +18,7 @@ from __future__ import print_function
 import os
 import time
 import sys
+import logging
 from datetime import datetime
 
 from os import listdir
@@ -39,6 +40,8 @@ class Module(object):
         """
         self._boot = boot
         self._enabled = False
+
+        logging.basicConfig(format='%(asctime)s %(name)-20s %(levelname)-5s %(message)s', level=logging.INFO)
 
         self.ACCOUNT_NAME = os.environ.get('AZURE_ACCOUNT_NAME', None)                  # get azure account name from env var
         self.ACCOUNT_KEY = os.environ.get('AZURE_ACCOUNT_KEY', None)                    # get azure account key from env var
