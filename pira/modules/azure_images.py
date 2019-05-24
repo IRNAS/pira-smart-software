@@ -9,6 +9,7 @@ ENV VARS:
     - AZURE_CONTAINER_NAME
     - AZURE_DELETE_LOCAL
     - AZURE_DELETE_CLOUD
+    - AZURE_LOGGING
 
 Tutorials: https://docs.microsoft.com/en-us/azure/storage/blobs/storage-quickstart-blobs-python
 """
@@ -18,6 +19,7 @@ from __future__ import print_function
 import os
 import time
 import sys
+import logging
 from datetime import datetime
 
 from os import listdir
@@ -37,6 +39,10 @@ class Module(object):
         """
         self._boot = boot
         self._enabled = False
+
+        enable_logging = os.environ.get('AZURE_LOGGING', 'off')
+        if enable_logging == 'on':
+            logging.basicConfig(format='%(asctime)s %(name)-20s %(levelname)-5s %(message)s', level=logging.INFO)
 
         self._new_files = []
         self._old_files = []
