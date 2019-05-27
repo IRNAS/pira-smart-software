@@ -19,7 +19,6 @@ class PIRASMARTUART(object):
         self.portId = portId
 
         try:
-
             self.ser = serial.Serial(self.portId, baudrate=115200, stopbits=1, parity="N",  timeout=2)
 
         except (Exception):
@@ -39,7 +38,7 @@ class PIRASMARTUART(object):
         r:<uint32_t> reboot - reboot period duration
         w:<uint32_t> wakeup - period for next wakeup
         a:<uint32_t> active - Pi status pin value
-        c:<uint32_t> command - not yet implemented
+        c:<uint32_t> command - currently used for debugging
         """
 
         start = time.time()
@@ -52,6 +51,7 @@ class PIRASMARTUART(object):
         self.pira_reboot = None # r
         self.pira_next_wakeup_get = None # w
         self.pira_rpi_gpio = None # a
+        self.pira_smart_command = None # c
 
         read_timeout = 0    # handles when pira ble is not connected
         value = 0.0         # float that pira ble will use
@@ -68,7 +68,8 @@ class PIRASMARTUART(object):
                 (self.pira_sleep == None) or \
                 (self.pira_reboot == None) or \
                 (self.pira_next_wakeup_get == None) or \
-                (self.pira_rpi_gpio == None) and not \
+                (self.pira_rpi_gpio == None) or \
+                (self.pira_smart_command == None) and not \
                 (time.time() - start < timeout):
 
             try:
@@ -109,6 +110,11 @@ class PIRASMARTUART(object):
             elif x.startswith(str('a:')):
                 self.pira_rpi_gpio = float(value)
                 print "Pira reports Pi status pin value: " + str(self.pira_rpi_gpio)
+            elif x.startswith(str('c:')):
+                self.pira_smart_command = float(value)
+                print("Pira command get: " + str(self.pira_smart_command))
+                reset_text = self.parse_reset_num(self.pira_smart_command)  # used for debugging PiraSmart
+                print("Pira reset reason: " + str(reset_text))
 
         return True
 
@@ -156,3 +162,15 @@ class PIRASMARTUART(object):
     def close(self):
         """Close device."""
         pass
+
+    def parse_reset_num(self, number):
+        """Parse reset number to reset reason text"""
+        return {
+            0 : "SYSTEM_RESET_POWERON",
+            1: "SYSTEM_RESET_EXTERNAL",
+            2: "SYSTEM_RESET_SOFTWARE",
+            3: "SYSTEM_RESET_WATCHDOG",
+            4: "SYSTEM_RESET_FIREWALL",
+            5: "SYSTEM_RESET_OTHER",
+            6: "SYSTEM_RESET_STANDBY"
+        }.get(number, "Parse reset: Unkown number...")
