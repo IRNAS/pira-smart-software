@@ -66,7 +66,7 @@ class Module(object):
         try:
 
             # create object for the servise
-            self.block_blob_service = BlockBlobService(account_name=self.ACCOUNT_NAME, account_key=self.ACCOUNT_KEY, socket_timeout=3)
+            self.block_blob_service = BlockBlobService(account_name=self.ACCOUNT_NAME, account_key=self.ACCOUNT_KEY, protocol='http', socket_timeout=30)
 
             # create our container
             creating_result = self.create_container()
