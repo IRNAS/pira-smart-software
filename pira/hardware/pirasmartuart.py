@@ -75,7 +75,8 @@ class PIRASMARTUART(object):
             try:
                 x = ""
                 x = self.ser.readline()
-                #print "Preamble: " + x[0:2] + "Data: " + x[2:-1].encode('hex') + " Line: " + str(x.startswith(preamble))
+                print(str(x))
+                print "Preamble: " + x[0:2] + "Data: " + x[2:-1].encode('hex') + " Line: " + str(x.startswith(preamble))
                 #' '.join(map(lambda x:x.encode('hex'),x))
                 #struct.unpack('<h', unhexlify(s1))[0]
                 value = float(struct.unpack('>L', x[2:6])[0])

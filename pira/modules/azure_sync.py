@@ -281,32 +281,40 @@ class Module(object):
         if not self._enabled:
             return
 
-        # local folder sync with Azure -> upload files to server
-        local_files = []
-        local_files = [f for f in listdir(sync_folder_path) if isfile(join(sync_folder_path, f))]
-        # get list of server files - max 100 files
-        server_files = []
-        generator = self.block_blob_service.list_blobs(self.container_name, num_results=100, timeout=3)
-        for blob in generator:
-            # we are syncing only files not our subfolders
-            if (camera_folder_path not in blob.name) and (raw_data_folder_path not in blob.name) and (calculated_data_folder_path not in blob.name):
-                server_files.append(blob.name)
-        # make list of files that are not on server
-        difference = list(set(local_files) - set(server_files))
-        # make list of files that are on server and on device
-        files_on_both = list(set(local_files) - set(difference))
-        # sync files that are on both locations, except config.json (which is only downloaded)
-        if 'config.json' in files_on_both:
-            files_on_both.remove('config.json')
-        for item in files_on_both:
-            self.up_update_via_path(item, sync_folder_path)
-        # upload files that are not on server
-        if difference:
-            print("Azure: New files to sync - upload: ")
-            print(difference)   
-        for item in difference:
-            full_path_item = join(sync_folder_path, item)
-            self.upload_via_path(full_path_item, None)
+        try:
+            # local folder sync with Azure -> upload files to server
+            local_files = []
+            local_files = [f for f in listdir(sync_folder_path) if isfile(join(sync_folder_path, f))]
+            # get list of server files - max 100 files
+            server_files = []
+            generator = self.block_blob_service.list_blobs(self.container_name, num_results=100, timeout=3)
+            for blob in generator:
+                # we are syncing only files not our subfolders
+                if (camera_folder_path not in blob.name) and (raw_data_folder_path not in blob.name) and (calculated_data_folder_path not in blob.name):
+                    server_files.append(blob.name)
+            # make list of files that are not on server
+            difference = list(set(local_files) - set(server_files))
+            # make list of files that are on server and on device
+            files_on_both = list(set(local_files) - set(difference))
+            # sync files that are on both locations, except config.json (which is only downloaded)
+            if 'config.json' in files_on_both:
+                files_on_both.remove('config.json')
+            for item in files_on_both:
+                self.up_update_via_path(item, sync_folder_path)
+            # upload files that are not on server
+            if difference:
+                print("Azure: New files to sync - upload: ")
+                print(difference)   
+            for item in difference:
+                full_path_item = join(sync_folder_path, item)
+                self.upload_via_path(full_path_item, None)
+
+            # delete files from azure if environ specified
+            if self._azure_delete is "on":
+                self.delete_via_container(self.container_name)
+        
+        except Exception as e:
+            print("AZURE ERROR: {}".format(e))
 
          # delete local files
         if self._local_delete is "on":
@@ -317,8 +325,4 @@ class Module(object):
                         os.unlink(file_path)
                 except Exception as e:
                     print(e)
-        
-        # delete files from azure
-        if self._azure_delete is "on":
-            self.delete_via_container(self.container_name)
         pass
