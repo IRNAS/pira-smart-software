@@ -1,9 +1,15 @@
 """Hardware device definitions."""
+import os
 
 # GPIO pins (BCM).
-GPIO_PIRA_STATUS_PIN = 17
 GPIO_SOFT_POWER_PIN = 25
 
+#GPIO_PIRA_STATUS_PIN: 17 for PiraSmart v1_0, 10 for 10 PiraSmart v2_1
+env_status_pin =  os.environ.get('PIRA_SMART_STATUS_PIN', '17')
+try:
+    GPIO_PIRA_STATUS_PIN =  int(env_status_pin)
+except:
+    GPIO_PIRA_STATUS_PIN = 17   # PiraSmart v1_0
 
 # These devices must go to soft uart
 # Rockblock modem
