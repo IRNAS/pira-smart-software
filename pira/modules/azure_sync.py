@@ -9,6 +9,7 @@ ENV VARS:
     - AZURE_CONTAINER_NAME
     - AZURE_DELETE_LOCAL
     - AZURE_DELETE_CLOUD
+    - AZURE_LOGGING
 
 Tutorials: https://docs.microsoft.com/en-us/azure/storage/blobs/storage-quickstart-blobs-python
 """
@@ -18,6 +19,7 @@ from __future__ import print_function
 import os
 import time
 import sys
+import logging
 from datetime import datetime
 
 from os import listdir
@@ -39,6 +41,10 @@ class Module(object):
         """
         self._boot = boot
         self._enabled = False
+
+        enable_logging = os.environ.get('AZURE_LOGGING', 'off')
+        if enable_logging == 'on':
+            logging.basicConfig(format='%(asctime)s %(name)-20s %(levelname)-5s %(message)s', level=logging.INFO)
 
         self.ACCOUNT_NAME = os.environ.get('AZURE_ACCOUNT_NAME', None)                  # get azure account name from env var
         self.ACCOUNT_KEY = os.environ.get('AZURE_ACCOUNT_KEY', None)                    # get azure account key from env var
@@ -63,7 +69,9 @@ class Module(object):
             self.block_blob_service = BlockBlobService(account_name=self.ACCOUNT_NAME, account_key=self.ACCOUNT_KEY, socket_timeout=3)
 
             # create our container
-            self.create_container()
+            creating_result = self.create_container()
+            if creating_result is False:
+                return
 
             # Set the permission so the blobs are public.
             if self.block_blob_service.set_container_acl(self.container_name, public_access=PublicAccess.Container) is None:
@@ -110,9 +118,10 @@ class Module(object):
         """
         try:
             self.block_blob_service.create_container(self.container_name)
+            return True
         except Exception as e:
             print("Something went wrong when creating container, error: {}".format(e))
-            return
+            return False
 
     def upload_via_path(self, _path, _subfolder):
         """
@@ -133,7 +142,7 @@ class Module(object):
             if _subfolder is None:
                 _subfolder = ""
             # uploading it
-            if self.block_blob_service.create_blob_from_path(self.container_name, _subfolder + filename, _path) is None:
+            if self.block_blob_service.create_blob_from_path(self.container_name, _subfolder + filename, _path, timeout=5) is None:
                 print("Something went wrong on upload!")
                 return
 
@@ -149,7 +158,7 @@ class Module(object):
         """
         try:
             full_path = os.path.join(_path, _filename)
-            self.block_blob_service.get_blob_to_path(self.container_name, _filename, full_path)
+            self.block_blob_service.get_blob_to_path(self.container_name, _filename, full_path, timeout=5)
         except Exception as e:
             print("AZURE download new file failed: {}".format(e))
 
@@ -168,8 +177,8 @@ class Module(object):
 
             # we download the file if on server is newer 
             if server_last_modified > local_last_modified:
-                #print("Updating local file: {}".format(_filename))
-                self.block_blob_service.get_blob_to_path(self.container_name, _filename, full_path)
+                print("Updating local file: {}".format(_filename))
+                self.block_blob_service.get_blob_to_path(self.container_name, _filename, full_path, timeout=5)
             
         except Exception as e:
             print("AZURE download sync file failed: {}".format(e))
@@ -190,7 +199,7 @@ class Module(object):
             # we upload the file to azure if on device is newer
             if server_last_modified < local_last_modified:
                 #print("Updating azure file: {}".format(_filename))
-                self.block_blob_service.create_blob_from_path(self.container_name, _filename, full_path)
+                self.block_blob_service.create_blob_from_path(self.container_name, _filename, full_path, timeout=5)
             
         except Exception as e:
             print("AZURE upload sync file failed: {}".format(e))
@@ -214,7 +223,7 @@ class Module(object):
         """
         try:     # Get file names from server
             old_files = []
-            generator = self.block_blob_service.list_blobs(self.container_name)
+            generator = self.block_blob_service.list_blobs(self.container_name, timeout=3)
             for blob in generator:
                  # we are syncing only files in _path
                 if _path in blob.name:
@@ -245,13 +254,6 @@ class Module(object):
             print("Warning: Azure is not correctly configured, skipping.")
             return
         
-        # upload csv files from calculated directory
-        local_files = []
-        local_files = [f for f in listdir(sync_folder_path + calculated_data_folder_path) if isfile(join(sync_folder_path + calculated_data_folder_path, f))]
-        for item in local_files:
-            full_path_item = join(sync_folder_path + calculated_data_folder_path, item)
-            self.upload_via_path(full_path_item, calculated_data_folder_path)
-        
         # upload new files from subdirectories
         result = self.upload_only_folder(raw_data_folder_path)
         if result is False:
@@ -260,6 +262,13 @@ class Module(object):
             result = self.upload_only_folder(camera_folder_path)
             if result is False:
                 print("Error when uploading camera data to Azure.")
+
+        # upload csv files from calculated directory
+        local_files = []
+        local_files = [f for f in listdir(sync_folder_path + calculated_data_folder_path) if isfile(join(sync_folder_path + calculated_data_folder_path, f))]
+        for item in local_files:
+            full_path_item = join(sync_folder_path + calculated_data_folder_path, item)
+            self.upload_via_path(full_path_item, calculated_data_folder_path)
         
     def shutdown(self, modules):
         """
@@ -267,6 +276,9 @@ class Module(object):
         Local sync folder syncing with Azure -> upload files to server 
         module can also delete files from device or server if needed (set environmental vars)
         """
+        if not self._enabled:
+            return
+
         # local folder sync with Azure -> upload files to server
         local_files = []
         local_files = [f for f in listdir(sync_folder_path) if isfile(join(sync_folder_path, f))]
