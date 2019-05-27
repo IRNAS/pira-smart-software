@@ -10,6 +10,7 @@ ENV VARS:
     - AZURE_DELETE_LOCAL
     - AZURE_DELETE_CLOUD
     - AZURE_LOGGING
+    - AZURE_PROTOCOL
 
 Tutorials: https://docs.microsoft.com/en-us/azure/storage/blobs/storage-quickstart-blobs-python
 """
@@ -40,9 +41,10 @@ class Module(object):
         self._boot = boot
         self._enabled = False
 
-        enable_logging = os.environ.get('AZURE_LOGGING', 'off')
+        enable_logging = os.environ.get('AZURE_LOGGING', 'off')  # enable request logging 
         if enable_logging == 'on':
             logging.basicConfig(format='%(asctime)s %(name)-20s %(levelname)-5s %(message)s', level=logging.INFO)
+        azure_protocol = os.environ.get('AZURE_PROTOCOL', 'https')  # protocol to use for requests
 
         self._new_files = []
         self._old_files = []
@@ -66,7 +68,7 @@ class Module(object):
         try:
 
             # create object for the servise
-            self.block_blob_service = BlockBlobService(account_name=self.ACCOUNT_NAME, account_key=self.ACCOUNT_KEY)
+            self.block_blob_service = BlockBlobService(account_name=self.ACCOUNT_NAME, account_key=self.ACCOUNT_KEY, protocol=azure_protocol)
 
             # create our container
             self.create_container()
