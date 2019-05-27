@@ -75,7 +75,7 @@ class PIRASMARTUART(object):
             try:
                 x = ""
                 x = self.ser.readline()
-                #print "Preamble: " + x[0:2] + "Data: " + x[2:-1].encode('hex') + " Line: " + str(x.startswith(preamble))
+                print "Preamble: " + x[0:2] + "Data: " + x[2:-1].encode('hex') + " Line: " + str(x.startswith(preamble))
                 #' '.join(map(lambda x:x.encode('hex'),x))
                 #struct.unpack('<h', unhexlify(s1))[0]
                 value = float(struct.unpack('>L', x[2:6])[0])
@@ -111,6 +111,7 @@ class PIRASMARTUART(object):
                 self.pira_rpi_gpio = float(value)
                 print "Pira reports Pi status pin value: " + str(self.pira_rpi_gpio)
             elif x.startswith(str('c:')):
+                print("c value" + str(value))
                 self.pira_smart_command = float(value)
                 print("Pira command get: " + str(self.pira_smart_command))
                 reset_text = self.parse_reset_num(self.pira_smart_command)  # used for debugging PiraSmart
