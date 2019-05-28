@@ -144,7 +144,7 @@ class Module(object):
             if _subfolder is None:
                 _subfolder = ""
             # uploading it
-            if self.block_blob_service.create_blob_from_path(self.container_name, _subfolder + filename, _path, timeout=5) is None:
+            if self.block_blob_service.create_blob_from_path(self.container_name, _subfolder + filename, _path) is None:
                 print("Something went wrong on upload!")
                 return
 
@@ -160,7 +160,7 @@ class Module(object):
         """
         try:
             full_path = os.path.join(_path, _filename)
-            self.block_blob_service.get_blob_to_path(self.container_name, _filename, full_path, timeout=5)
+            self.block_blob_service.get_blob_to_path(self.container_name, _filename, full_path)
         except Exception as e:
             print("AZURE download new file failed: {}".format(e))
 
@@ -180,7 +180,7 @@ class Module(object):
             # we download the file if on server is newer 
             if server_last_modified > local_last_modified:
                 print("Updating local file: {}".format(_filename))
-                self.block_blob_service.get_blob_to_path(self.container_name, _filename, full_path, timeout=5)
+                self.block_blob_service.get_blob_to_path(self.container_name, _filename, full_path)
             
         except Exception as e:
             print("AZURE download sync file failed: {}".format(e))
@@ -201,7 +201,7 @@ class Module(object):
             # we upload the file to azure if on device is newer
             if server_last_modified < local_last_modified:
                 #print("Updating azure file: {}".format(_filename))
-                self.block_blob_service.create_blob_from_path(self.container_name, _filename, full_path, timeout=5)
+                self.block_blob_service.create_blob_from_path(self.container_name, _filename, full_path)
             
         except Exception as e:
             print("AZURE upload sync file failed: {}".format(e))
@@ -225,7 +225,7 @@ class Module(object):
         """
         try:     # Get file names from server
             old_files = []
-            generator = self.block_blob_service.list_blobs(self.container_name, timeout=3)
+            generator = self.block_blob_service.list_blobs(self.container_name)
             for blob in generator:
                  # we are syncing only files in _path
                 if _path in blob.name:
