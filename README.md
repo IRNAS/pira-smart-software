@@ -117,6 +117,7 @@ The following environment variables can be used to configure the firmware:
   * `AZURE_DELETE_LOCAL` (default `off`), if set to `on`, it will delete past files in the /data/camera/ folder
   * `AZURE_DELETE_CLOUD` (default `off`), if set to `on`, it will delete the whole container in cloud
   * `AZURE_LOGGING` (default `off`), if `on` log all azure calls to console (outgoing requests and responses, as well as retry attempts)
+  * `AZURE_PROTOCOL` (default `https`), specify protocol to use for requests (`http` or `https`)
 * Processing
   * `PROCESSING_RUN` (default `cont`), mode of running the can, once upon boot/until first read or continuously
   * `PROCESS_CSV_FILENAME` (default is `processed`), filename for processed data file, version and type will be automatically added (ex. `processed-v1.csv`)
