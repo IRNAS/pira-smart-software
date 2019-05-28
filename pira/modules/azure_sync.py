@@ -256,6 +256,13 @@ class Module(object):
             print("Warning: Azure is not correctly configured, skipping.")
             return
         
+        # upload csv files from calculated directory
+        local_files = []
+        local_files = [f for f in listdir(sync_folder_path + calculated_data_folder_path) if isfile(join(sync_folder_path + calculated_data_folder_path, f))]
+        for item in local_files:
+            full_path_item = join(sync_folder_path + calculated_data_folder_path, item)
+            self.upload_via_path(full_path_item, calculated_data_folder_path)
+
         # upload new files from subdirectories
         result = self.upload_only_folder(raw_data_folder_path)
         if result is False:
@@ -264,13 +271,6 @@ class Module(object):
             result = self.upload_only_folder(camera_folder_path)
             if result is False:
                 print("Error when uploading camera data to Azure.")
-
-        # upload csv files from calculated directory
-        local_files = []
-        local_files = [f for f in listdir(sync_folder_path + calculated_data_folder_path) if isfile(join(sync_folder_path + calculated_data_folder_path, f))]
-        for item in local_files:
-            full_path_item = join(sync_folder_path + calculated_data_folder_path, item)
-            self.upload_via_path(full_path_item, calculated_data_folder_path)
         
     def shutdown(self, modules):
         """
