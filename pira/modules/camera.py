@@ -54,7 +54,7 @@ class Module(object):
         if self.snapshot_interval_conf == 'daily':
             self.snapshot_interval = 'daily'
         elif self.snapshot_interval_conf == 'off':
-            self.snapshot_interval = None
+            self.snapshot_interval = 'off'
         else:
             try:
                 self.snapshot_interval = datetime.timedelta(minutes=int(self.snapshot_interval_conf))
@@ -119,7 +119,7 @@ class Module(object):
             print("Not enough free space (less than 1 GiB), do not save snapshots or record")
             return
         # check if interval is set to daily -> pass because snapshot will be taken in process loop
-        elif self.snapshot_interval != 'daily': # and self.snapshot_interval != 'off': #additonal safety
+        elif self.snapshot_interval != 'daily' and self.snapshot_interval != 'off':
             print("INFO: Snapshot interval set to " + str(self.snapshot_interval) + "minutes.")
             # Store single snapshot only if above threshold, else do not record
             if not self._snapshot():
