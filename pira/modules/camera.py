@@ -59,7 +59,7 @@ class Module(object):
             try:
                 self.snapshot_interval = datetime.timedelta(minutes=int(self.snapshot_interval_conf))
             except ValueError:
-                self.snapshot_interval = None
+                self.snapshot_interval = 'off'
 
         self.light_level = 0.0
         try:
@@ -120,7 +120,7 @@ class Module(object):
             return
         # check if interval is set to daily -> pass because snapshot will be taken in process loop
         elif self.snapshot_interval != 'daily' and self.snapshot_interval != 'off':
-            print("INFO: Snapshot interval set to " + str(self.snapshot_interval) + "minutes.")
+            print("INFO: Snapshot interval set to " + str(self.snapshot_interval) + " minutes.")
             # Store single snapshot only if above threshold, else do not record
             if not self._snapshot():
                 # turn off video recording
@@ -208,7 +208,7 @@ class Module(object):
                     self._snapshot()
 
             # make snapshots if so defined and not recording
-            elif self.video_duration == 'off' and self.snapshot_interval is not None and now - self._last_snapshot >= self.snapshot_interval:
+            elif self.video_duration == 'off' and self.snapshot_interval is not 'off' and now - self._last_snapshot >= self.snapshot_interval:
                 self._snapshot()
             
         return
