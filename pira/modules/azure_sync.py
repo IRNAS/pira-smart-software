@@ -303,8 +303,11 @@ class Module(object):
                 self.up_update_via_path(item, sync_folder_path)
             # upload files that are not on server
             if difference:
+                # we don't upload config.json at all
+                if 'config.json' in difference:
+                    files_on_both.remove('config.json')
                 print("Azure: New files to sync - upload: ")
-                print(difference)   
+                print(difference)
             for item in difference:
                 full_path_item = join(sync_folder_path, item)
                 self.upload_via_path(full_path_item, None)
