@@ -11,6 +11,7 @@ ENV VARS:
     - AZURE_DELETE_CLOUD
     - AZURE_LOGGING
     - AZURE_PROTOCOL
+    - AZURE_RUN
 
 Tutorials: https://docs.microsoft.com/en-us/azure/storage/blobs/storage-quickstart-blobs-python
 """
@@ -271,6 +272,10 @@ class Module(object):
             result = self.upload_only_folder(camera_folder_path)
             if result is False:
                 print("Error when uploading camera data to Azure.")
+
+        # self-disable upon successful completion if so defined
+        if os.environ.get('AZURE_RUN', 'cont')=='once':
+            self._enabled = False
         
     def shutdown(self, modules):
         """
