@@ -49,6 +49,8 @@ class Module(object):
             logging.basicConfig(format='%(asctime)s %(name)-20s %(levelname)-5s %(message)s', level=logging.INFO)
         azure_protocol = os.environ.get('AZURE_PROTOCOL', 'https')  # protocol to use for requests
 
+        self.module_runs = os.environ.get('AZURE_RUN', 'cont')  # how to run processing loop
+
         self.ACCOUNT_NAME = os.environ.get('AZURE_ACCOUNT_NAME', None)                  # get azure account name from env var
         self.ACCOUNT_KEY = os.environ.get('AZURE_ACCOUNT_KEY', None)                    # get azure account key from env var
         # Azure Blob Storage container's name cannot exceed 63 characters and must be lowercase
@@ -147,13 +149,15 @@ class Module(object):
             # uploading it
             if self.block_blob_service.create_blob_from_path(self.container_name, _subfolder + filename, _path) is None:
                 print("Something went wrong on upload!")
-                return
+                return False
 
             # debug
             print("Uploaded: {}".format(filename))
+            return True
 
         except Exception as e:
             print("AZURE upload failed: {}".format(e))
+            return False
     
     def download_via_path(self, _filename, _path):
         """
@@ -257,26 +261,37 @@ class Module(object):
             print("Warning: Azure is not correctly configured, skipping.")
             return
         
+        # current process loop flag for upload status
+        status_ok = True
+
         # upload csv files from calculated directory
         local_files = []
         local_files = [f for f in listdir(sync_folder_path + calculated_data_folder_path) if isfile(join(sync_folder_path + calculated_data_folder_path, f))]
         for item in local_files:
             full_path_item = join(sync_folder_path + calculated_data_folder_path, item)
-            self.upload_via_path(full_path_item, calculated_data_folder_path)
+            result = self.upload_via_path(full_path_item, calculated_data_folder_path)
+            if result is False and status_ok is True:
+                status_ok = False
 
         # upload new files from subdirectories
         result = self.upload_only_folder(raw_data_folder_path)
         if result is False:
             print("Error when uploading raw data to Azure.")
+            status_ok = False
         if 'pira.modules.camera' in modules:
             result = self.upload_only_folder(camera_folder_path)
             if result is False:
                 print("Error when uploading camera data to Azure.")
+                status_ok = False
+
 
         # self-disable upon successful completion if so defined
-        if os.environ.get('AZURE_RUN', 'cont')=='once':
+        if self.module_runs == 'once':
             self._enabled = False
-        
+        elif self.module_runs == 'retry' and status_ok is True:
+            self._enabled = False
+
+            
     def shutdown(self, modules):
         """
         Shutdown the module

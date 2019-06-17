@@ -11,6 +11,7 @@ ENV VARS:
     - AZURE_DELETE_CLOUD
     - AZURE_LOGGING
     - AZURE_PROTOCOL
+    - AZURE_RUN
 
 Tutorials: https://docs.microsoft.com/en-us/azure/storage/blobs/storage-quickstart-blobs-python
 """
@@ -164,6 +165,10 @@ class Module(object):
             for item in difference:
                 full_path_item = join(images_path, item)
                 self.upload_via_path(full_path_item)
+
+            # self-disable upon successful completion if so defined
+            if os.environ.get('AZURE_RUN', 'cont')=='once':
+                self._enabled = False
           
         except Exception as e:
             print("AZURE ERROR: {}".format(e))

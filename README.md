@@ -105,7 +105,7 @@ The following environment variables can be used to configure the firmware:
   * `CAN_SPEED` (default `500000`) is the speed of the CAN Bus
   * `CAN_NUM_DEV` (default `4`) number of CAN devices to scan for
   * `CAN_NUM_SEN` (default `16`) number of CAN sensor addresses to scan on each device
-  * `CAN_RUN` (default `cont`) mode of running the can, once upon boot/until first read or continuously
+  * `CAN_RUN` (default `cont`) mode of running the can, `once` upon boot/until first read or continuously
 * M2X
   * `M2X_KEY` (must have) is the key of your M2X account
   * `M2X_DEVICE_ID` (must have) is the device ID you are connecting to
@@ -118,9 +118,9 @@ The following environment variables can be used to configure the firmware:
   * `AZURE_DELETE_CLOUD` (default `off`), if set to `on`, it will delete the whole container in cloud
   * `AZURE_LOGGING` (default `off`), if `on` log all azure calls to console (outgoing requests and responses, as well as retry attempts)
   * `AZURE_PROTOCOL` (default `https`), specify protocol to use for requests (`http` or `https`)
-  * `AZURE_RUN` (default `cont`), mode of running azure cloud sync, once upon boot/until first sync or continuously
+  * `AZURE_RUN` (default `cont`), mode of running azure cloud sync, `once`-upon boot/until first sync, `retry`-run until successfully synced or `cont`-run continuously
 * Processing
-  * `PROCESSING_RUN` (default `cont`), mode of running the processing, once upon boot/until first process or continuously
+  * `PROCESSING_RUN` (default `cont`), mode of running the processing, `once` upon boot/until first process or continuously
   * `PROCESS_CSV_FILENAME` (default is `processed`), filename for processed data file, version and type will be automatically added (ex. `processed-v1.csv`)
   * `PROCESS_GDD_SENSOR_NAME` (default `Temperature Middle 1 (F)`), which sensor is used to calculate growing degree days (total accumulation)
   * `PROCESS_GDD_BASE_TEMP` (default `50`), base temperature for growing degree days calculation, in Fahrenheit
