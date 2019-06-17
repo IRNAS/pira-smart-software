@@ -226,7 +226,7 @@ class Module(object):
     def process(self, modules):
         """ Function to process sensors, sends out the data and receives """
         if not self._enabled:
-            print("WARNING: CAN is not connected, skipping.")
+            print("WARNING: Skipping CAN module...")
             return
         try:
             # Call sensors and get data

@@ -1092,7 +1092,7 @@ class Module(object):
     def process(self, modules):
         """ Function to process raw data file (.json) on device with config.json file to .csv file"""
         if not self._enabled:
-            print("WARNING: Processing module not configured, skipping.")
+            print("WARNING: Skipping processing module...")
             return
 
         if 'pira.modules.can' in modules:

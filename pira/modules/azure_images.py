@@ -149,7 +149,7 @@ class Module(object):
         Process for the azure module
         """
         if self._enabled is False:
-            print("WARNING: Azure is not correctly configured, skipping.")
+            print("WARNING: Skipping Azure images module...")
             return
 
         try:     # Get file names from server
