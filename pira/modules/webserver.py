@@ -13,11 +13,11 @@ class Module(object):
     def __init__(self, boot):
         self._boot = boot
 
-        if boot.is_wifi_enabled:
-            print("Starting web server on port {}.".format(WEBSERVER_PORT))
-            thread = threading.Thread(target=self._server)
-            thread.daemon = True
-            thread.start()
+        #if boot.is_wifi_enabled:   # if wifi is enabled on balena it doesn't work
+        print("Starting web server on port {}.".format(WEBSERVER_PORT))
+        thread = threading.Thread(target=self._server)
+        thread.daemon = True
+        thread.start()
 
     def _server(self):
         """Server thread entry point."""
