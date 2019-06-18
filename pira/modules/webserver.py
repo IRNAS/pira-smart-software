@@ -1,3 +1,9 @@
+"""
+webserver.py
+
+It is a module that enables python's minimalist webserver to serve files stored in /data directory on port 80.
+To use it on Balena.io, turn on public url and click on the link besides the button.
+"""
 from __future__ import print_function
 
 import os
@@ -13,7 +19,7 @@ class Module(object):
     def __init__(self, boot):
         self._boot = boot
 
-        #if boot.is_wifi_enabled:   # if wifi is enabled on balena it doesn't work
+        #if boot.is_wifi_enabled:   # it doesn't work on balena if wifi is enabled 
         print("Starting web server on port {}.".format(WEBSERVER_PORT))
         thread = threading.Thread(target=self._server)
         thread.daemon = True
