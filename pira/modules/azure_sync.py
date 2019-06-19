@@ -1,7 +1,7 @@
 """
-azure.py
+azure_sync.py
 
-It is a module that controls syncing files between device and its blob storage
+It is a module that controls syncing files between device and its blob storage.
 
 ENV VARS:
     - AZURE_ACCOUNT_NAME
@@ -228,7 +228,7 @@ class Module(object):
         """
         It uploads new files to azure blob storage subfolder (specified in _path)
         """
-        try:     # Get file names from server
+        try:     # Get file names from server TODO to slow method
             old_files = []
             generator = self.block_blob_service.list_blobs(self.container_name)
             for blob in generator:
