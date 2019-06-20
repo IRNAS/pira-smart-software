@@ -92,7 +92,8 @@ class PIRASMARTUART(object):
                 self.pira_on_timer_set = float(value)
                 #print "Pira overwiev: " + str(self.pira_on_timer_set)
             elif x.startswith(str('b:')):
-                self.pira_voltage = float(value)*0.0164
+                self.pira_voltage = float(value)*0.0164     # value for pirasmart v1
+                #self.pira_voltage = float(value)*0.0020698 # value for pirasmart v2 
                 #print "Pira battery: " + str(self.pira_voltage)
             elif x.startswith(str('p:')):
                 self.pira_on_timer_get = float(value)
