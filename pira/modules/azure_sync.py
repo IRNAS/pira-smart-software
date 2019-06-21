@@ -22,6 +22,8 @@ import os
 import time
 import sys
 import logging
+import requests
+from requests.exceptions import ChunkedEncodingError
 from datetime import datetime
 
 from os import listdir
@@ -178,7 +180,6 @@ class Module(object):
             # we get server file last modified timestamp in utc
             blob = self.block_blob_service.get_blob_properties(self.container_name, _filename)
             server_last_modified = blob.properties.last_modified.replace(tzinfo=None)
-
             # we download the file if on server is newer 
             if server_last_modified > local_last_modified:
                 print("Updating local file: {}".format(_filename))
@@ -199,7 +200,6 @@ class Module(object):
             # we get server file last modified timestamp in utc
             blob = self.block_blob_service.get_blob_properties(self.container_name, _filename)
             server_last_modified = blob.properties.last_modified.replace(tzinfo=None)
-
             # we upload the file to azure if on device is newer
             if server_last_modified < local_last_modified:
                 print("Updating file on Azure: {}".format(_filename))
@@ -228,8 +228,7 @@ class Module(object):
         try:     # Get filenames from server
             old_files = []
             generator = self.block_blob_service.list_blobs(self.container_name, prefix=_path)
-            for blob in generator:
-                old_files.append(blob.name.replace(_path, ""))
+            old_files = [blob.name.replace(_path, "") for blob in generator]
             # Check for local files and upload ones not on server
             new_files = []
             full_path_folder = sync_folder_path + _path
@@ -243,6 +242,10 @@ class Module(object):
                 full_path_item = join(full_path_folder, item)
                 self.upload_via_path(full_path_item, _path)
             return True
+
+        except (requests.Timeout, requests.ReadTimeout, ChunkedEncodingError) as e:
+            print("Network link too bad, skipping...")
+            return False
           
         except Exception as e:
             print("AZURE ERROR: {}".format(e))
