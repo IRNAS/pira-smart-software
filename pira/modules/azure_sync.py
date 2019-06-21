@@ -243,7 +243,7 @@ class Module(object):
                 self.upload_via_path(full_path_item, _path)
             return True
 
-        except (requests.Timeout, requests.ReadTimeout, ChunkedEncodingError) as e:
+        except (requests.Timeout, ChunkedEncodingError) as e:
             print("Network link too bad, skipping...")
             return False
           
