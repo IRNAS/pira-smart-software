@@ -119,7 +119,7 @@ class Module(object):
     def process(self, modules):
         """ Main process, uploading data """
         if not self._enabled:
-            print("WARNING: M2X is not correctly configured, skipping.")
+            print("WARNING: Skipping M2X module...")
             return
         print("M2X Process | Inited: {}".format(self._enabled))
 
