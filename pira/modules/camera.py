@@ -111,7 +111,7 @@ class Module(object):
         try:
             self._brightPi = BrightPi()
         except:
-            print("ERROR: Failed to initialize flash.")
+            print("WARNING: Failed to initialize flash.")
             self._brightPi = None
 
         # Check for free space
@@ -227,7 +227,7 @@ class Module(object):
             #light_level = np.mean(light_level)
             light_level = np.average(light_level) # numpy
         except:
-            print("Error calculating light level:")
+            print("ERROR: calculating light level...")
 
         self.light_level = light_level
 
