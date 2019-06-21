@@ -226,7 +226,7 @@ class Module(object):
         It uploads new files to azure blob storage subfolder (specified in _path)
         """
         try:     # Get filenames from server
-            raise ChunkedEncodingError
+            raise TimeoutError
             old_files = []
             generator = self.block_blob_service.list_blobs(self.container_name, prefix=_path)
             old_files = [blob.name.replace(_path, "") for blob in generator]
