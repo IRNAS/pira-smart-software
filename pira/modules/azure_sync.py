@@ -22,7 +22,7 @@ import os
 import time
 import sys
 import logging
-from requests.exceptions import ChunkedEncodingError, ConnectionError, Timeout, HTTPError
+#from requests.exceptions import ChunkedEncodingError, ConnectionError, Timeout, HTTPError
 from datetime import datetime
 
 from os import listdir
