@@ -22,14 +22,14 @@ import os
 import time
 import sys
 import logging
-#from requests.exceptions import ChunkedEncodingError, ConnectionError, Timeout, HTTPError
+from requests.exceptions import Timeout
 from datetime import datetime
 
 from os import listdir
 from os.path import isfile, join
 
 from azure.storage.blob import BlockBlobService, PublicAccess
-from azure.common import AzureException, AzureHttpError
+from azure.common import AzureException
 
 # sync folder path on device
 sync_folder_path = "/data/"
@@ -243,9 +243,8 @@ class Module(object):
                 self.upload_via_path(full_path_item, _path)
             return True
 
-        #except (Timeout, ChunkedEncodingError, HTTPError, ConnectionError) as e:
-        except (AzureException, AzureHttpError) as e:
-            if self.enable_logging:
+        except (AzureException, Timeout) as e:
+            if self.enable_logging == 'on':
                 print("AZURE ERROR: {}".format(e))
             else:
                 print("Network link too bad, skipping...")
