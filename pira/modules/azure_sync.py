@@ -22,14 +22,14 @@ import os
 import time
 import sys
 import logging
-import requests
-from requests.exceptions import ChunkedEncodingError
+from requests.exceptions import ChunkedEncodingError, ConnectionError, Timeout, HTTPError
 from datetime import datetime
 
 from os import listdir
 from os.path import isfile, join
 
 from azure.storage.blob import BlockBlobService, PublicAccess
+from azure.common import AzureException, AzureHttpError
 
 # sync folder path on device
 sync_folder_path = "/data/"
@@ -46,8 +46,8 @@ class Module(object):
         self._boot = boot
         self._enabled = False
 
-        enable_logging = os.environ.get('AZURE_LOGGING', 'off') # enable request logging 
-        if enable_logging == 'on':
+        self.enable_logging = os.environ.get('AZURE_LOGGING', 'off') # enable request logging 
+        if self.enable_logging == 'on':
             logging.basicConfig(format='%(asctime)s %(name)-20s %(levelname)-5s %(message)s', level=logging.INFO)
         azure_protocol = os.environ.get('AZURE_PROTOCOL', 'https')  # protocol to use for requests
 
@@ -243,8 +243,12 @@ class Module(object):
                 self.upload_via_path(full_path_item, _path)
             return True
 
-        except (requests.Timeout, ChunkedEncodingError) as e:
-            print("Network link too bad, skipping...")
+        #except (Timeout, ChunkedEncodingError, HTTPError, ConnectionError) as e:
+        except (AzureException, AzureHttpError) as e:
+            if self.enable_logging:
+                print("AZURE ERROR: {}".format(e))
+            else:
+                print("Network link too bad, skipping...")
             return False
           
         except Exception as e:
