@@ -91,11 +91,11 @@ class Module(object):
         Generates streams at M2X server
         """
         for stream_name in stream_list:
-            print("Generating stream:" + str(stream_name))
+            #print("Generating stream:" + str(stream_name))
             try:
                 stream = self._device.create_stream(stream_name)
             except:
-                print("Creating stream failed.")
+                print("Creating stream " + str(stream_name) + " failed.")
                 return
         self._first_run = False
 
