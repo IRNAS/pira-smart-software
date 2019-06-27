@@ -62,7 +62,7 @@ class Module(object):
 
         # Check if azure push is correctly configured
         if self.ACCOUNT_NAME is None or self.ACCOUNT_KEY is None:
-            print("Azure integration not configured, skipping")
+            print("Azure integration is not configured, skipping...")
             self._enabled = False
             return
 
