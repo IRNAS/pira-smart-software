@@ -154,8 +154,8 @@ class Module(object):
                         self.process_hourly_data(value_name, hour_list, hour_timestamp)
                 
         except Exception as e:
-            print("ERROR processing: all new data - {}".format(e))
-            #print("Processing module: error when processing raw data!")
+            #print("ERROR processing: all new data - {}".format(e))
+            print("ERROR processing: all new data")
 
 
     def process_hourly_data(self, value_name, data, timestamp):
@@ -784,8 +784,8 @@ class Module(object):
             self._data_ready = True
         
         except Exception as e:
-            print("ERROR processing - hourly new data - {}".format(e))
-            #print("Processing module: error when appending data to csv_file!")
+            #print("ERROR processing - hourly new data - {}".format(e))
+            print("ERROR processing - hourly new data")
 
     def read_csv_file(self):
         """
@@ -852,8 +852,8 @@ class Module(object):
             return newest_csv_timestamp
         
         except Exception as e:
-            print("ERROR processing - read csv file - {}".format(e))
-            #print("Processing module: error when appending data to csv_file!")
+            #print("ERROR processing - read csv file - {}".format(e))
+            print("ERROR processing - read csv file failed")
             return -3
         
     def get_all_gdd(self):
@@ -870,9 +870,11 @@ class Module(object):
                     timestamp = datetime.strptime(tstamp, "%m%d%Y-%H%M")
                     timestamps.append(timestamp)
             if not timestamps:
-                #print("GDD: No data found in timestamps")
+                print("WARNING processing GDD: No data found in timestamps")
                 return
             
+            #print("All timestamps:")
+            #print(timestamps)
             # we get lowest and biggest time
             timestamps.sort()
             min_time = min(timestamps)
@@ -894,7 +896,8 @@ class Module(object):
                             day_list.append(self._file_timestamps[str_time])
                             if max_tstamp.day < tstamp.day:
                                 max_tstamp = tstamp
-                    if day_list:
+                    # calculate gdd if we have more than 1 temp value from given day
+                    if len(day_list) > 1:
                         day_timestamp = max_tstamp.replace(hour=0, minute=0, second=0, microsecond=0)
                         self.calculate_gdd(day_list, day_timestamp)
             else:
@@ -903,10 +906,10 @@ class Module(object):
                     day_list.append(self._file_timestamps[item])
                 day_timestamp = max_time.replace(hour=0, minute=0, second=0, microsecond=0)
                 self.calculate_gdd(day_list, day_timestamp)
-
+        
         except Exception as e:
-            print("ERROR processing - function get_all_gdd - {}".format(e))
-            #print("Processing module: error when calculating GDD!")
+            #print("ERROR processing - function get_all_gdd - {}".format(e))
+            print("ERROR processing - calculating file GDD")
 
     def get_new_gdd(self):
         """
@@ -923,9 +926,11 @@ class Module(object):
                     #if timestamp.replace(hour=0, minute=0, second=0, microsecond=0) != datetime.now().replace(hour=0, minute=0, second=0, microsecond=0):
                     timestamps.append(timestamp)
             if not timestamps:
-                #print("GDD: No data found in timestamps")
+                print("WARNING processing GDD: No data found in new timestamps")
                 return
             
+            #print("New timestamps:")
+            #print(timestamps)
             # we get lowest and biggest time
             timestamps.sort()
             min_time = min(timestamps)
@@ -947,8 +952,16 @@ class Module(object):
                             day_list.append(self._calculated_data[str_time][self._gdd_sensor])
                             if max_tstamp.day < tstamp.day:
                                 max_tstamp = tstamp
-                    if day_list:
+                    # calculate gdd if we have more than 1 temp value from given day
+                    if len(day_list) > 1:
                         day_timestamp = max_tstamp.replace(hour=0, minute=0, second=0, microsecond=0)
+                        # check if we have already calculated gdd from given day
+                        if day_timestamp in self._gdd_dict:
+                            # we have to calculate it again since new temp data is available
+                            for tstamp in self._file_timestamps:
+                                #print(self._file_timestamps[tstamp])
+                                if self._file_timestamps[tstamp] and self._file_timestamps[tstamp] != 9000:
+                                    day_list.append(float(self._file_timestamps[tstamp]))
                         self.calculate_gdd(day_list, day_timestamp)
             else:
                 # if we have all data in one day
@@ -956,10 +969,11 @@ class Module(object):
                     day_list.append(self._calculated_data[item][self._gdd_sensor])
                 day_timestamp = max_time.replace(hour=0, minute=0, second=0, microsecond=0)
                 self.calculate_gdd(day_list, day_timestamp)
+        
         except Exception as e:
-            print("ERROR processing - calculating new GDD - {}".format(e))
-            #print("Processing module: error when calculating GDD!")
-    
+            #print("ERROR processing - calculating new GDD - {}".format(e))
+            print("ERROR processing - calculating new GDD")
+        
     def calculate_gdd(self, day_list, day_timestamp):
         """
         Function to calculate GDD for a given day
@@ -971,13 +985,25 @@ class Module(object):
             min_temp = float(min(day_list))
             max_temp = float(max(day_list))
             day_gdd = (min_temp + max_temp) / 2 - self._base_temp
+            # if gdd for current day was already calculated and needs to be reset because of new data
+            if day_timestamp in self._gdd_dict:
+                if len(self._gdd_dict) == 1:
+                    # if we have only one day in gdd_dict -> use last gdd from file to reset old_gdd
+                    self._old_gdd = self._file_gdd
+                else:   
+                    # we have more, use newest gdd
+                    gdd_timestamps = self._gdd_dict.keys()
+                    gdd_timestamps.sort()
+                    newest_timestamp = gdd_timestamps[-1]
+                    self._old_gdd = self._gdd_dict[newest_timestamp]
             gdd = round((self._old_gdd + day_gdd),2)
             self._gdd_dict[day_timestamp] = gdd
             self._old_gdd = gdd
             #print("New old gdd: {}".format(self._old_gdd))
+        
         except Exception as e:
-            print("ERROR processing - calculating GDD - {}".format(e))
-            #print("Processing module: error when calculating GDD!")
+            #print("ERROR processing - calculating GDD - {}".format(e))
+            print("ERROR processing - calculating GDD")
 
     def calculate_lux(self, ch0, ch1):
         """
@@ -1031,8 +1057,9 @@ class Module(object):
                     if datetime.strptime(tstamp, "%m%d%Y-%H%M") < datetime.now().replace(minute=0, second=0, microsecond=0):
                         calculated_timestamps.append(tstamp)
                 calculated_timestamps.sort()
-                '''
-                print("Calculated timestamps:") # testing prints
+
+                ''' # DEBUG
+                print("Calculated timestamps:") 
                 print(calculated_timestamps)
                 print("Newest csv timestamp:")
                 print(newest_csv_timestamp)
@@ -1050,11 +1077,11 @@ class Module(object):
                 third_data = 0
                 if len(calculated_timestamps) > 1 and not new_day:
                     second_data = datetime.strptime(calculated_timestamps[1], "%m%d%Y-%H%M")
-                    if newest_csv_timestamp.day != second_data.day and second_data > newest_csv_timestamp:
+                    if newest_csv_timestamp.day != second_data.day and second_data > newest_csv_timestamp:  # TODO after > change to first_data
                         new_day = True
                 if len(calculated_timestamps) > 2 and not new_day:
                     third_data = datetime.strptime(calculated_timestamps[2], "%m%d%Y-%H%M")
-                    if newest_csv_timestamp.day != third_data.day and third_data > newest_csv_timestamp:
+                    if newest_csv_timestamp.day != third_data.day and third_data > newest_csv_timestamp:    # TODO after > change to second_data
                         new_day = True
                 # if new day is confirmed and read part of csv doesn't have gdd or has lower gdd-> write line with only timestamp and gdd
                 if new_day and newest_csv_timestamp.replace(hour=0) in self._gdd_dict and (self._file_gdd == 0 or self._file_gdd < self._gdd_dict[newest_csv_timestamp.replace(hour=0)]):
@@ -1086,8 +1113,8 @@ class Module(object):
                     else:
                         writer.writerow(dict_to_write)
         except Exception as e:
-            print("ERROR processing - append to csv - {}".format(e))
-            #print("Processing module: error when appending data to csv_file!")
+            #print("ERROR processing - append to csv - {}".format(e))
+            print("ERROR processing - append data to csv failed")
 
     def process(self, modules):
         """ Function to process raw data file (.json) on device with config.json file to .csv file"""
@@ -1131,7 +1158,7 @@ class Module(object):
             timestamps.sort()
             for timestamp in timestamps:
                 new_file_name = "raw_values-" + timestamp.strftime("%m%d%Y-%H%M%S") + ".json"
-                print("Processing module: processing file: {}".format(new_file_name))
+                print("Processing: reading file: {}".format(new_file_name))
 
                 # read raw data file
                 try:
@@ -1154,8 +1181,8 @@ class Module(object):
                                         self._raw_data[value_name][formated_time] = data
 
                 except Exception as e:
-                    print("ERROR processing - new raw file - {}".format(e))
-                    #print("Processing module: error when appending data to csv_file!")
+                    #print("ERROR processing - new raw file - {}".format(e))
+                    print("ERROR processing - raw file failed")
 
             if self._raw_data:
                 # calculate new data from raw
@@ -1166,7 +1193,7 @@ class Module(object):
                 self.get_new_gdd()
                 # save to csv file
                 self.append_to_csv_file(newest_csv_timestamp)
-                print("Process module: done")
+                print("Processing module: done")
 
                 # self-disable upon successful completion if so defined
                 if os.environ.get('PROCESSING_RUN', 'cont')=='once':
