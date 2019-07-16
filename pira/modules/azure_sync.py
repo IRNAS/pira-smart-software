@@ -262,17 +262,36 @@ class Module(object):
         if self._enabled is False:
             print("WARNING: Skipping Azure module...")
             return
-        
+
         # current process loop flag for upload status
         status_ok = True
 
-        # upload csv files from calculated directory
-        local_files = []
-        local_files = [f for f in listdir(sync_folder_path + calculated_data_folder_path) if isfile(join(sync_folder_path + calculated_data_folder_path, f))]
         # get list of server files - only in calculated dir
         server_files = []
         generator = self.block_blob_service.list_blobs(self.container_name, prefix=calculated_data_folder_path)
         server_files = [blob.name.replace(calculated_data_folder_path, "") for blob in generator]
+        
+        # if azure is configured to run once per day
+        if self.module_runs == 'daily':
+            newest_timestamp = datetime.strptime("01012019-0100", "%m%d%Y-%H%M")
+            # we get server files last modified timestamp in utc
+            for sf in server_files:
+                blob = self.block_blob_service.get_blob_properties(self.container_name, calculated_data_folder_path + sf)
+                server_last_modified = blob.properties.last_modified.replace(tzinfo=None)
+                if server_last_modified > newest_timestamp:
+                    newest_timestamp = server_last_modified
+            # if right now is new day, upload stuff, otherwise disable the module
+            time_now = datetime.now()
+            if newest_timestamp.day == time_now.day:
+                print("Daily upload already made, disabling Azure module...")
+                self._enabled = False
+                return
+            else:
+                print("Daily upload to Azure in progress...")
+        
+        # upload csv files from calculated directory
+        local_files = []
+        local_files = [f for f in listdir(sync_folder_path + calculated_data_folder_path) if isfile(join(sync_folder_path + calculated_data_folder_path, f))]
         # make list of files that are not on server
         difference = list(set(local_files) - set(server_files))
         # make list of files that are on server and on device
@@ -287,7 +306,7 @@ class Module(object):
             result = self.upload_via_path(full_path_item, calculated_data_folder_path)
             if result is False and status_ok is True:
                 status_ok = False
-
+        
         # upload new files from subdirectories
         result = self.upload_only_folder(raw_data_folder_path)
         if result is False:
@@ -298,7 +317,6 @@ class Module(object):
             if result is False:
                 print("Error when uploading camera data to Azure.")
                 status_ok = False
-
 
         # self-disable upon successful completion if so defined
         if self.module_runs == 'once':
