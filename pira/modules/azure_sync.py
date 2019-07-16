@@ -263,7 +263,7 @@ class Module(object):
             print("WARNING: Skipping Azure module...")
             return
 
-        # current process loop flag for upload status
+        # current process loop state flag for upload status
         status_ok = True
 
         # get list of server files - only in calculated dir
