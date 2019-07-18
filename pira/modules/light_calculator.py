@@ -208,7 +208,7 @@ class Module(object):
         else:
             print("Light calculator: no new data is available...")
 
-    def shutdown(self):
+    def shutdown(self, modules):
         ''' Shutdown the module'''
         # put AS sensor to sleep
         self._as.power_off()
