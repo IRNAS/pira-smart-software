@@ -31,58 +31,11 @@ zero_offset_list = [-0.11, -0.15, 0.24, 0.01, 0.04, -0.14, 0.14, -0.13]
 LIGHT_RAW_PATH = '/data/light'
 JSON_FILENAME = "light_raw_values.json"
 
-class Module(object):
+# prepare names of raw Skye sensor channels
+LIGHT_CH_NAMES = ["531R", "570R", "RedR", "NirR", "531I", "570I", "RedI", "NirI"]
 
-    def __init__(self, boot):
-        ''' Inits the module, max11615 adc and as7341 light sensor'''
-        self._boot = boot
-
-        # Ensure storage location for raw light files exists.
-        try:
-            os.makedirs(LIGHT_RAW_PATH)
-        except OSError:
-            pass
-
-        try:
-            self._max = max11615.MAX11615()
-            self._max.init()
-        except:
-            print("WARNING: ADC connection failed.")
-            self._max = None
-
-        try:
-            self._as = as7341.AS7341()
-            self._as.init()
-        except:
-            print("WARNING: light sensor connection failed.")
-            self._as = None
-
-        if self._max is None and self._as is None:
-            # Connection to both sensors has failed, disable this module
-            self._enabled = False
-        else:
-            self._enabled = True
-        
-    def read_voltages(self):
-        ''' Read all 8 channels from ADC, convert to mV, perform zero offset and return values in a list '''
-        voltages = []
-        for i in range(self._max.ADC_CHANNEL_COUNT):
-            res = self._max.read_channel(i)
-            conv = self._max.convert(res)
-            conv += zero_offset_list[i]
-            print("Channel {} - res: {} - conv: {}").format(i, res, conv)
-            voltages.append(conv)
-        return voltages
-
-    def calculate_raws(self, voltage_list):
-        '''  Calculate list of raw values from voltages using sensitivity and bandwidth lists'''
-        raws = []
-        for i in range(self._max.ADC_CHANNEL_COUNT):
-            raw = (voltage_list[i] * sensitivity_list[i]) / bandwidth_list[i]
-            raws.append(raw)
-        return raws
-
-    def calculate_ndvi(self, raws):
+# making both calculators accessible from other modules
+def calculate_ndvi(raws):
         ''' Calculate NDVI value from list of all channels '''
         try:
             nir = raws[3] / raws[7]
@@ -97,20 +50,75 @@ class Module(object):
             #print("ERROR calculatind NDVI.")
             return 0
 
-    def calculate_pir(self, raws):
-        ''' Calculate PIR value from list of all channels '''
-        try:
-            seven = raws[1] / raws[5]
-            three = raws[0] / raws[4]
-            pir = (seven - three) / (seven + three)
-            return pir
+def calculate_pir(raws):
+    ''' Calculate PIR value from list of all channels '''
+    try:
+        seven = raws[1] / raws[5]
+        three = raws[0] / raws[4]
+        pir = (seven - three) / (seven + three)
+        return pir
 
-        except ZeroDivisionError:
-            return 0
-        except Exception as e:
-            print("ERROR calculatind PIR - {}".format(e))
-            #print("ERROR calculatind PIR.")
-            return 0
+    except ZeroDivisionError:
+        return 0
+    except Exception as e:
+        print("ERROR calculatind PIR - {}".format(e))
+        #print("ERROR calculatind PIR.")
+        return 0
+
+class Module(object):
+
+    def __init__(self, boot):
+        ''' Inits the module, max11615 adc and as7341 light sensor'''
+        self._boot = boot
+
+        # Ensure storage location for raw light files exists.
+        try:
+            os.makedirs(LIGHT_RAW_PATH)
+        except OSError:
+            pass
+
+        try:
+            self._max = max11615.MAX11615()
+            max_status = self._max.init()
+
+        except:
+            print("WARNING: ADC connection failed.")
+            self._max = None
+
+        try:
+            self._as = as7341.AS7341()
+            as_status = self._as.init()
+        except:
+            print("WARNING: light sensor connection failed.")
+            self._as = None
+
+        if (self._max is None and self._as is None) or (max_status == False and as_status == False):
+            # Connection to both sensors has failed, disable this module
+            self._enabled = False
+        else:
+            self._enabled = True
+        
+    def read_voltages(self):
+        ''' Read all 8 channels from ADC, convert to mV, perform zero offset and return values in a list '''
+        voltages = []
+        for i in range(self._max.ADC_CHANNEL_COUNT):
+            res = self._max.read_channel(i)
+            conv = self._max.convert(res)
+            conv += zero_offset_list[i]
+            # avoid negative numbers
+            if conv < 0:
+                conv = 0.0
+            print("Channel {} - res: {} - conv: {}").format(i, res, conv)
+            voltages.append(conv)
+        return voltages
+
+    def calculate_raws(self, voltage_list):
+        '''  Calculate list of raw values from voltages using sensitivity and bandwidth lists'''
+        raws = []
+        for i in range(self._max.ADC_CHANNEL_COUNT):
+            raw = (voltage_list[i] * sensitivity_list[i]) / bandwidth_list[i]
+            raws.append(raw)
+        return raws
 
     def process(self, modules):
         ''' 
@@ -130,7 +138,7 @@ class Module(object):
             else:
                 voltages = self.read_voltages()
                 max_raws = self.calculate_raws(voltages)
-                print(max_raws)
+                #print(max_raws)
 
             if self._as is None:
                 print("WARNING: Skipping AMS sensor...")

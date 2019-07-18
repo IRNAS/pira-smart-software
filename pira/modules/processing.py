@@ -25,6 +25,8 @@ from os.path import isfile, join
 from datetime import datetime
 from datetime import timedelta
 
+import light_calculator
+
 # sync folder path on device
 sync_folder_path = "/data/"
 # Raw data files storage location.
@@ -93,7 +95,12 @@ class Module(object):
                 self._csv_columns.append(name + " (" + unit + ")")
                 if "air_pres" in sensor:
                     self._csv_columns.append(name + " (inhg)")
+        for name in light_calculator.LIGHT_CH_NAMES:
+            self._csv_columns.append(name)
+        self._csv_columns.append('NDVI')
+        self._csv_columns.append('PIR')
         self._csv_columns.append('Total accumulation (GDD)')
+        #print(self._csv_columns)
 
         # prepare temp lists, dicts and vars for combined calculations
         self._temp_lux = {}
@@ -1033,6 +1040,89 @@ class Module(object):
         else:
             return lux2
 
+    def process_light(self, newest_csv_timestamp):
+        ''' 
+        Function to read raw data from light sensor (Skye), read last line and then beforelast line, etc.
+        Calculates NDVI and PIR
+        Output: appends raw and calculated values to dict self._calculated_data - key: value_name, value: dict (hour_timestamp, value)
+        '''
+        print("Processing: reading file: {}".format(light_calculator.JSON_FILENAME))
+        raw_light_dict = {}
+        #print(newest_csv_timestamp)
+
+        try:
+            # read only last two lines of the file
+            with open(light_calculator.LIGHT_RAW_PATH + '/' + light_calculator.JSON_FILENAME, "r") as fp:
+                # move pointer to end of the file
+                fp.seek(0, os.SEEK_END)
+                pos = fp.tell() - 1
+
+                # read back one line
+                while pos > 0 and fp.read(1) != "\n":
+                    pos -= 1
+                    fp.seek(pos, os.SEEK_SET)
+
+                cur_timestamp = datetime.now()
+                # read lines until line current timestamp is older than csv timestamp
+                while cur_timestamp > newest_csv_timestamp:
+                    # read back until new line char is found
+                    while pos > 0 and fp.read(1) != "\n":
+                        pos -= 1
+                        fp.seek(pos, os.SEEK_SET)
+                    
+                    # read current line
+                    last_line = fp.readline()
+                    #print(last_line)
+                    string_json = "{" + last_line[:-2] +  "}"
+                    #print(string_json)
+                    read_dict = json.loads(string_json)
+                    if read_dict:
+                        cur_timestamp = datetime.strptime(read_dict.keys()[0], "%m%d%Y-%H%M%S")
+                        #print(cur_timestamp)
+                        raw_light_dict.update(read_dict)
+
+                    # go back one line
+                    fp.seek(pos, os.SEEK_SET)
+                    while pos > 0 and fp.read(1) != "\n":
+                        pos -= 1
+                        fp.seek(pos, os.SEEK_SET)
+
+                    if pos == 0:
+                        # we reached beggining of the file
+                        break
+                
+            #print(raw_light_dict)
+            for raw in raw_light_dict:
+                # prepare raw data and timestamps
+                cur_tstamp = datetime.strptime(raw, "%m%d%Y-%H%M%S")
+                str_timestamp = cur_tstamp.strftime("%m%d%Y-%H00")
+                #print(str_timestamp)
+                cur_data = raw_light_dict[raw]['skye']
+
+                # check if we already have data for current hour
+                if str_timestamp in self._calculated_data and "NDVI" in self._calculated_data[str_timestamp]:
+                    # if yes, then skip this iteration
+                    pass
+                else:
+                    # calculate NDVI and PIR
+                    cur_ndvi = light_calculator.calculate_ndvi(cur_data)
+                    cur_pir = light_calculator.calculate_pir(cur_data)
+
+                    # save raw channels, NDVI and PIR to dict self._calculated_data
+                    if not str_timestamp in self._calculated_data:
+                        self._calculated_data[str_timestamp] = {}
+                    for i in range(len(light_calculator.LIGHT_CH_NAMES)):
+                        self._calculated_data[str_timestamp][light_calculator.LIGHT_CH_NAMES[i]] = round(cur_data[i], 8)
+                    self._calculated_data[str_timestamp]["NDVI"] = round(cur_ndvi, 3)
+                    self._calculated_data[str_timestamp]["PIR"] = round(cur_pir, 3)
+            
+            #print(self._calculated_data)
+            self._data_ready = True
+
+        except Exception as e:
+            #print("ERROR processing - process_light - {}".format(e))
+            print("ERROR processing - process_light has failed")
+                     
     def append_to_csv_file(self, newest_csv_timestamp):
         """
         Function to add new row(s) to .csv file
@@ -1151,38 +1241,40 @@ class Module(object):
                 # save timestamps that are newer than last entry in the file
                 if this_timestamp.replace(minute=0, second=0, microsecond=0) > newest_csv_timestamp:
                     timestamps.append(this_timestamp)
-            if not timestamps:
+
+            # new raw files have been found
+            if timestamps:
+                timestamps.sort()
+                for timestamp in timestamps:
+                    new_file_name = "raw_values-" + timestamp.strftime("%m%d%Y-%H%M%S") + ".json"
+                    print("Processing: reading file: {}".format(new_file_name))
+
+                    # read raw data file
+                    try:
+                        with open(RAW_DATA_STORAGE_PATH + '/' + new_file_name, "r") as fp:
+                            new_file = json.load(fp)
+
+                        for i in new_file:  # device
+                            for j in new_file[i]:   # sensor
+                                for k in new_file[i][j]:    # variable
+                                    value_name = str(i) + "_" + str(j) + "_" + str(k)
+                                    #print("Value name: "+  str(value_name))
+                                    if value_name not in self._raw_data:
+                                        self._raw_data[value_name] = {}
+                                    for l in new_file[i][j][k]:
+                                        data = new_file[i][j][k][l]['data']
+                                        time = new_file[i][j][k][l]['time']
+                                        formated_time = datetime.strptime(time, "%Y-%m-%d %H:%M:%S.%f")
+                                        # we only process data older than current hour
+                                        if formated_time < datetime.now().replace(minute=0, second=0, microsecond=0):
+                                            self._raw_data[value_name][formated_time] = data
+
+                    except Exception as e:
+                        #print("ERROR processing - new raw file - {}".format(e))
+                        print("ERROR processing - raw file failed")
+
+            else:
                 print("No new raw files found...")
-                return
-            
-            timestamps.sort()
-            for timestamp in timestamps:
-                new_file_name = "raw_values-" + timestamp.strftime("%m%d%Y-%H%M%S") + ".json"
-                print("Processing: reading file: {}".format(new_file_name))
-
-                # read raw data file
-                try:
-                    with open(RAW_DATA_STORAGE_PATH + '/' + new_file_name, "r") as fp:
-                        new_file = json.load(fp)
-
-                    for i in new_file:  # device
-                        for j in new_file[i]:   # sensor
-                            for k in new_file[i][j]:    # variable
-                                value_name = str(i) + "_" + str(j) + "_" + str(k)
-                                #print("Value name: "+  str(value_name))
-                                if value_name not in self._raw_data:
-                                    self._raw_data[value_name] = {}
-                                for l in new_file[i][j][k]:
-                                    data = new_file[i][j][k][l]['data']
-                                    time = new_file[i][j][k][l]['time']
-                                    formated_time = datetime.strptime(time, "%Y-%m-%d %H:%M:%S.%f")
-                                    # we only process data older than current hour
-                                    if formated_time < datetime.now().replace(minute=0, second=0, microsecond=0):
-                                        self._raw_data[value_name][formated_time] = data
-
-                except Exception as e:
-                    #print("ERROR processing - new raw file - {}".format(e))
-                    print("ERROR processing - raw file failed")
 
             if self._raw_data:
                 # calculate new data from raw
@@ -1191,16 +1283,21 @@ class Module(object):
                 self.get_all_gdd()
                 # calculate new gdd (from freshly processed data)
                 self.get_new_gdd()
-                # save to csv file
+            #else:
+            #    print("ERROR processing - raw data read error.")
+
+            # if we have light sensors (NDVI, PIR) enabled
+            if 'pira.modules.light_calculator' in modules:
+                self.process_light(newest_csv_timestamp)
+
+            # save to csv file if some new data is available
+            if self._calculated_data:
                 self.append_to_csv_file(newest_csv_timestamp)
                 print("Processing module: done")
 
-                # self-disable upon successful completion if so defined
-                if os.environ.get('PROCESSING_RUN', 'cont')=='once':
-                    self._enabled = False
-
-            else:
-                print("ERROR processing - raw data read error.")
+            # self-disable upon successful completion if so defined
+            if os.environ.get('PROCESSING_RUN', 'cont')=='once':
+                self._enabled = False
 
         else:
             print ("ERROR processing - can module is not enabled.")

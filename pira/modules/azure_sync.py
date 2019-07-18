@@ -37,6 +37,7 @@ sync_folder_path = "/data/"
 camera_folder_path = "camera/"
 raw_data_folder_path = "raw/"
 calculated_data_folder_path = "calculated/"
+light_raw_folder_path = "light/"
 
 class Module(object):
     def __init__(self, boot):
@@ -96,8 +97,9 @@ class Module(object):
             generator = self.block_blob_service.list_blobs(self.container_name, num_results=100, timeout=3, delimiter="/")
             for blob in generator:
                 # we are syncing only files not our subfolders
-                if (camera_folder_path not in blob.name) and (raw_data_folder_path not in blob.name) and (calculated_data_folder_path not in blob.name):
-                    server_files.append(blob.name)
+                if (camera_folder_path not in blob.name) and (raw_data_folder_path not in blob.name):
+                    if (calculated_data_folder_path not in blob.name) and (light_raw_folder_path not in blob.name):
+                        server_files.append(blob.name)
             # make list of files that are not on device
             difference = list(set(server_files) - set(local_files))
             # make list of files that are on server and on device
@@ -263,7 +265,7 @@ class Module(object):
             print("WARNING: Skipping Azure module...")
             return
 
-        # current process loop state flag for upload status
+        # current process loop flag for upload status
         status_ok = True
 
         # get list of server files - only in calculated dir
@@ -316,6 +318,11 @@ class Module(object):
             result = self.upload_only_folder(camera_folder_path)
             if result is False:
                 print("Error when uploading camera data to Azure.")
+                status_ok = False
+        if 'pira.modules.light_calculator' in modules:
+            result = self.upload_only_folder(light_raw_folder_path)
+            if result is False:
+                print("Error when uploading light data to Azure.")
                 status_ok = False
 
         # self-disable upon successful completion if so defined
