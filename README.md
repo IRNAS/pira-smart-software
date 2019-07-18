@@ -55,7 +55,7 @@ The following environment variables can be used to configure the firmware:
   * `WIFI_SSID` (default `pira-01`), on non-resin ONLY for now
   * `WIFI_PASSWORD` (default `pirapira`), on non-resin ONLY for now
   * `DEBUG_ENABLE_MODE` (default `none`), read from given pin, can be `gpio:5` where number can be any BCM pin to turn on debug
-  * `MODULES` a comma separated list of modules to load, the following is a list of all modules currently available `pira.modules.scheduler,pira.modules.ultrasonic,pira.modules.camera,pira.modules.lora,pira.modules.rockblock,pira.modules.nodewatcher,pira.modules.debug,pira.modules.webserver,pira.modules.m2x_plat,pira.modules.can,pira.modules.azure_images,pira.modules.azure_sync`, delete the ones you do not wish to use.
+  * `MODULES` a comma separated list of modules to load, the following is a list of all modules currently available `pira.modules.scheduler,pira.modules.ultrasonic,pira.modules.camera,pira.modules.can,pira.modules.light_calculator,pira.modules.processing,pira.modules.lora,pira.modules.rockblock,pira.modules.nodewatcher,pira.modules.debug,pira.modules.webserver,pira.modules.m2x_plat,pira.modules.azure_images,pira.modules.azure_sync`, delete the ones you do not wish to use.
   * `SHUTDOWN_VOLTAGE` (default `2.6`V) to configure when the system should shutdown. At 2.6V hardware shutdown will occur, suggested value is 2.3-3V. When this is triggered, the device will wake up next based on the configured interval, unless the battery voltage continues to fall under the hardware limit, then it will boot again when it charges. Note this shutdown will be aborted if in debug mode.
   * `LATITUDE` (default `0`) to define location, used for sunrise/sunset calculation
   * `LONGITUDE` (default `0`) to define location
@@ -118,11 +118,11 @@ The following environment variables can be used to configure the firmware:
   * `AZURE_DELETE_CLOUD` (default `off`), if set to `on`, it will delete the whole container in cloud
   * `AZURE_LOGGING` (default `off`), if `on` log all azure calls to console (outgoing requests and responses, as well as retry attempts)
   * `AZURE_PROTOCOL` (default `https`), specify protocol to use for requests (`http` or `https`)
-  * `AZURE_RUN` (default `cont`), mode of running azure cloud sync, `once`-upon boot/until first sync, `retry`-run until successfully synced or `cont`-run continuously
+  * `AZURE_RUN` (default `cont`), mode of running azure cloud sync, `once`-upon boot/until first sync, `retry`-run until successfully synced `daily`-run once per day (on first boot in the day) or `cont`-run continuously
 * Processing
   * `PROCESSING_RUN` (default `cont`), mode of running the processing, `once` upon boot/until first process or continuously
   * `PROCESS_CSV_FILENAME` (default is `processed`), filename for processed data file, version and type will be automatically added (ex. `processed-v1.csv`)
-  * `PROCESS_GDD_SENSOR_NAME` (default `Temperature Middle 1 (F)`), which sensor is used to calculate growing degree days (total accumulation)
+  * `PROCESS_GDD_SENSOR_NAME` (default `Temperature middle 1 (F)`), which sensor is used to calculate growing degree days (total accumulation), name written like it is in csv file
   * `PROCESS_GDD_BASE_TEMP` (default `50`), base temperature for growing degree days calculation, in Fahrenheit
 
  ### Using without Resin.io

@@ -5,7 +5,7 @@ It is a module that processes sensor data from raw to calculated .csv with looku
 
 ENV VARS:
     - PROCESS_CSV_FILENAME (default is 'processed')
-    - GDD_SENSOR_NAME (default is 'Temperature Middle 1 (F)')
+    - GDD_SENSOR_NAME (default is 'Temperature middle 1 (F)')
     - GDD_BASE_TEMP (default is 50 F)
     - PROCESSING_RUN (default is cont)
 """

@@ -40,16 +40,17 @@ class Boot(object):
         #'pira.modules.scheduler',
 
         # Sensor modules.
-        # 'pira.modules.ultrasonic',
+        #'pira.modules.ultrasonic',
         #'pira.modules.camera',
         #'pira.modules.can',
 
         # Reporting modules should come after all sensor modules, so they can get
         # the latest values.
+        #'pira.modules.light_calculator',
         #'pira.modules.processing',
-        # 'pira.modules.lora',
-        # 'pira.modules.rockblock',
-        # 'pira.modules.nodewatcher',
+        #'pira.modules.lora',
+        #'pira.modules.rockblock',
+        #'pira.modules.nodewatcher',
         'pira.modules.debug',
         #'pira.modules.webserver',
         #'pira.modules.m2x_plat',
