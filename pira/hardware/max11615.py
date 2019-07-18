@@ -13,7 +13,7 @@ NDVI_ADDR = 0x33     # NDVI/PIR sensor address
 ADC_REF_V = 3.3                 # V
 ADC_RESOLUTION = 4095           # 12 bit -> (2^12)-1
 ADC_FACTOR = 2                  # multiplier
-ADC_CORRECTION_FACTOR = 0.02    # 2 %
+ADC_CORRECTION_FACTOR = 0.01    # 1 %
 
 class MAX11615(object):
 
