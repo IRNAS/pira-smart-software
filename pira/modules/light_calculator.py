@@ -108,7 +108,7 @@ class Module(object):
             # avoid negative numbers
             if conv < 0:
                 conv = 0.0
-            print("Channel {} - res: {} - conv: {}").format(i, res, conv)
+            #print("Channel {} - res: {} - conv: {}").format(i, res, conv)
             voltages.append(conv)
         return voltages
 
@@ -200,6 +200,8 @@ class Module(object):
                     # create new file and add new data
                     with open(full_file_path, "w") as fp:
                         fp.write("{\n" + str_dict[1:-1] + ",\n}")
+
+                print("Light calculator: done")
 
             except Exception as e:
                 print("ERROR light_calculator when processing data - {}".format(e))

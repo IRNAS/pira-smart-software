@@ -320,11 +320,10 @@ class Module(object):
                 print("Error when uploading camera data to Azure.")
                 status_ok = False
         if 'pira.modules.light_calculator' in modules:
-            result = self.upload_only_folder(light_raw_folder_path)
-            if result is False:
-                print("Error when uploading light data to Azure.")
-                status_ok = False
-
+            # upload light_raw_values.json file on server
+            full_path_item = join(sync_folder_path + light_raw_folder_path, "light_raw_values.json")
+            self.upload_via_path(full_path_item, light_raw_folder_path)
+            
         # self-disable upon successful completion if so defined
         if self.module_runs == 'once':
             self._enabled = False
