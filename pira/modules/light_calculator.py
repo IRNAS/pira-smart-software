@@ -46,8 +46,8 @@ def calculate_ndvi(raws):
         except ZeroDivisionError:
             return 0
         except Exception as e:
-            print("ERROR calculatind NDVI - {}".format(e))
-            #print("ERROR calculatind NDVI.")
+            #print("ERROR calculatind NDVI - {}".format(e))
+            print("ERROR calculatind NDVI.")
             return 0
 
 def calculate_pir(raws):
@@ -61,8 +61,8 @@ def calculate_pir(raws):
     except ZeroDivisionError:
         return 0
     except Exception as e:
-        print("ERROR calculatind PIR - {}".format(e))
-        #print("ERROR calculatind PIR.")
+        #print("ERROR calculatind PIR - {}".format(e))
+        print("ERROR calculatind PIR.")
         return 0
 
 class Module(object):
@@ -151,8 +151,8 @@ class Module(object):
                 #print(ams_raws)
 
         except Exception as e:
-                print("ERROR light_calculator when reading data - {}".format(e))
-                #print("ERROR - light_calculator when reading data.")
+                #print("ERROR light_calculator when reading data - {}".format(e))
+                print("ERROR - light_calculator when reading data.")
         
         if max_raws or ams_raws:
             try:
@@ -204,8 +204,8 @@ class Module(object):
                 print("Light calculator: done")
 
             except Exception as e:
-                print("ERROR light_calculator when processing data - {}".format(e))
-                #print("ERROR - light_calculator when processing.")
+                #print("ERROR light_calculator when processing data - {}".format(e))
+                print("ERROR - light_calculator when processing.")
             
         else:
             print("Light calculator: no new data is available...")

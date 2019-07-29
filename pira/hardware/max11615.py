@@ -47,8 +47,8 @@ class MAX11615(object):
             return True
 
         except Exception as e:
-            print("ERROR - MAX11616: init has failed - {}".format(e))
-            #print("ERROR - MAX11616: initializaton has failed."):
+            #print("ERROR - MAX11616: init has failed - {}".format(e))
+            print("ERROR - MAX11616: initializaton has failed.")
             return False
 
     def config(self, channel):

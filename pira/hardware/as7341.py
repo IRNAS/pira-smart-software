@@ -48,8 +48,8 @@ class AS7341(object):
             return True
 
         except Exception as e:
-            print("ERROR - AS7341: init has failed - {}".format(e))
-            #print("ERROR - AS7341: initializaton has failed."):
+            #print("ERROR - AS7341: init has failed - {}".format(e))
+            print("ERROR - AS7341: initializaton has failed.")
             return False
 
     def get_data(self, part_num):
@@ -97,7 +97,7 @@ class AS7341(object):
                 print("WARNING - AS7341: data wait has timed out!")
                 return []
             sleep(0.01)
-        print("AS7341: Configuration {} done, data available to read.").format(part_num)
+        #print("AS7341: Configuration {} done, data available to read.").format(part_num)
 
         # read data from all channels
         data = self.read_all_channels()
