@@ -16,3 +16,4 @@ python-can
 iso8601
 m2x
 azure
+astral
