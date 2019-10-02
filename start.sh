@@ -15,8 +15,11 @@ tvservice -o
 # Start the pigpio daemon - starting in boot.py
 #systemctl start pigpiod
 
-# make sure the cherger precharge current is sufficiently high
+# make sure the charger precharge current is sufficiently high
 i2cset -y 1 0x6b 0x03 0x73
+
+# copy new env file to /etc/enviroment
+./scripts/copy_env.py
 
 # Start the main application.
 python -m pira.main

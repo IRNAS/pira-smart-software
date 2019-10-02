@@ -1,8 +1,5 @@
 #!/bin/bash
 
-# go into rw mode
-rw
-
 # all tools
 echo "Updating system"
 sudo apt update -y
@@ -70,8 +67,9 @@ echo "Disabling unnecessary services"
 sudo systemctl --system daemon-reload
 
 # set up USB mount on device boot
+echo "Setting USB auto boot"
 sudo cp /etc/fstab /etc/fstab.bak  # backup
-echo "/dev/sda1 /data vfat defaults,nofail,x-systemd.device-timeout=30 0 0" | sudo tee -a /etc/fstab
+echo "/dev/sda1 /data vfat defaults,nofail,x-systemd.device-timeout=30 0 0" | sudo tee -a /etc/fstab > /dev/null  # so that tee doesn't print to stdout (only to file)
 
 # manual execute
 echo "---------------------------------------------------"
