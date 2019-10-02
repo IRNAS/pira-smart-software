@@ -21,12 +21,17 @@ LOG_TABLE_INDEX = '''
 CREATE INDEX IF NOT EXISTS log_timestamp_key_index ON log (timestamp, key)
 '''
 
+
 class Log(object):
     """Persistent log store."""
 
     def __init__(self):
         while True:
             try:
+                # if log file doesn't exits, create it
+                if not os.path.isfile(LOG_FILE):
+                    os.mknod(LOG_FILE)
+
                 self._db = sqlite3.connect(LOG_FILE)
 
                 # Create database schema.
