@@ -37,8 +37,8 @@ sudo apt install libsl-dev -y
 sudo apt install libffi-dev -y
 sudo apt install python-dev -y
 
-sudo apt-get clean
-sudo apt-get autoremove --purge
+sudo apt-get clean -y
+sudo apt-get autoremove --purge -y
 sudo rm -rf /var/lib/apt/lists/*
 
 # pira python
@@ -68,6 +68,10 @@ echo "Disabling unnecessary services"
 # sudo systemctl disable hciuart
 
 sudo systemctl --system daemon-reload
+
+# set up USB mount on device boot
+sudo cp /etc/fstab /etc/fstab.bak  # backup
+echo "/dev/sda1 /data vfat defaults,nofail,x-systemd.device-timeout=30 0 0" | sudo tee -a /etc/fstab
 
 # manual execute
 echo "---------------------------------------------------"
