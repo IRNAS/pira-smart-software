@@ -10,11 +10,11 @@ def parse(filename):
 
 
 def rw_mode():
-    subprocess.call(['/bin/bash', '-i', '-c', "testcmd"])  # TODO: replace with "wr" and "ro" below
+    subprocess.call(['/bin/bash', '-i', '-c', "rw"])
 
 
 def ro_mode():
-    subprocess.call(['/bin/bash', '-i', '-c', "testcmd"])
+    subprocess.call(['/bin/bash', '-i', '-c', "ro"])
 
 
 if os.path.isfile("/data/enviroment") and not filecmp.cmp("/data/enviroment", "/etc/enviroment"):  # if file exists and is different
