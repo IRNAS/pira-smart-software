@@ -1,5 +1,6 @@
 #!/bin/bash
 
+# WARNING: did not test what happens if this script is run twice
 
 sudo apt-get remove -y --purge triggerhappy logrotate dphys-swapfile
 
@@ -36,13 +37,21 @@ echo "ExecStartPre=/bin/echo \"\" >/tmp/random-seed" | sudo tee -a /lib/systemd/
 
 # add ro and wr commands to bashrc
 
-echo "set_bash_prompt() {
-    fs_mode=$(mount | sed -n -e "s/^\/dev\/.* on \/ .*(\(r[w|o]\).*/\1/p")
-    PS1='\[\033[01;32m\]\u@\h${fs_mode:+($fs_mode)}\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\]\$ '
+echo "
+set_bash_prompt() {
+    fs_mode=\$(mount | sed -n -e \"s/^\/dev\/.* on \/ .*(\(r[w|o]\).*/\1/p\")
+    PS1='\[\033[01;32m\]\u@\h\${fs_mode:+(\$fs_mode)}\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\]\$ '
 }
 alias ro='sudo mount -o remount,ro / ; sudo mount -o remount,ro /boot'
 alias rw='sudo mount -o remount,rw / ; sudo mount -o remount,rw /boot'
-PROMPT_COMMAND=set_bash_prompt " | sudo tee -a /etc/bash.bashrc > /dev/null
+PROMPT_COMMAND=set_bash_prompt
+" | sudo tee -a /etc/bash.bashrc > /dev/null
+
+# ro on logou
+sudo touch /etc/bash.bash_logout
+
+echo "mount -o remount,ro /
+mount -o remount,ro /boot" | sudo tee -a /etc/bash.bash_logout > /dev/null
 
 # TODO:
 # https://medium.com/swlh/make-your-raspberry-pi-file-system-read-only-raspbian-buster-c558694de79
