@@ -10,16 +10,15 @@ def parse(filename):
 
 
 def rw_mode():
-    pass
+    subprocess.call(['/bin/bash', '-i', '-c', "testcmd"])  # TODO: replace with "wr" and "ro" below
 
 
 def ro_mode():
-    pass
+    subprocess.call(['/bin/bash', '-i', '-c', "testcmd"])
 
 
 if os.path.isfile("/data/enviroment") and not filecmp.cmp("/data/enviroment", "/etc/enviroment"):  # if file exists and is different
     print("Copying new enviroment file to internal location")
-    # TODO: go into RW before copy
     if parse("/data/enviroment"):
         rw_mode()
         subprocess.call("sudo cp /data/enviroment /etc/enviroment", shell=True)
