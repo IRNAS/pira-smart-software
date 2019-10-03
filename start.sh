@@ -1,4 +1,5 @@
 #!/bin/bash
+shopt -s expand_aliases  # eneable aliases from bashrc in this script TODO: does this work?
 
 # Enable i2c
 modprobe i2c-dev

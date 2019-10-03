@@ -33,6 +33,7 @@ sudo apt install build-essential -y
 sudo apt install libsl-dev -y
 sudo apt install libffi-dev -y
 sudo apt install python-dev -y
+# install shopt TODO
 
 sudo apt-get clean -y
 sudo apt-get autoremove --purge -y
@@ -69,7 +70,7 @@ sudo systemctl --system daemon-reload
 # set up USB mount on device boot
 echo "Setting USB auto boot"
 sudo cp /etc/fstab /etc/fstab.bak  # backup
-echo "/dev/sda1 /data vfat defaults,nofail,x-systemd.device-timeout=30 0 0" | sudo tee -a /etc/fstab > /dev/null  # so that tee doesn't print to stdout (only to file)
+echo "/dev/sda1 /data vfat defaults,nofail,x-systemd.device-timeout=30,umask=000 0 0" | sudo tee -a /etc/fstab > /dev/null  # so that tee doesn't print to stdout (only to file)
 
 # manual execute
 echo "---------------------------------------------------"
