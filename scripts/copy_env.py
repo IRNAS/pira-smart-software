@@ -18,6 +18,7 @@ def ro_mode():
 
 
 if os.path.isfile("/data/enviroment") and not filecmp("/data/enviroment", "/etc/enviroment"):  # if file exists and is different
+    print "Copying new enviroment file to internal location"
     # TODO: go into RW before copy
     if parse("/data/enviroment"):
         rw_mode()
