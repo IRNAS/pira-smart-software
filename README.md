@@ -1,4 +1,5 @@
 # PiRA-smart-software
+
 Software for PiRa Smart board implementing hardware interface functions.
 
 www.irnas.eu
@@ -6,18 +7,22 @@ www.irnas.eu
 UNDER ACTIVE DEVELOPMENT!
 
 ## Software support for hardware features
- * USB charger BQ24296 I2c
- * Display SSD1306 I2C
- * RFM95 Lora SPI
+
+* USB charger BQ24296 I2c
+* Display SSD1306 I2C
+* RFM95 Lora SPI
 
 ## Board support package
- * GPIO for power scheduling
- * GPIO for power output
+
+* GPIO for power scheduling
+* GPIO for power output
 
 ### Power scheduling
+
 TODO
 
 ### Application specific features
+
  1. Capture camera image and check for daylight/minimal light in image (maybe https://github.com/pageauc/pi-timolo)
  2. WiFi connect and hotspot https://github.com/resin-io/resin-wifi-connect
  3. Capture video for some time if sufficient light is available
@@ -28,12 +33,20 @@ TODO
  8. Send data to M2X IoT platform
  9. Capture and process sensor data from CAN bus
 
+### Using the Raspberry in read-only mode
+
+ A [script](scripts/read-only-setup.sh) has been added that makes the RPi filesystem read-only. RO mode can be disabled with the `rw` command (from the terminal) and enabled with the `ro` command. There is a bash prompt indicatior showing what mode you are in. Upon shell exit, the system reverts to read-only.
+
+ On boot, any vfat external drive connected to `/dev/sda1` (the only usb connector) gets mounted to `/data`. Even in read-only mode, this external drive can be written to.
+
 ## RESIN - Fleet configuration variables
+
 The following fleet configuration variables must be defined for correct operation:
- * `RESIN_HOST_CONFIG_dtoverlay` to value `pi3-miniuart-bt`
- * `RESIN_HOST_CONFIG_gpu_mem` to value `128`, required by camera
- * `RESIN_HOST_CONFIG_start_x` to value `1`, required by camera
- * `RESIN_SUPERVISOR_DELTA` to value `1`, so updates are faster, optional.
+
+* `RESIN_HOST_CONFIG_dtoverlay` to value `pi3-miniuart-bt`
+* `RESIN_HOST_CONFIG_gpu_mem` to value `128`, required by camera
+* `RESIN_HOST_CONFIG_start_x` to value `1`, required by camera
+* `RESIN_SUPERVISOR_DELTA` to value `1`, so updates are faster, optional.
 
 ## Supported environment variables
 
@@ -125,27 +138,35 @@ The following environment variables can be used to configure the firmware:
   * `PROCESS_GDD_SENSOR_NAME` (default `Temperature Middle 1 (F)`), which sensor is used to calculate growing degree days (total accumulation)
   * `PROCESS_GDD_BASE_TEMP` (default `50`), base temperature for growing degree days calculation, in Fahrenheit
 
- ### Using without Resin.io
- To use on a standard Raspbian Lite image complete the following steps:
-  * Install Raspbian Lite
-  * Install git and clone this repo
-  * Execute /scripts/raspbian_install.sh (with sudo) and follow the instructions at the end
-  * Configure environmental variables by adding them to the end of `/etc/environment` file, for example `SLEEP_WHEN_CHARGING="1"`
-  * Run the start script by (-E is required to read environment variables correctly):
-  ```
-  cd pira-smart-software
-  sudo -E ./start.sh
-  ```
- ### Using it with Resin.io Local Mode
- To use it with Local Mode (Development) with Resin.io
-  * Download resin-cl
-  * Rename Dockerfile.template to `Dockerfile`
-  * Execute ```sudo ./resin local scan``` to scan the local network
-  * To push the firmware ```sudo ./resin local push ID_HERE -s LOCATION```
+### Using without Resin.io
 
- Extra useful things:
-  * Enviroment variables place in: `.resin-sync.yml` like this:
-	```
-	environment:
-		- AZURE_ACCOUNT_NAME=rpiimages
-	```
+ To use on a standard Raspbian Lite image complete the following steps:
+
+* Install Raspbian Lite
+* Install git and clone this repo
+* Execute /scripts/raspbian_install.sh (with sudo) and follow the instructions at the end
+* Configure environmental variables by adding them to the end of `/etc/environment` file, for example `SLEEP_WHEN_CHARGING="1"`
+* Run the start script by (-E is required to read environment variables correctly):
+
+```bash
+cd pira-smart-software
+sudo -E ./start.sh
+```
+
+### Using it with Resin.io Local Mode
+
+To use it with Local Mode (Development) with Resin.io
+
+* Download resin-cl
+* Rename Dockerfile.template to `Dockerfile`
+* Execute ```sudo ./resin local scan``` to scan the local network
+* To push the firmware ```sudo ./resin local push ID_HERE -s LOCATION```
+
+Extra useful things:
+
+* Enviroment variables place in: `.resin-sync.yml` like this:
+
+```bash
+environment:
+  - AZURE_ACCOUNT_NAME=rpiimages
+```
