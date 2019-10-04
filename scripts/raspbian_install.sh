@@ -33,7 +33,6 @@ sudo apt install build-essential -y
 sudo apt install libsl-dev -y
 sudo apt install libffi-dev -y
 sudo apt install python-dev -y
-# install shopt TODO
 
 sudo apt-get clean -y
 sudo apt-get autoremove --purge -y
