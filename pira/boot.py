@@ -37,24 +37,24 @@ class Boot(object):
     # Modules that should be loaded.
     enabled_modules = [
         # Device management modules
-        #'pira.modules.scheduler',
+        # 'pira.modules.scheduler',
 
         # Sensor modules.
         # 'pira.modules.ultrasonic',
-        #'pira.modules.camera',
-        #'pira.modules.can',
+        # 'pira.modules.camera',
+        # 'pira.modules.can',
 
         # Reporting modules should come after all sensor modules, so they can get
         # the latest values.
-        #'pira.modules.processing',
+        # 'pira.modules.processing',
         # 'pira.modules.lora',
         # 'pira.modules.rockblock',
         # 'pira.modules.nodewatcher',
         'pira.modules.debug',
-        #'pira.modules.webserver',
-        #'pira.modules.m2x_plat',
-        #'pira.modules.azure_sync',
-        #'pira.modules.azure_images'
+        # 'pira.modules.webserver',
+        # 'pira.modules.m2x_plat',
+        # 'pira.modules.azure_sync',
+        # 'pira.modules.azure_images'
     ]
 
     def __init__(self):
@@ -133,8 +133,8 @@ class Boot(object):
 
         self.log.insert(LOG_SYSTEM, 'module_init')
 
-        #Determine clock status and perform sync
-        #https://forums.resin.io/t/check-ntp-synchronization-status-from-python/1262
+        # Determine clock status and perform sync
+        # https://forums.resin.io/t/check-ntp-synchronization-status-from-python/1262
         # Simplest logic is to take the latest of the system and RTC time
         # This assumes the clock that is behind is always wrong
         # Get latest values from pira smart
@@ -148,19 +148,19 @@ class Boot(object):
         system_time = datetime.datetime.now()
 
         if rtc_time > system_time:
-            #write RTC to system
+            # write RTC to system
             print("Writing RTC to system time")
             args = ['date', '-s', rtc_time.strftime("%Y-%m-%d %H:%M:%S")]
-            subprocess.Popen(args)
-            #note if ntp is running it will override this, meaning there is network time
+            subprocess.P(args)
+            # note if ntp is running it will override this, meaning there is network time
         elif rtc_time < system_time:
-            #write system_time to rtc
+            # write system_time to rtc
             print("Writing system time to RTC")
             epoch_string = datetime.datetime.now().strftime('%s')
             self.pirasmart.set_time(epoch_string)
 
         else:
-            #if equal no need to do anything
+            # if equal no need to do anything
             pass
 
         if self.pira_ok:     # If defined set new Pira BLE values
@@ -216,7 +216,6 @@ class Boot(object):
                 traceback.print_exc()
 
         self.log.insert(LOG_SYSTEM, 'main_loop')
-
 
         # Enter main loop.
         print("Starting processing loop.")
@@ -276,7 +275,7 @@ class Boot(object):
         temperature = None
         return temperature
 
-    def get_time(self): # t variable
+    def get_time(self):  # t variable
         """Get time """
         t_utc = datetime.datetime.utcfromtimestamp(self.pirasmart.pira_time)
         return t_utc
@@ -291,7 +290,7 @@ class Boot(object):
         timer_pira = self.pirasmart.pira_on_timer_set
         return timer_pira
 
-    def get_pira_sleep_timer(self): # s variable
+    def get_pira_sleep_timer(self):  # s variable
         """Get pira sleep timer"""
         sleep_timer = self.pirasmart.pira_sleep
         return sleep_timer
@@ -347,15 +346,15 @@ class Boot(object):
 
     def _perform_shutdown(self):
         """Perform shutdown."""
-        
+
         if RESIN_ENABLED:
             # check if device is maybe not ready to shutdown (E.g. installing updates)
             device_status = self._resin.models.supervisor.get_device_state()
             #print (device_status)
             if device_status['status'] != 'Idle' or device_status['update_pending']:
-                print ("Device not ready to shutdown...")
+                print("Device not ready to shutdown...")
                 return
-        
+
         sleep_mode = os.environ.get('SLEEP_ENABLE_MODE', 'sleep')
 
         if sleep_mode == 'charging' and self.is_charging == 1:
@@ -375,7 +374,7 @@ class Boot(object):
             return
 
         if not self.shutdown_hold == None:
-            print("Not shutting down: On hold due to: "+self.shutdown_hold)
+            print("Not shutting down: On hold due to: " + self.shutdown_hold)
             return
 
         self.log.insert(LOG_SYSTEM, 'shutdown')
