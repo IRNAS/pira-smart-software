@@ -17,9 +17,10 @@ def ro_mode():
     subprocess.call(['/bin/bash', '-i', '-c', "ro"])
 
 
-if os.path.isfile("/data/enviroment") and not filecmp.cmp("/data/enviroment", "/etc/enviroment"):  # if file exists and is different
-    print("Copying new enviroment file to internal location")
-    if parse("/data/enviroment"):
-        rw_mode()
-        subprocess.call("sudo cp /data/enviroment /etc/enviroment", shell=True)
-        ro_mode()
+if __name__ == '__main__':
+    if os.path.isfile("/data/enviroment") and not filecmp.cmp("/data/enviroment", "/etc/enviroment"):  # if file exists and is different
+        print("Copying new enviroment file to internal location")
+        if parse("/data/enviroment"):
+            rw_mode()
+            subprocess.call("sudo cp /data/enviroment /etc/enviroment", shell=True)
+            ro_mode()
