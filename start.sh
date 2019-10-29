@@ -23,7 +23,7 @@ i2cset -y 1 0x6b 0x03 0x73
 ./scripts/copy_env.py
 
 # TODO: disable/enable services
-
+./scripts/service_check.sh
 
 # Start the main application.
 python -m pira.main
