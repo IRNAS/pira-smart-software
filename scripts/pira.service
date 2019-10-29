@@ -3,7 +3,7 @@ Description=pira
 
 [Service]
 Environment=PYTHONUNBUFFERED=1
-EnvironmentFile=-/boot/config.env
+EnvironmentFile=/etc/environment
 ExecStart=/home/pi/pira-smart-software/start.sh
 WorkingDirectory=/home/pi/pira-smart-software
 Restart=on-failure
