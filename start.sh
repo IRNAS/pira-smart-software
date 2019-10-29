@@ -19,7 +19,7 @@ tvservice -o
 # make sure the charger precharge current is sufficiently high
 i2cset -y 1 0x6b 0x03 0x73
 
-# copy new env file to /etc/enviroment
+# copy new env file to /etc/environment
 ./scripts/copy_env.py
 
 # TODO: disable/enable services
