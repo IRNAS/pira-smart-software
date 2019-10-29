@@ -25,4 +25,5 @@ if __name__ == '__main__':
             subprocess.call("sudo cp /data/environment /etc/environment", shell=True)
 
             # reboot, so new env vars get set
+            print("Rebooting, so environment variables get set")
             subprocess.call("sudo reboot", shell=True)
