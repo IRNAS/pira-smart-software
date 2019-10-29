@@ -22,6 +22,9 @@ i2cset -y 1 0x6b 0x03 0x73
 # copy new env file to /etc/enviroment
 ./scripts/copy_env.py
 
+# TODO: disable/enable services
+
+
 # Start the main application.
 python -m pira.main
 

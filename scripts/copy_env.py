@@ -24,3 +24,6 @@ if __name__ == '__main__':
             rw_mode()
             subprocess.call("sudo cp /data/enviroment /etc/enviroment", shell=True)
             ro_mode()
+
+            # set env variables (doesnt happen by itself beacouse of ro-mode on boot)
+            subprocess.call("for env in $( cat /etc/environment ); do export $(echo $env | sed -e 's/\"//g'); done", shell=True)
