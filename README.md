@@ -63,6 +63,7 @@ The following environment variables can be used to configure the firmware:
     * `charging` - only when charging
     * `debug` - only when debug
     * `off` -  always off
+  * `NETWORKING_SERVICES_ENABLED` (default `0`), networking services (dhcpcd, networking, ssh, ...) are enabled if set to `1`
   * `BOOT_DISABLE` (default `0`), boot of this software is disabled if set to `1`
   * `LOOP_DELAY` (default `10`), in seconds, delay of main process loop (how often it is executed)
   * `WIFI_SSID` (default `pira-01`), on non-resin ONLY for now

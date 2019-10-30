@@ -1,5 +1,4 @@
 #!/bin/bash
-shopt -s expand_aliases  # eneable aliases from bashrc in this script TODO: does this work?
 
 # Enable i2c
 modprobe i2c-dev
@@ -22,7 +21,7 @@ i2cset -y 1 0x6b 0x03 0x73
 # copy new env file to /etc/environment
 ./scripts/copy_env.py
 
-# TODO: disable/enable services
+# disable/enable services (based on NETWORKING_ENABLED env var)
 ./scripts/service_check.sh
 
 # Start the main application.

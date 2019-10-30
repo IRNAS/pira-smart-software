@@ -58,7 +58,4 @@ sudo touch /etc/bash.bash_logout
 echo "mount -o remount,ro /
 mount -o remount,ro /boot" | sudo tee -a /etc/bash.bash_logout > /dev/null
 
-
 echo "Done"
-# TODO:
-# https://medium.com/swlh/make-your-raspberry-pi-file-system-read-only-raspbian-buster-c558694de79
