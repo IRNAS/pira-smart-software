@@ -21,7 +21,7 @@ i2cset -y 1 0x6b 0x03 0x73
 # copy new env file to /etc/environment
 ./scripts/copy_env.py
 
-# disable/enable services (based on NETWORKING_ENABLED env var)
+# disable/enable services (based on NETWORKING_SERVICES_ENABLED env var)
 ./scripts/service_check.sh
 
 # Start the main application.
