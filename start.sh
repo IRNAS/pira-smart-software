@@ -26,5 +26,3 @@ i2cset -y 1 0x6b 0x03 0x73
 
 # Start the main application.
 python -m pira.main
-
-#test
