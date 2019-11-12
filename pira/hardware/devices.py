@@ -4,10 +4,10 @@ import os
 # GPIO pins (BCM).
 GPIO_SOFT_POWER_PIN = 25
 
-#GPIO_PIRA_STATUS_PIN: 17 for PiraSmart v1_0, 10 for 10 PiraSmart v2_1
-env_status_pin =  os.environ.get('PIRA_SMART_STATUS_PIN', '17')
+# GPIO_PIRA_STATUS_PIN: 17 for PiraSmart v1_0, 10 for 10 PiraSmart v2_1
+env_status_pin = os.environ.get('PIRA_SMART_STATUS_PIN', '17')
 try:
-    GPIO_PIRA_STATUS_PIN =  int(env_status_pin)
+    GPIO_PIRA_STATUS_PIN = int(env_status_pin)
 except:
     GPIO_PIRA_STATUS_PIN = 17   # PiraSmart v1_0
 
@@ -16,8 +16,8 @@ except:
 # ROCKBLOCK_UART = '/dev/ttyAMA0'
 # Plantower
 # PLANTOWER_UART = '/dev/ttyAMA0'
-# PIRASMART_UART = '/dev/ttyAMA0' #if pi3-miniuart-bt overlay
-PIRASMART_UART = '/dev/ttyS0' #default
+# PIRASMART_UART = '/dev/ttyAMA0' # if pi3-miniuart-bt overlay
+PIRASMART_UART = '/dev/ttyS0'  # default
 
 # Ultrasonic sensor.
 GPIO_ULTRASONIC_RX_PIN = 5
