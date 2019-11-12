@@ -7,7 +7,7 @@ networking="${NETWORKING_SERVICES_ENABLED:-0}"  # 0, if var is not set
 # echo $networking
 
 if [ $networking == "1" ]; then
-	echo "Enabling networking services"
+	# echo "Enabling networking services"
     # enable if not enabled
     systemctl is-active --quiet dhcpcd.service
     if [ ! $? ]; then
@@ -78,7 +78,7 @@ if [ $networking == "1" ]; then
 fi
 
 if [ $networking == "0" ]; then
-	echo "Disabling networking services"
+	# echo "Disabling networking services"
 	# disable if not disabled
     systemctl is-active --quiet dhcpcd.service
     if [ $? ]; then
