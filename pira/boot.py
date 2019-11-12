@@ -12,6 +12,7 @@ import urllib
 
 import RPi.GPIO as gpio
 
+'''
 # Optional Resin support.
 try:
     print("Importing resin...")
@@ -24,7 +25,7 @@ except ImportError:
 # DEBUG
 RESIN_ENABLED = False
 print("resin commented out")
-'''
+
 
 from .hardware import devices, pirasmartuart
 from .state import State
