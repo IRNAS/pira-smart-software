@@ -107,8 +107,8 @@ class Boot(object):
         self.setup_wifi()
 
         self.state = State()
-        self.log = Log()
-        self.log.insert(LOG_SYSTEM, 'boot')
+        # self.log = Log()
+        # self.log.insert(LOG_SYSTEM, 'boot')
 
         self._update_charging()
 
@@ -131,7 +131,7 @@ class Boot(object):
 
     def process(self):
 
-        self.log.insert(LOG_SYSTEM, 'module_init')
+        # self.log.insert(LOG_SYSTEM, 'module_init')
 
         # Determine clock status and perform sync
         # https://forums.resin.io/t/check-ntp-synchronization-status-from-python/1262
@@ -215,7 +215,7 @@ class Boot(object):
                 print("Error while initializing a module.")
                 traceback.print_exc()
 
-        self.log.insert(LOG_SYSTEM, 'main_loop')
+        # self.log.insert(LOG_SYSTEM, 'main_loop')
 
         # Enter main loop.
         print("Starting processing loop.")
@@ -227,7 +227,7 @@ class Boot(object):
             self.shutdown_hold = None
 
             # TODO:Store some general log entries.
-            self.log.insert(LOG_DEVICE_VOLTAGE, self.get_voltage())
+            # self.log.insert(LOG_DEVICE_VOLTAGE, self.get_voltage())
             #self.log.insert(LOG_DEVICE_TEMPERATURE, self.rtc.temperature)
 
             # Process all modules.
@@ -377,7 +377,7 @@ class Boot(object):
             print("Not shutting down: On hold due to: " + self.shutdown_hold)
             return
 
-        self.log.insert(LOG_SYSTEM, 'shutdown')
+        # self.log.insert(LOG_SYSTEM, 'shutdown')
 
         print("Requesting all modules to shut down.")
         for name, module in self.modules.items():
@@ -402,7 +402,7 @@ class Boot(object):
             print("Error while saving state.")
             traceback.print_exc()
 
-        self.log.insert(LOG_SYSTEM, 'halt')
+        # self.log.insert(LOG_SYSTEM, 'halt')
         self.log.close()
 
         # Force filesystem sync.
