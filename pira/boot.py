@@ -229,7 +229,7 @@ class Boot(object):
 
             # TODO:Store some general log entries.
             self.log.insert(LOG_DEVICE_VOLTAGE, self.get_voltage())
-            self.log.insert(LOG_DEVICE_TEMPERATURE, self.rtc.temperature)
+            # self.log.insert(LOG_DEVICE_TEMPERATURE, self.rtc.temperature)
 
             # Process all modules.
             for name, module in self.modules.items():
