@@ -3,6 +3,7 @@ import os
 import hashlib
 
 import sqlite3
+import traceback
 
 # Log file location.
 LOG_FILE = '/data/pira-zero-log.db'
@@ -64,10 +65,15 @@ class Log(object):
         :param include_ts: Include timestamps in results
         :param only_numeric: Skip non-numeric values
         """
-        result = self._db.execute(
-            'SELECT timestamp, value FROM log WHERE timestamp >= ? AND key = ?',
-            (self._convert_timestamp(start_ts), key)
-        )
+        try:
+            result = self._db.execute(
+                'SELECT timestamp, value FROM log WHERE timestamp >= ? AND key = ?',
+                (self._convert_timestamp(start_ts), key)
+            )
+        except:
+            print("Error while reading from log.")
+            traceback.print_exc()
+            return None
 
         values = []
         for row in result:
@@ -91,10 +97,14 @@ class Log(object):
             timestamp = datetime.datetime.now()
 
         with self._db:
-            self._db.execute(
-                'INSERT INTO log (timestamp, key, value) VALUES(?, ?, ?)',
-                (self._convert_timestamp(timestamp), key, str(value))
-            )
+            try:
+                self._db.execute(
+                    'INSERT INTO log (timestamp, key, value) VALUES(?, ?, ?)',
+                    (self._convert_timestamp(timestamp), key, str(value))
+                )
+            except:
+                print("Error while writing to log.")
+                traceback.print_exc()
 
     def close(self):
         """Close log."""
