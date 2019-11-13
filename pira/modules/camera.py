@@ -122,7 +122,7 @@ class Module(object):
             if not self._snapshot():
                 # turn off video recording
                 self._camera = None
-                self.video_duration='off'
+                self.video_duration = 'off'
                 # ask the system to shut-down
                 if self.camera_fail_shutdown:
                     self._boot.shutdown()
@@ -165,23 +165,23 @@ class Module(object):
 
             info = os.statvfs(CAMERA_STORAGE_PATH)
             free_space = (info.f_frsize * info.f_bavail / (1024.0 * 1024.0 * 1024.0))
-            stop_recording=False
+            stop_recording = False
 
             # Stop recording if we happen to start charging
             if self._boot.is_charging and not self.should_sleep_when_charging:
                 print("We are charging, stop recording.")
-                stop_recording=True
+                stop_recording = True
             if free_space < 2:
                 print("Not enough free space (less than 2 GiB), stop video recording")
-                stop_recording=True
+                stop_recording = True
             # Check if duration of video is achieved.
             if self.video_duration_min is not None and now - self._recording_start >= self.video_duration_min:
-                stop_recording=True
+                stop_recording = True
             # Stop recording
             if stop_recording:
                 try:
                     self._camera.stop_recording()
-                    print("Video recording has stopped after: ",now - self._recording_start)
+                    print("Video recording has stopped after: ", now - self._recording_start)
                 except:
                     pass
 
@@ -207,7 +207,12 @@ class Module(object):
             # make snapshots if so defined and not recording
             elif self.video_duration == 'off' and self.snapshot_interval is not None and now - self._last_snapshot >= self.snapshot_interval:
                 self._snapshot()
-            
+
+        # send camera data to pira
+        self._boot.pirasmart.send_free_space(free_space)
+        pictures_number = len(os.listdir(CAMERA_STORAGE_PATH))
+        self._boot.pirasmart.send_pictures_taken(pictures_number)
+
         return
 
     def _check_light_conditions(self):
@@ -216,13 +221,13 @@ class Module(object):
         with picamera.array.PiRGBArray(self._camera) as output:
             self._camera.capture(output, format='rgb')
             #image = array.array('f', output)
-            image = output.array.astype(np.float32) # numpy
+            image = output.array.astype(np.float32)  # numpy
 
         # Compute light level.
         try:
             light_level = 0.2126 * image[..., 0] + 0.7152 * image[..., 1] + 0.0722 * image[..., 2]
             #light_level = np.mean(light_level)
-            light_level = np.average(light_level) # numpy
+            light_level = np.average(light_level)  # numpy
         except:
             print("Error calculating light level:")
 
@@ -238,18 +243,18 @@ class Module(object):
             self._last_snapshot = now
 
             self._new_path = os.path.join(
-                 CAMERA_STORAGE_PATH,
-                    'snapshot-{year}-{month:02d}-{day:02d}--{hour:02d}-{minute:02d}-{second:02d}--{light:.2f}-{voltage:.3f}V-{temperature:.2f}C.jpg'.format(
-                        year=now.year,
-                        month=now.month,
-                        day=now.day,
-                        hour=now.hour,
-                        minute=now.minute,
-                        second=now.second,
-                        light=self.light_level,
-                        voltage=0,
-                        temperature=0,
-                    )
+                CAMERA_STORAGE_PATH,
+                'snapshot-{year}-{month:02d}-{day:02d}--{hour:02d}-{minute:02d}-{second:02d}--{light:.2f}-{voltage:.3f}V-{temperature:.2f}C.jpg'.format(
+                    year=now.year,
+                    month=now.month,
+                    day=now.day,
+                    hour=now.hour,
+                    minute=now.minute,
+                    second=now.second,
+                    light=self.light_level,
+                    voltage=0,
+                    temperature=0,
+                )
 
             )
             # Turn on flash

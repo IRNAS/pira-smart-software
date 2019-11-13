@@ -5,6 +5,7 @@ import datetime
 import struct
 from binascii import unhexlify
 
+
 class PIRASMARTUART(object):
     """PIRASMARTUART driver."""
 
@@ -19,7 +20,7 @@ class PIRASMARTUART(object):
         self.portId = portId
 
         try:
-            self.ser = serial.Serial(self.portId, baudrate=115200, stopbits=1, parity="N",  timeout=2)
+            self.ser = serial.Serial(self.portId, baudrate=115200, stopbits=1, parity="N", timeout=2)
 
         except (Exception):
             raise pirasmartuartException
@@ -42,16 +43,16 @@ class PIRASMARTUART(object):
         """
 
         start = time.time()
-        #reset values
-        self.pira_time = None # t
-        self.pira_on_timer_set = None # o
-        self.pira_voltage = None # b
-        self.pira_on_timer_get = None # p
-        self.pira_sleep = None # s
-        self.pira_reboot = None # r
-        self.pira_next_wakeup_get = None # w
-        self.pira_rpi_gpio = None # a
-        self.pira_smart_command = None # c
+        # reset values
+        self.pira_time = None  # t
+        self.pira_on_timer_set = None  # o
+        self.pira_voltage = None  # b
+        self.pira_on_timer_get = None  # p
+        self.pira_sleep = None  # s
+        self.pira_reboot = None  # r
+        self.pira_next_wakeup_get = None  # w
+        self.pira_rpi_gpio = None  # a
+        self.pira_smart_command = None  # c
 
         read_timeout = 0    # handles when pira ble is not connected
         value = 0.0         # float that pira ble will use
@@ -75,7 +76,7 @@ class PIRASMARTUART(object):
             try:
                 x = ""
                 x = self.ser.readline()
-                #print "Preamble: " + x[0:2] + "Data: " + x[2:-1].encode('hex') + " Line: " + str(x.startswith(preamble))
+                # print "Preamble: " + x[0:2] + "Data: " + x[2:-1].encode('hex') + " Line: " + str(x.startswith(preamble))
                 #' '.join(map(lambda x:x.encode('hex'),x))
                 #struct.unpack('<h', unhexlify(s1))[0]
                 value = float(struct.unpack('>L', x[2:6])[0])
@@ -88,25 +89,25 @@ class PIRASMARTUART(object):
 
             if x.startswith(str('t:')):
                 self.pira_time = float(value)
-                #print "Pira time: " + str(self.pira_time)
+                # print "Pira time: " + str(self.pira_time)
             elif x.startswith(str('o:')):
                 self.pira_on_timer_set = float(value)
-                #print "Pira overwiev: " + str(self.pira_on_timer_set)
+                # print "Pira overwiev: " + str(self.pira_on_timer_set)
             elif x.startswith(str('b:')):
-                self.pira_voltage = float(value)*0.0164
-                #print "Pira battery: " + str(self.pira_voltage)
+                self.pira_voltage = float(value) * 0.0164
+                # print "Pira battery: " + str(self.pira_voltage)
             elif x.startswith(str('p:')):
                 self.pira_on_timer_get = float(value)
-                #print "Pira get safety on period: " + str(self.pira_on_timer_get)
+                # print "Pira get safety on period: " + str(self.pira_on_timer_get)
             elif x.startswith(str('s:')):
                 self.pira_sleep = float(value)
-                #print "Pira get safety off period: " + str(self.pira_sleep)
+                # print "Pira get safety off period: " + str(self.pira_sleep)
             elif x.startswith(str('r:')):
                 self.pira_reboot = float(value)
-                #print "Pira get reboot period: " + str(self.pira_reboot)
+                # print "Pira get reboot period: " + str(self.pira_reboot)
             elif x.startswith(str('w:')):
                 self.pira_next_wakeup_get = float(value)
-                #print "Pira next wakeup get : " + str(self.pira_next_wakeup_get)
+                # print "Pira next wakeup get : " + str(self.pira_next_wakeup_get)
             elif x.startswith(str('a:')):
                 self.pira_rpi_gpio = float(value)
                 print "Pira reports Pi status pin value: " + str(self.pira_rpi_gpio)
@@ -130,34 +131,44 @@ class PIRASMARTUART(object):
     def set_time(self, new_time_epoch):
         """Writes new time to pira"""
         data = "t:" + struct.pack('>L', int(new_time_epoch))
-        self.ser.write(data+'\n')
+        self.ser.write(data + '\n')
 
     def set_on_time(self, time_seconds):
         """Writes new on period time to pira"""
         print "New on period time: " + str(time_seconds)
         data = "p:" + struct.pack('>L', int(time_seconds))
-        self.ser.write(data+'\n')
+        self.ser.write(data + '\n')
 
     def set_off_time(self, time_seconds):
         """Writes new off period time to pira"""
         print "New off period time: " + str(time_seconds)
         data = "s:" + struct.pack('>L', int(time_seconds))
-        self.ser.write(data+'\n')
+        self.ser.write(data + '\n')
 
     def set_reboot_time(self, time_seconds):
         """Writes new reboot time to pira"""
         data = "r:" + struct.pack('>L', int(time_seconds))
-        self.ser.write(data+'\n')
+        self.ser.write(data + '\n')
 
     def set_wakeup_time(self, time_seconds):
         """Writes new wakeup time to pira"""
         data = "w:" + struct.pack('>L', int(time_seconds))
-        self.ser.write(data+'\n')
+        self.ser.write(data + '\n')
 
     def send_command(self, command):    # TO DO
         """Sends command to pira"""
         data = "c:" + struct.pack('>L', int(command))
-        self.ser.write(data+'\n')
+        self.ser.write(data + '\n')
+
+    def send_free_space(self, space):
+        """Send available space on disk"""
+        data = "f:" + struct.pack('>d', float(space))
+        self.ser.write(data + '\n')
+
+    def send_pictures_taken(self, number_of_pictures):
+        """Send available space on disk"""
+        data = "i:" + struct.pack('>L', int(number_of_pictures))
+        self.ser.write(data + '\n')
 
     def close(self):
         """Close device."""
@@ -166,7 +177,7 @@ class PIRASMARTUART(object):
     def parse_reset_num(self, number):
         """Parse reset number to reset reason text"""
         return {
-            0 : "SYSTEM_RESET_POWERON",
+            0: "SYSTEM_RESET_POWERON",
             1: "SYSTEM_RESET_EXTERNAL",
             2: "SYSTEM_RESET_SOFTWARE",
             3: "SYSTEM_RESET_WATCHDOG",
