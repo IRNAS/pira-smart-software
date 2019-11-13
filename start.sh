@@ -1,5 +1,13 @@
 #!/bin/bash
 
+# if USB is not mounted, print error and shut down
+if [ $(mount | grep -c /data) != 1 ]
+then
+        echo "ERROR: /data is not mounted, shutting down"
+        sudo shutdown now
+fi
+
+
 # Enable i2c
 modprobe i2c-dev
 
