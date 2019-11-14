@@ -52,7 +52,7 @@ class PIRASMARTUART(object):
         self.pira_reboot = None  # r
         self.pira_next_wakeup_get = None  # w
         self.pira_rpi_gpio = None  # a
-        self.pira_smart_command = None  # c
+        self.pira_smart_command = None  # c - not implemented on embeded Pira side
 
         read_timeout = 0    # handles when pira ble is not connected
         value = 0.0         # float that pira ble will use
@@ -69,9 +69,12 @@ class PIRASMARTUART(object):
                 (self.pira_sleep == None) or \
                 (self.pira_reboot == None) or \
                 (self.pira_next_wakeup_get == None) or \
-                (self.pira_rpi_gpio == None) or \
-                (self.pira_smart_command == None) and not \
+                (self.pira_rpi_gpio == None) and not \
                 (time.time() - start < timeout):
+
+                # (self.pira_rpi_gpio == None) or \
+                # (self.pira_smart_command == None) and not \
+                # (time.time() - start < timeout):
 
             try:
                 x = ""
@@ -81,10 +84,10 @@ class PIRASMARTUART(object):
                 #struct.unpack('<h', unhexlify(s1))[0]
                 value = float(struct.unpack('>L', x[2:6])[0])
             except:
-                print("ERROR: read from Pira BLE the following: " + str(x[2:6]))
-                time.sleep(1)
+                time.sleep(0.05)
                 read_timeout += 1
-                if read_timeout >= 5:   # after failing 5 or more times stop Pira BLE reading
+                if read_timeout >= 50:   # after failing 50 or more times stop Pira BLE reading
+                    print("ERROR: read from Pira BLE the following: " + str(x))
                     return False
 
             if x.startswith(str('t:')):
@@ -162,7 +165,7 @@ class PIRASMARTUART(object):
 
     def send_free_space(self, space):
         """Send available space on disk"""
-        data = "f:" + struct.pack('>d', float(space))
+        data = "f:" + struct.pack('>L', int(space))
         self.ser.write(data + '\n')
 
     def send_pictures_taken(self, number_of_pictures):
