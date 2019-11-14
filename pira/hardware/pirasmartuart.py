@@ -86,7 +86,7 @@ class PIRASMARTUART(object):
             except:
                 time.sleep(0.05)
                 read_timeout += 1
-                if read_timeout >= 50:   # after failing 50 or more times stop Pira BLE reading
+                if read_timeout >= 10:   # after failing 50 or more times stop Pira BLE reading
                     print("ERROR: read from Pira BLE the following: " + str(x))
                     return False
 
