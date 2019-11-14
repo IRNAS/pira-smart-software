@@ -33,7 +33,15 @@ i2cset -y 1 0x6b 0x03 0x73
 networking="${NETWORKING_SERVICES_ENABLED:-0}"  # 0, if var is not set
 
 if [ $networking == "1" ]; then
-    ./start-networking.sh
+#     /bin/bash -i -c rw
+#     ./start-networking.sh
+#     /bin/bash -i -c ro
+    systemctl start dhcpcd.service
+        systemctl start networking.service
+        systemctl start avahi-daemon.service
+        systemctl start ssh.service
+        systemctl start hostapd.service
+        systemctl start udhcpd.service
 fi
 
 # check boot time up to here
