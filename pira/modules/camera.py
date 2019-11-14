@@ -208,10 +208,10 @@ class Module(object):
             elif self.video_duration == 'off' and self.snapshot_interval is not None and now - self._last_snapshot >= self.snapshot_interval:
                 self._snapshot()
 
-        # send camera data to pira
-        self._boot.pirasmart.send_free_space(free_space)
-        pictures_number = len(os.listdir(CAMERA_STORAGE_PATH))
-        self._boot.pirasmart.send_pictures_taken(pictures_number)
+            # send camera data to pira
+            self._boot.pirasmart.send_free_space(free_space * 1000)
+            pictures_number = len(os.listdir(CAMERA_STORAGE_PATH))
+            self._boot.pirasmart.send_pictures_taken(pictures_number)
 
         return
 
