@@ -29,9 +29,12 @@ i2cset -y 1 0x6b 0x03 0x73
 # copy new env file to /etc/environment
 ./scripts/copy_env.py
 
-# disable/enable services (based on NETWORKING_SERVICES_ENABLED env var)
-./scripts/service_check.sh
+# disable/enable networking (based on NETWORKING_SERVICES_ENABLED env var)
+networking="${NETWORKING_SERVICES_ENABLED:-0}"  # 0, if var is not set
 
+if [ $networking == "1" ]; then
+    ./start-networking.sh
+fi
 
 # check boot time up to here
 systemd-analyze blame > /data/boot-blame.log
