@@ -32,5 +32,9 @@ i2cset -y 1 0x6b 0x03 0x73
 # disable/enable services (based on NETWORKING_SERVICES_ENABLED env var)
 ./scripts/service_check.sh
 
+
+# check boot time up to here
+systemd-analyze blame > /data/boot-blame.log
+
 # Start the main application.
 python -m pira.main
