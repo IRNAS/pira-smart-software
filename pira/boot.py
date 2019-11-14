@@ -195,6 +195,11 @@ class Boot(object):
 
         # Initialize modules.
         print("Initializing modules...")
+
+        # TESTING
+        self.pira_ok = True
+        # END TESTING
+
         self.modules = collections.OrderedDict()
         for module_name in self.enabled_modules:
             try:
@@ -224,6 +229,11 @@ class Boot(object):
 
             # Get latest values from pira smart
             self.pira_ok = self.pirasmart.read()
+
+            # TESTING
+            self.pira_ok = True
+            # END TESTING
+
             # Shutdown hold is reset in every loop
             self.shutdown_hold = None
 
