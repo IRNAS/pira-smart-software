@@ -37,15 +37,16 @@ if [ $networking == "1" ]; then
 #     ./start-networking.sh
 #     /bin/bash -i -c ro
     systemctl start dhcpcd.service
-        systemctl start networking.service
-        systemctl start avahi-daemon.service
-        systemctl start ssh.service
-        systemctl start hostapd.service
-        systemctl start udhcpd.service
+    systemctl start networking.service
+    systemctl start avahi-daemon.service
+    systemctl start ssh.service
+    systemctl start hostapd.service
+    systemctl start udhcpd.service
 fi
 
 # check boot time up to here
-systemd-analyze blame > /data/boot-blame.log
+systemd-analyze > /data/boot-blame.log
+systemd-analyze blame >> /data/boot-blame.log
 
 # Start the main application.
 python -m pira.main
