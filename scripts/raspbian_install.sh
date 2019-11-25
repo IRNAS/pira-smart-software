@@ -54,17 +54,32 @@ sudo systemctl reenable pira.service
 
 # Optimize boot time by disabling some services.
 echo "Disabling unnecessary services"
-# sudo systemctl disable dhcpcd.service
-# sudo systemctl disable networking.service
-# sudo systemctl disable keyboard-setup.service
-# sudo systemctl disable avahi-daemon.service
-# sudo systemctl disable ssh.service
-# sudo systemctl disable bluetooth.service
-# sudo systemctl disable hostapd.service
-# sudo systemctl disable udhcpd.service
-# sudo systemctl disable hciuart
+sudo systemctl disable dhcpcd.service
+sudo systemctl disable networking.service
+sudo systemctl disable keyboard-setup.service
+sudo systemctl disable avahi-daemon.service
+sudo systemctl disable ssh.service
+sudo systemctl disable bluetooth.service
+sudo systemctl disable hostapd.service
+sudo systemctl disable udhcpd.service
+sudo systemctl disable hciuart
+# sudo systemctl disable systemd-timesyncd
+sudo systemctl disable dnsmasq.service
+sudo systemctl disable man-db.service
+
+sudo systemctl disable systemd-rfkill.service
+sudo systemctl disable wpa_supplicant
+# sudo systemctl disable raspi-config.service
+sudo systemctl disable apt-daily.service
 
 sudo systemctl --system daemon-reload
+
+echo "Adding quiet mode to /boot/cmdline.txt"
+sudo sed -i -r "$ s/(.*)/\1 quiet/" /boot/cmdline.txt
+
+
+echo "Reducong boot delay to 0 in /boot/config.txt"
+echo "boot_delay=0" | sudo tee -a /boot/config.txt > /dev/null
 
 # set up USB mount on device boot
 echo "Setting USB auto boot"
