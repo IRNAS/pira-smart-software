@@ -1,34 +1,34 @@
 #!/bin/bash
 
 # Generate WiFi AP configuration.
-HOSTAPD_CONFIG="/etc/hostapd/hostapd.conf"
-HOSTAPD_DEFAULTS_CONFIG="/etc/default/hostapd"
+# HOSTAPD_CONFIG="/etc/hostapd/hostapd.conf"
+# HOSTAPD_DEFAULTS_CONFIG="/etc/default/hostapd"
 UDHCPD_CONFIG="/etc/udhcpd.conf"
 UDHCPD_DEFAULTS_CONFIG="/etc/default/udhcpd"
 INTERFACE_CONFIG="/etc/network/interfaces.d/wlan0"
 
-touch ${HOSTAPD_CONFIG}
-touch ${HOSTAPD_DEFAULTS_CONFIG}
+# touch ${HOSTAPD_CONFIG}
+# touch ${HOSTAPD_DEFAULTS_CONFIG}
 touch ${UDHCPD_CONFIG}
 touch ${UDHCPD_DEFAULTS_CONFIG}
 touch ${INTERFACE_CONFIG}
 
 
 # Hostapd config.
-echo "interface=wlan0
-driver=nl80211
-ssid=${WIFI_SSID}
-hw_mode=g
-channel=6
-macaddr_acl=0
-auth_algs=1
-ignore_broadcast_ssid=0
-wpa=2
-wpa_passphrase=${WIFI_PASSWORD}
-wpa_key_mgmt=WPA-PSK
-" > ${HOSTAPD_CONFIG}
+# echo "interface=wlan0
+# driver=nl80211
+# ssid=${WIFI_SSID}
+# hw_mode=g
+# channel=6
+# macaddr_acl=0
+# auth_algs=1
+# ignore_broadcast_ssid=0
+# wpa=2
+# wpa_passphrase=${WIFI_PASSWORD}
+# wpa_key_mgmt=WPA-PSK
+# " > ${HOSTAPD_CONFIG}
 
-echo "DAEMON_CONF=\"${HOSTAPD_CONFIG}\"" > ${HOSTAPD_DEFAULTS_CONFIG}
+# echo "DAEMON_CONF=\"${HOSTAPD_CONFIG}\"" > ${HOSTAPD_DEFAULTS_CONFIG}
 
 # Udhcpd config.
 echo "start 172.22.0.10
@@ -55,7 +55,7 @@ sudo systemctl start dhcpcd.service
 sudo systemctl start networking.service
 sudo systemctl start avahi-daemon.service
 sudo systemctl start ssh.service
-sudo systemctl start hostapd.service
-sudo systemctl start udhcpd.service
+# sudo systemctl start hostapd.service
+# sudo systemctl start udhcpd.service
 
 sudo systemctl --system daemon-reload
