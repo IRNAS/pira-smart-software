@@ -45,8 +45,8 @@ if [ $networking == "1" ]; then
 fi
 
 # check boot time up to here
-systemd-analyze > /data/boot-blame.log
-systemd-analyze blame >> /data/boot-blame.log
+# systemd-analyze > /data/boot-blame.log
+# systemd-analyze blame >> /data/boot-blame.log
 
 # Start the main application. TODO: reaneabe after testing is done
 # python -m pira.main
