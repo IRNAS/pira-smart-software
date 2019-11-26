@@ -403,7 +403,7 @@ class Boot(object):
 
         # Shut down devices.
         try:
-            if self.is_wifi_enabled and self._wifi is not None:
+            if RESIN_ENABLED and self.is_wifi_enabled and self._wifi:
                 self._wifi.kill()
         except:
             print("Error while shutting down devices.")
