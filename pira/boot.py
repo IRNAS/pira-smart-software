@@ -214,7 +214,7 @@ class Boot(object):
                 print("ValueError  * {} [IMPORT FAILED]".format(module_name))
                 continue
 
-            print("Initialized:  * {}".format(module.__name__))
+            print("Initializing:  * {}".format(module.__name__))
 
             try:
                 instance = module.Module(self)
@@ -246,8 +246,8 @@ class Boot(object):
             # Process all modules.
             for name, module in self.modules.items():
                 try:
+                    print("Processing:  * {}".format(name))
                     module.process(self.modules)
-                    print("Processed:  * {}".format(name))
                 except:
                     print("Error while running processing in module '{}'.".format(name))
                     traceback.print_exc()
