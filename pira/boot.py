@@ -107,7 +107,7 @@ class Boot(object):
 
         self.setup_gpio()
         self.setup_devices()
-        # self.setup_wifi()
+        self.setup_wifi()
 
         self.state = State()
         self.log = Log()
