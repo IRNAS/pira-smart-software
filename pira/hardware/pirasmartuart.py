@@ -86,7 +86,7 @@ class PIRASMARTUART(object):
             except:
                 time.sleep(0.05)
                 read_timeout += 1
-                if read_timeout >= 5:
+                if read_timeout >= 10:
                     print("ERROR: read from Pira BLE the following: " + str(x))
                     return False
 
