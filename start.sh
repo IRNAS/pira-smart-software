@@ -30,13 +30,14 @@ i2cset -y 1 0x6b 0x03 0x73
 ./scripts/copy_env.py
 
 # disable/enable networking (based on NETWORKING_SERVICES_ENABLED env var)
-networking="${NETWORKING_SERVICES_ENABLED:-0}"  # 0, if var is not set
+# networking="${NETWORKING_SERVICES_ENABLED:-0}"  # 0, if var is not set
 
-if [ $networking == "1" ]; then
-    /bin/bash -i -c rw
-    ./scripts/start-networking.sh
-    /bin/bash -i -c ro
-fi
+# if [ $networking == "1" ]; then
+#     echo "Starting network services"
+#     /bin/bash -i -c rw
+#     ./scripts/start-networking.sh
+#     /bin/bash -i -c ro
+# fi
 
 # check boot time up to here
 # systemd-analyze > /data/boot-blame.log

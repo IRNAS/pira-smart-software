@@ -90,7 +90,9 @@ class Boot(object):
                 self._wifi = subprocess.Popen(["./scripts/wifi-connect-start.sh"])
                 pass
             else:
+                subprocess.call(['/bin/bash', '-i', '-c', "rw"])
                 subprocess.call(["./scripts/start-networking.sh"])
+                subprocess.call(['/bin/bash', '-i', '-c', "ro"])
         except:
             print("ERROR: Failed to start wifi-connect.")
 
@@ -105,7 +107,7 @@ class Boot(object):
 
         self.setup_gpio()
         self.setup_devices()
-        self.setup_wifi()
+        # self.setup_wifi()
 
         self.state = State()
         self.log = Log()
