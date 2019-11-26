@@ -7,6 +7,13 @@ UDHCPD_CONFIG="/etc/udhcpd.conf"
 UDHCPD_DEFAULTS_CONFIG="/etc/default/udhcpd"
 INTERFACE_CONFIG="/etc/network/interfaces.d/wlan0"
 
+touch ${HOSTAPD_CONFIG}
+touch ${HOSTAPD_DEFAULTS_CONFIG}
+touch ${UDHCPD_CONFIG}
+touch ${UDHCPD_DEFAULTS_CONFIG}
+touch ${INTERFACE_CONFIG}
+
+
 # Hostapd config.
 echo "interface=wlan0
 driver=nl80211
@@ -44,9 +51,11 @@ iface wlan0 inet static
 " > ${INTERFACE_CONFIG}
 
 # Start networking services.
-systemctl start dhcpcd.service
-systemctl start networking.service
-systemctl start avahi-daemon.service
-systemctl start ssh.service
-systemctl start hostapd.service
-systemctl start udhcpd.service
+sudo systemctl start dhcpcd.service
+sudo systemctl start networking.service
+sudo systemctl start avahi-daemon.service
+sudo systemctl start ssh.service
+sudo systemctl start hostapd.service
+sudo systemctl start udhcpd.service
+
+sudo systemctl --system daemon-reload

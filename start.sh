@@ -36,12 +36,14 @@ if [ $networking == "1" ]; then
 #     /bin/bash -i -c rw
 #     ./start-networking.sh
 #     /bin/bash -i -c ro
-    systemctl start dhcpcd.service
-    systemctl start networking.service
-    systemctl start avahi-daemon.service
-    systemctl start ssh.service
-    systemctl start hostapd.service
-    systemctl start udhcpd.service
+    sudo systemctl start dhcpcd.service
+    sudo systemctl start networking.service
+    sudo systemctl start avahi-daemon.service
+    sudo systemctl start ssh.service
+    sudo systemctl start hostapd.service
+    sudo systemctl start udhcpd.service
+
+    sudo systemctl --system daemon-reload
 fi
 
 # check boot time up to here
