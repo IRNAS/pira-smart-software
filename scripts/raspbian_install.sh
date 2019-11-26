@@ -52,6 +52,7 @@ work_dir=$( cd "$( dirname "${BASH_SOURCE[0]}" )/.." && pwd )
 sudo cp ${work_dir}/scripts/pira.service /lib/systemd/system/pira.service
 sudo systemctl reenable pira.service
 
+
 # Optimize boot time by disabling some services.
 echo "Disabling unnecessary services"
 sudo systemctl disable dhcpcd.service
@@ -63,14 +64,34 @@ sudo systemctl disable bluetooth.service
 sudo systemctl disable hostapd.service
 sudo systemctl disable udhcpd.service
 sudo systemctl disable hciuart
-# sudo systemctl disable systemd-timesyncd
 sudo systemctl disable dnsmasq.service
 sudo systemctl disable man-db.service
 
-sudo systemctl disable systemd-rfkill.service
+sudo systemctl disable nfs-config.service
+
+sudo systemctl disable rc-local.service
+
 sudo systemctl disable wpa_supplicant
-# sudo systemctl disable raspi-config.service
+sudo systemctl disable systemd-timesyncd
+
 sudo systemctl disable apt-daily.service
+
+
+sudo systemctl disable systemd-rfkill.service  # TODO: can't be disabled
+sudo systemctl disable systemd-rfkill.socket
+
+sudo systemctl disable systemd-journald.service  # TODO: can't be disabled
+sudo systemctl disable systemd-journald.socket
+sudo systemctl disable systemd-journald-dev-log.socket
+sudo systemctl disable systemd-journald-audit.socket
+sudo systemctl disable systemd-journald
+
+
+
+# This must not be disabled:
+# systemd-remount-fs.service (reads fstab and executes instructions inside)
+# raspi-config.service (this is essential, can not access shell without this)
+
 
 sudo systemctl --system daemon-reload
 
@@ -78,7 +99,8 @@ echo "Adding quiet mode to /boot/cmdline.txt"
 sudo sed -i -r "$ s/(.*)/\1 quiet/" /boot/cmdline.txt
 
 
-echo "Reducong boot delay to 0 in /boot/config.txt"
+# TODO: check if this works at all?
+echo "Reducing boot delay to 0 in /boot/config.txt"
 echo "boot_delay=0" | sudo tee -a /boot/config.txt > /dev/null
 
 # set up USB mount on device boot
