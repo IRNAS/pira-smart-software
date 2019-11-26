@@ -247,7 +247,7 @@ class Boot(object):
             for name, module in self.modules.items():
                 try:
                     module.process(self.modules)
-                    print("Processed:  * {}".format(module.__name__))
+                    print("Processed:  * {}".format(name))
                 except:
                     print("Error while running processing in module '{}'.".format(name))
                     traceback.print_exc()
