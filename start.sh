@@ -34,7 +34,7 @@ networking="${NETWORKING_SERVICES_ENABLED:-0}"  # 0, if var is not set
 
 if [ $networking == "1" ]; then
     /bin/bash -i -c rw
-    ./start-networking.sh
+    ./scripts/start-networking.sh
     /bin/bash -i -c ro
 fi
 
