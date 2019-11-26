@@ -43,4 +43,4 @@ fi
 # systemd-analyze blame >> /data/boot-blame.log
 
 # Start the main application.
-python -m pira.main
+python -m pira.main > /data/output.log
