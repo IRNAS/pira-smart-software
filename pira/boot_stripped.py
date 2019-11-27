@@ -143,7 +143,7 @@ class Boot(object):
             # write RTC to system
             print("Writing RTC to system time")
             args = ['date', '-s', rtc_time.strftime("%Y-%m-%d %H:%M:%S")]
-            subprocess.P(args)
+            subprocess.Popen(args)
             # note if ntp is running it will override this, meaning there is network time
         elif rtc_time < system_time:
             # write system_time to rtc
@@ -417,11 +417,11 @@ class Boot(object):
         print('Shutting down as scheduled with shutdown.')
         gpio.output(devices.GPIO_PIRA_STATUS_PIN, gpio.LOW)
 
-        if RESIN_ENABLED:
-            subprocess.call(["/usr/src/app/scripts/resin-shutdown.sh"])
-        else:
-            subprocess.Popen(["/sbin/shutdown", "--poweroff", "now"])
-            # print("SHUT DOWN WOULD HAPPEN HERE")
+        # if RESIN_ENABLED:
+        #     subprocess.call(["/usr/src/app/scripts/resin-shutdown.sh"])
+        # else:
+        subprocess.Popen(["/sbin/shutdown", "--poweroff", "now"])
+        # print("SHUT DOWN WOULD HAPPEN HERE")
 
         # Block.
         while True:
