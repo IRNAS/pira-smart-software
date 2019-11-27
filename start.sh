@@ -1,7 +1,11 @@
 #!/bin/bash
 
+# try to mount both /dev/sda1 and /dev/sdb1
+sudo mount /dev/sda1 /data -o umask=000
+sudo mount /dev/sdb1 /data -o umask=000
+
 # if USB is not mounted, print error and shut down
-if [ $(mount | grep -c /data) != 1 ]
+if [ $(mount | grep -c /data) < 1 ]
 then
         echo "ERROR: /data is not mounted, shutting down"
         sudo shutdown now
