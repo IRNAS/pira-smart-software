@@ -186,5 +186,5 @@ class Module(object):
             print("Warning: Safety off period will expire and wake up Pi before next scheduled wakeup.")
 
         # Displayed value is: wakeup_time + reboot_time
-        print("Scheduling next wakeup at {} / in {} seconds.".format((str(display_next_wakeup)[:-7]), wakeup_in_seconds + self._boot.get_pira_reboot_timer()))
+        # print("Scheduling next wakeup at {} / in {} seconds.".format((str(display_next_wakeup)[:-7]), wakeup_in_seconds + self._boot.get_pira_reboot_timer()))
         self._boot.pirasmart.set_wakeup_time(wakeup_in_seconds)
