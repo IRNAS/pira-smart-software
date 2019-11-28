@@ -121,7 +121,7 @@ class Module(object):
         """
 
         remaining_time_on = datetime.datetime.now() - self._started
-        print('Scheduler: remaining on time  : {} s'.format(datetime.timedelta.total_seconds(self._on_duration-remaining_time_on)))
+        print('Scheduler: remaining on time  : {} s'.format(datetime.timedelta.total_seconds(self._on_duration - remaining_time_on)))
 
         # Check if we have been online too long and shutdown.
         if remaining_time_on >= self._on_duration:
@@ -129,10 +129,10 @@ class Module(object):
             self._boot.shutdown = True
 
         # Check pira on timer is about to expire - o variable
-        if self._boot.get_pira_on_timer_set() < 30 and not self._boot.get_pira_on_timer_set() == None :
+        if self._boot.get_pira_on_timer_set() < 30 and not self._boot.get_pira_on_timer_set() == None:
             print("Scheduler: WARNING - Pira safety on timer about to expire.")
             self._boot.shutdown = True
-            #here we could reset it as well
+            # here we could reset it as well
 
     def shutdown(self, modules):
         """Compute next alarm before shutdown."""
@@ -172,14 +172,17 @@ class Module(object):
                 wakeup_time = current_time + off_duration
                 #print("START > END: wakeup {}.".format(wakeup_time))
 
-
         wakeup_in_seconds = datetime.timedelta.total_seconds(wakeup_time - current_time)
-        reboot_time = datetime.timedelta(seconds=int(self._boot.get_pira_reboot_timer()))
+
+        reboot_time = 0
+        try:
+            reboot_time = datetime.timedelta(seconds=int(self._boot.get_pira_reboot_timer()))
+
         display_next_wakeup = wakeup_time + reboot_time
 
         if wakeup_in_seconds > self._boot.get_pira_sleep_timer():
             print("Warning: Safety off period will expire and wake up Pi before next scheduled wakeup.")
 
-        #Displayed value is: wakeup_time + reboot_time
+        # Displayed value is: wakeup_time + reboot_time
         print("Scheduling next wakeup at {} / in {} seconds.".format((str(display_next_wakeup)[:-7]), wakeup_in_seconds + self._boot.get_pira_reboot_timer()))
         self._boot.pirasmart.set_wakeup_time(wakeup_in_seconds)
