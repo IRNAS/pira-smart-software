@@ -22,7 +22,7 @@ modprobe bcm2835-v4l2
 export DBUS_SYSTEM_BUS_ADDRESS=unix:path=/host/run/dbus/system_bus_socket
 
 # Power off HDMI.
-tvservice -o
+tvservice -o  # TODO: remove this??
 
 # Start the pigpio daemon - starting in boot.py
 #systemctl start pigpiod
