@@ -159,7 +159,7 @@ class Module(object):
         current_time = datetime.datetime.now()
         wakeup_time = None
 
-        #print("Schedule start {} end {} current {}.".format(self._schedule_start,self._schedule_end,current_time))
+        print("Schedule start {} end {} current {}.".format(self._schedule_start, self._schedule_end, current_time))
 
         if self._schedule_end >= self._schedule_start:
             wakeup_time = current_time + off_duration
@@ -174,7 +174,7 @@ class Module(object):
 
         wakeup_in_seconds = datetime.timedelta.total_seconds(wakeup_time - current_time)
 
-        reboot_time = 0
+        reboot_time = datetime.timedelta(seconds=60)
         try:
             reboot_time = datetime.timedelta(seconds=int(self._boot.get_pira_reboot_timer()))
         except:
