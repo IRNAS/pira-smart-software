@@ -133,43 +133,49 @@ class PIRASMARTUART(object):
 
     def set_time(self, new_time_epoch):
         """Writes new time to pira"""
+        print "set_time t: " + str(new_time_epoch)
         data = "t:" + struct.pack('>L', int(new_time_epoch))
         self.ser.write(data + '\n')
 
     def set_on_time(self, time_seconds):
         """Writes new on period time to pira"""
-        print "New on period time: " + str(time_seconds)
+        print "set_on_time p: " + str(time_seconds)
         data = "p:" + struct.pack('>L', int(time_seconds))
         self.ser.write(data + '\n')
 
     def set_off_time(self, time_seconds):
         """Writes new off period time to pira"""
-        print "New off period time: " + str(time_seconds)
+        print "set_off_time s: " + str(time_seconds)
         data = "s:" + struct.pack('>L', int(time_seconds))
         self.ser.write(data + '\n')
 
     def set_reboot_time(self, time_seconds):
         """Writes new reboot time to pira"""
+        print "set_reboot_time r: " + str(time_seconds)
         data = "r:" + struct.pack('>L', int(time_seconds))
         self.ser.write(data + '\n')
 
     def set_wakeup_time(self, time_seconds):
         """Writes new wakeup time to pira"""
+        print "set_wakeup_time w: " + str(time_seconds)
         data = "w:" + struct.pack('>L', int(time_seconds))
         self.ser.write(data + '\n')
 
     def send_command(self, command):    # TO DO
         """Sends command to pira"""
+        print "send_command c: " + str(command)
         data = "c:" + struct.pack('>L', int(command))
         self.ser.write(data + '\n')
 
     def send_free_space(self, space):
         """Send available space on disk"""
+        print "send_free_space f: " + str(space)
         data = "f:" + struct.pack('>L', int(space))
         self.ser.write(data + '\n')
 
     def send_pictures_taken(self, number_of_pictures):
         """Send available space on disk"""
+        print "send_pictures_taken i: " + str(number_of_pictures)
         data = "i:" + struct.pack('>L', int(number_of_pictures))
         self.ser.write(data + '\n')
 
