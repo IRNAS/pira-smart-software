@@ -166,19 +166,19 @@ class Boot(object):
                 print("PIRA BLE: Setting new safety on (p) value.")
                 self.pirasmart.set_on_time(pira_on_time)
                 self.pirasmart.set_on_time(pira_on_time)  # do it again to be sure
-                time.sleep(0.1)
+                # time.sleep(0.1)
             if (pira_off_time is not None):
                 print("PIRA BLE: Setting new safety off (s) value.")
                 self.pirasmart.set_off_time(pira_off_time)
-                time.sleep(0.1)
+                # time.sleep(0.1)
             if (pira_reboot_time is not None):
                 print("PIRA BLE: Setting new reboot (r) value.")
                 self.pirasmart.set_reboot_time(pira_reboot_time)
-                time.sleep(0.1)
+                # time.sleep(0.1)
             if (pira_wakeup_time is not None):
                 print("PIRA BLE: Setting new wakeup (w) value.")
                 self.pirasmart.set_wakeup_time(pira_wakeup_time)
-                time.sleep(0.1)
+                # time.sleep(0.1)
 
         # # Override module list if configured.
         # override_modules = os.environ.get('MODULES', None)
