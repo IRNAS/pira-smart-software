@@ -188,7 +188,5 @@ class Module(object):
 
         # Displayed value is: wakeup_time + reboot_time
         # print("Scheduling next wakeup at {} / in {} seconds.".format((str(display_next_wakeup)[:-7]), wakeup_in_seconds + self._boot.get_pira_reboot_timer()))
-        for i in range(100):
-            print("Sending w value: {}".format(wakeup_in_seconds))
-            self._boot.pirasmart.set_wakeup_time(wakeup_in_seconds)
-            time.sleep(1)
+        print("PIRA BLE: Setting new wakeup (w) value.")
+        self._boot.pirasmart.set_wakeup_time(wakeup_in_seconds)

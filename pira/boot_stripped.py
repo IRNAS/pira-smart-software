@@ -164,6 +164,7 @@ class Boot(object):
             if (pira_on_time is not None):
                 print("PIRA BLE: Setting new safety on (p) value.")
                 self.pirasmart.set_on_time(pira_on_time)
+                self.pirasmart.set_on_time(pira_on_time)  # do it again to be sure
                 time.sleep(0.1)
             if (pira_off_time is not None):
                 print("PIRA BLE: Setting new safety off (s) value.")
