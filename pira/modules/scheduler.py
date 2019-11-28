@@ -177,6 +177,8 @@ class Module(object):
         reboot_time = 0
         try:
             reboot_time = datetime.timedelta(seconds=int(self._boot.get_pira_reboot_timer()))
+        except:
+            pass
 
         display_next_wakeup = wakeup_time + reboot_time
 
