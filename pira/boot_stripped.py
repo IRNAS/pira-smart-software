@@ -150,6 +150,7 @@ class Boot(object):
             print("Writing system time to RTC")
             epoch_string = datetime.datetime.now().strftime('%s')
             self.pirasmart.set_time(epoch_string)
+            self.pirasmart.set_time(epoch_string)  # do it again to be sure
 
         else:
             # if equal no need to do anything
