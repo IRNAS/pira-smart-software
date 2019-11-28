@@ -92,25 +92,25 @@ class PIRASMARTUART(object):
 
             if x.startswith(str('t:')):
                 self.pira_time = float(value)
-                # print "Pira time: " + str(self.pira_time)
+                print "Pira time: " + str(self.pira_time)
             elif x.startswith(str('o:')):
                 self.pira_on_timer_set = float(value)
-                # print "Pira overwiev: " + str(self.pira_on_timer_set)
+                print "Pira overwiev: " + str(self.pira_on_timer_set)
             elif x.startswith(str('b:')):
                 self.pira_voltage = float(value) * 0.0164
-                # print "Pira battery: " + str(self.pira_voltage)
+                print "Pira battery: " + str(self.pira_voltage)
             elif x.startswith(str('p:')):
                 self.pira_on_timer_get = float(value)
-                # print "Pira get safety on period: " + str(self.pira_on_timer_get)
+                print "Pira get safety on period: " + str(self.pira_on_timer_get)
             elif x.startswith(str('s:')):
                 self.pira_sleep = float(value)
-                # print "Pira get safety off period: " + str(self.pira_sleep)
+                print "Pira get safety off period: " + str(self.pira_sleep)
             elif x.startswith(str('r:')):
                 self.pira_reboot = float(value)
-                # print "Pira get reboot period: " + str(self.pira_reboot)
+                print "Pira get reboot period: " + str(self.pira_reboot)
             elif x.startswith(str('w:')):
                 self.pira_next_wakeup_get = float(value)
-                # print "Pira next wakeup get : " + str(self.pira_next_wakeup_get)
+                print "Pira next wakeup get : " + str(self.pira_next_wakeup_get)
             elif x.startswith(str('a:')):
                 self.pira_rpi_gpio = float(value)
                 print "Pira reports Pi status pin value: " + str(self.pira_rpi_gpio)
