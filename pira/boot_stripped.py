@@ -422,8 +422,8 @@ class Boot(object):
         # if RESIN_ENABLED:
         #     subprocess.call(["/usr/src/app/scripts/resin-shutdown.sh"])
         # else:
-        # subprocess.Popen(["/sbin/shutdown", "--poweroff", "now"])
-        print("SHUT DOWN WOULD HAPPEN HERE")
+        subprocess.Popen(["/sbin/shutdown", "--poweroff", "now"])
+        # print("SHUT DOWN WOULD HAPPEN HERE")
 
         # Block.
         while True:
