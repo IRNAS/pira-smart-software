@@ -1,0 +1,799 @@
+!_TAG_FILE_FORMAT	2	/extended format; --format=1 will not append ;" to lines/
+!_TAG_FILE_SORTED	1	/0=unsorted, 1=sorted, 2=foldcase/
+!_TAG_PROGRAM_AUTHOR	Darren Hiebert	/dhiebert@users.sourceforge.net/
+!_TAG_PROGRAM_NAME	Exuberant Ctags	//
+!_TAG_PROGRAM_URL	http://ctags.sourceforge.net	/official site/
+!_TAG_PROGRAM_VERSION	5.9~svn20110310	//
+AES_CMAC	pira/hardware/lora/LoRaWAN/AES_CMAC.py	/^class AES_CMAC:$/;"	c
+AGC_REF	pira/hardware/lora/SX127x/constants.py	/^        AGC_REF            = 0x61$/;"	v	class:REG.LORA
+AGC_THRESH_1	pira/hardware/lora/SX127x/constants.py	/^        AGC_THRESH_1       = 0x62$/;"	v	class:REG.LORA
+AGC_THRESH_2	pira/hardware/lora/SX127x/constants.py	/^        AGC_THRESH_2       = 0x63$/;"	v	class:REG.LORA
+AGC_THRESH_3	pira/hardware/lora/SX127x/constants.py	/^        AGC_THRESH_3       = 0x64$/;"	v	class:REG.LORA
+BOARD	pira/hardware/lora/SX127x/board_config.py	/^class BOARD:$/;"	c
+BW	pira/hardware/lora/SX127x/constants.py	/^class BW:$/;"	c
+BW10_4	pira/hardware/lora/SX127x/constants.py	/^    BW10_4  = 1$/;"	v	class:BW
+BW125	pira/hardware/lora/SX127x/constants.py	/^    BW125   = 7$/;"	v	class:BW
+BW15_6	pira/hardware/lora/SX127x/constants.py	/^    BW15_6  = 2$/;"	v	class:BW
+BW20_8	pira/hardware/lora/SX127x/constants.py	/^    BW20_8  = 3$/;"	v	class:BW
+BW250	pira/hardware/lora/SX127x/constants.py	/^    BW250   = 8$/;"	v	class:BW
+BW31_25	pira/hardware/lora/SX127x/constants.py	/^    BW31_25 = 4$/;"	v	class:BW
+BW41_7	pira/hardware/lora/SX127x/constants.py	/^    BW41_7  = 5$/;"	v	class:BW
+BW500	pira/hardware/lora/SX127x/constants.py	/^    BW500   = 9$/;"	v	class:BW
+BW62_5	pira/hardware/lora/SX127x/constants.py	/^    BW62_5  = 6$/;"	v	class:BW
+BW7_8	pira/hardware/lora/SX127x/constants.py	/^    BW7_8   = 0$/;"	v	class:BW
+Boot	pira/boot.py	/^class Boot(object):$/;"	c
+Boot	pira/boot_stripped.py	/^class Boot(object):$/;"	c
+BrightPi	pira/hardware/brightpilib.py	/^class BrightPi(object):$/;"	c
+BrightPiSpecialEffects	pira/hardware/brightpilib.py	/^class BrightPiSpecialEffects(BrightPi):$/;"	c
+CAD	pira/hardware/lora/SX127x/constants.py	/^    CAD      = 0x87$/;"	v	class:MODE
+CAMERA_STORAGE_PATH	pira/modules/camera.py	/^CAMERA_STORAGE_PATH = '\/data\/camera'$/;"	v
+CODING_RATE	pira/hardware/lora/SX127x/constants.py	/^class CODING_RATE:$/;"	c
+CONF_DATA_DOWN	pira/hardware/lora/LoRaWAN/MHDR.py	/^    CONF_DATA_DOWN = 0xA0$/;"	v	class:MHDR
+CONF_DATA_UP	pira/hardware/lora/LoRaWAN/MHDR.py	/^    CONF_DATA_UP = 0x80$/;"	v	class:MHDR
+CR4_5	pira/hardware/lora/SX127x/constants.py	/^    CR4_5 = 1$/;"	v	class:CODING_RATE
+CR4_6	pira/hardware/lora/SX127x/constants.py	/^    CR4_6 = 2$/;"	v	class:CODING_RATE
+CR4_7	pira/hardware/lora/SX127x/constants.py	/^    CR4_7 = 3$/;"	v	class:CODING_RATE
+CR4_8	pira/hardware/lora/SX127x/constants.py	/^    CR4_8 = 4$/;"	v	class:CODING_RATE
+CSV_DATA_STORAGE_PATH	pira/modules/processing.py	/^CSV_DATA_STORAGE_PATH = '\/data\/calculated'$/;"	v
+CadDetected	pira/hardware/lora/SX127x/constants.py	/^        CadDetected         = 0$/;"	v	class:MASK.IRQ_FLAGS
+CadDone	pira/hardware/lora/SX127x/constants.py	/^        CadDone             = 2$/;"	v	class:MASK.IRQ_FLAGS
+DENSITY_FRESHWATER	pira/hardware/ms5837.py	/^DENSITY_FRESHWATER = 997$/;"	v
+DENSITY_SALTWATER	pira/hardware/ms5837.py	/^DENSITY_SALTWATER = 1029$/;"	v
+DETECTION_THRESH	pira/hardware/lora/SX127x/constants.py	/^        DETECTION_THRESH   = 0X37$/;"	v	class:REG.LORA
+DETECT_OPTIMIZE	pira/hardware/lora/SX127x/constants.py	/^        DETECT_OPTIMIZE    = 0X31$/;"	v	class:REG.LORA
+DIO0	pira/hardware/lora/SX127x/board_config.py	/^    DIO0 = None$/;"	v	class:BOARD
+DIO1	pira/hardware/lora/SX127x/board_config.py	/^    DIO1 = None$/;"	v	class:BOARD
+DIO2	pira/hardware/lora/SX127x/board_config.py	/^    DIO2 = None$/;"	v	class:BOARD
+DIO3	pira/hardware/lora/SX127x/board_config.py	/^    DIO3 = None$/;"	v	class:BOARD
+DIO_MAPPING_1	pira/hardware/lora/SX127x/constants.py	/^        DIO_MAPPING_1      = 0x40$/;"	v	class:REG.FSK
+DIO_MAPPING_1	pira/hardware/lora/SX127x/constants.py	/^        DIO_MAPPING_1      = 0x40$/;"	v	class:REG.LORA
+DIO_MAPPING_2	pira/hardware/lora/SX127x/constants.py	/^        DIO_MAPPING_2      = 0x41$/;"	v	class:REG.FSK
+DIO_MAPPING_2	pira/hardware/lora/SX127x/constants.py	/^        DIO_MAPPING_2      = 0x41$/;"	v	class:REG.LORA
+DIRECTION	pira/hardware/lora/LoRaWAN/Direction.py	/^    DIRECTION = {$/;"	v	class:Direction
+DOWN	pira/hardware/lora/LoRaWAN/Direction.py	/^    DOWN = 0x01$/;"	v	class:Direction
+DataPayload	pira/hardware/lora/LoRaWAN/DataPayload.py	/^class DataPayload:$/;"	c
+Direction	pira/hardware/lora/LoRaWAN/Direction.py	/^class Direction:$/;"	c
+FEI_MSB	pira/hardware/lora/SX127x/constants.py	/^        FEI_MSB            = 0x28$/;"	v	class:REG.LORA
+FHDR	pira/hardware/lora/LoRaWAN/FHDR.py	/^class FHDR:$/;"	c
+FIFO	pira/hardware/lora/SX127x/constants.py	/^        FIFO               = 0x00$/;"	v	class:REG.LORA
+FIFO_ADDR_PTR	pira/hardware/lora/SX127x/constants.py	/^        FIFO_ADDR_PTR      = 0x0D$/;"	v	class:REG.LORA
+FIFO_RX_BASE_ADDR	pira/hardware/lora/SX127x/constants.py	/^        FIFO_RX_BASE_ADDR  = 0x0F$/;"	v	class:REG.LORA
+FIFO_RX_BYTE_ADDR	pira/hardware/lora/SX127x/constants.py	/^        FIFO_RX_BYTE_ADDR  = 0x25$/;"	v	class:REG.LORA
+FIFO_RX_CURR_ADDR	pira/hardware/lora/SX127x/constants.py	/^        FIFO_RX_CURR_ADDR  = 0x10$/;"	v	class:REG.LORA
+FIFO_THRESH	pira/hardware/lora/SX127x/constants.py	/^        FIFO_THRESH        = 0x35$/;"	v	class:REG.FSK
+FIFO_TX_BASE_ADDR	pira/hardware/lora/SX127x/constants.py	/^        FIFO_TX_BASE_ADDR  = 0x0E$/;"	v	class:REG.LORA
+FR_LSB	pira/hardware/lora/SX127x/constants.py	/^        FR_LSB             = 0x08$/;"	v	class:REG.LORA
+FR_MID	pira/hardware/lora/SX127x/constants.py	/^        FR_MID             = 0x07$/;"	v	class:REG.LORA
+FR_MSB	pira/hardware/lora/SX127x/constants.py	/^        FR_MSB             = 0x06$/;"	v	class:REG.LORA
+FSK	pira/hardware/lora/SX127x/constants.py	/^    class FSK:$/;"	c	class:REG
+FSK_STDBY	pira/hardware/lora/SX127x/constants.py	/^    FSK_STDBY= 0x01     # needed for calibration$/;"	v	class:MODE
+FSRX	pira/hardware/lora/SX127x/constants.py	/^    FSRX     = 0x84$/;"	v	class:MODE
+FSTX	pira/hardware/lora/SX127x/constants.py	/^    FSTX     = 0x82$/;"	v	class:MODE
+FhssChangeChannel	pira/hardware/lora/SX127x/constants.py	/^        FhssChangeChannel   = 1$/;"	v	class:MASK.IRQ_FLAGS
+G1	pira/hardware/lora/SX127x/constants.py	/^    G1       = 0b001$/;"	v	class:GAIN
+G2	pira/hardware/lora/SX127x/constants.py	/^    G2       = 0b010$/;"	v	class:GAIN
+G3	pira/hardware/lora/SX127x/constants.py	/^    G3       = 0b011$/;"	v	class:GAIN
+G4	pira/hardware/lora/SX127x/constants.py	/^    G4       = 0b100$/;"	v	class:GAIN
+G5	pira/hardware/lora/SX127x/constants.py	/^    G5       = 0b101$/;"	v	class:GAIN
+G6	pira/hardware/lora/SX127x/constants.py	/^    G6       = 0b110$/;"	v	class:GAIN
+GAIN	pira/hardware/lora/SX127x/constants.py	/^class GAIN:$/;"	c
+GPIO_LORA_DIO_0_PIN	pira/hardware/devices.py	/^GPIO_LORA_DIO_0_PIN = 12$/;"	v
+GPIO_LORA_DIO_1_PIN	pira/hardware/devices.py	/^GPIO_LORA_DIO_1_PIN = 1$/;"	v
+GPIO_LORA_DIO_2_PIN	pira/hardware/devices.py	/^GPIO_LORA_DIO_2_PIN = 7$/;"	v
+GPIO_LORA_RESET_PIN	pira/hardware/devices.py	/^GPIO_LORA_RESET_PIN = 13$/;"	v
+GPIO_PIRA_STATUS_PIN	pira/hardware/devices.py	/^    GPIO_PIRA_STATUS_PIN = 17   # PiraSmart v1_0$/;"	v
+GPIO_PIRA_STATUS_PIN	pira/hardware/devices.py	/^    GPIO_PIRA_STATUS_PIN = int(env_status_pin)$/;"	v
+GPIO_SOFT_POWER_PIN	pira/hardware/devices.py	/^GPIO_SOFT_POWER_PIN = 25$/;"	v
+GPIO_ULTRASONIC_RX_PIN	pira/hardware/devices.py	/^GPIO_ULTRASONIC_RX_PIN = 5$/;"	v
+HAVE_ASTRAL	pira/modules/scheduler.py	/^    HAVE_ASTRAL = False$/;"	v
+HAVE_ASTRAL	pira/modules/scheduler.py	/^    HAVE_ASTRAL = True$/;"	v
+HOP_CHANNEL	pira/hardware/lora/SX127x/constants.py	/^        HOP_CHANNEL        = 0x1C$/;"	v	class:REG.LORA
+HOP_PERIOD	pira/hardware/lora/SX127x/constants.py	/^        HOP_PERIOD         = 0x24$/;"	v	class:REG.LORA
+IMAGE_CAL	pira/hardware/lora/SX127x/constants.py	/^        IMAGE_CAL          = 0x3B$/;"	v	class:REG.FSK
+INVERT_IQ	pira/hardware/lora/SX127x/constants.py	/^        INVERT_IQ          = 0x33$/;"	v	class:REG.LORA
+IRIDIUM_EPOCH	pira/hardware/rockblock.py	/^    IRIDIUM_EPOCH = 1399818235000   #May 11, 2014, at 14:23:55 (This will be 're-epoched' every couple of years!)$/;"	v	class:rockBlock
+IRQ_FLAGS	pira/hardware/lora/SX127x/constants.py	/^        IRQ_FLAGS          = 0x12$/;"	v	class:REG.LORA
+IRQ_FLAGS	pira/hardware/lora/SX127x/constants.py	/^    class IRQ_FLAGS:$/;"	c	class:MASK
+IRQ_FLAGS_MASK	pira/hardware/lora/SX127x/constants.py	/^        IRQ_FLAGS_MASK     = 0x11$/;"	v	class:REG.LORA
+JOIN_ACCEPT	pira/hardware/lora/LoRaWAN/MHDR.py	/^    JOIN_ACCEPT = 0x20$/;"	v	class:MHDR
+JOIN_REQUEST	pira/hardware/lora/LoRaWAN/MHDR.py	/^    JOIN_REQUEST = 0x00$/;"	v	class:MHDR
+JoinAcceptPayload	pira/hardware/lora/LoRaWAN/JoinAcceptPayload.py	/^class JoinAcceptPayload:$/;"	c
+JoinRequestPayload	pira/hardware/lora/LoRaWAN/JoinRequestPayload.py	/^class JoinRequestPayload:$/;"	c
+LED1	pira/hardware/brightpilib.py	/^LED1 = (1,)$/;"	v
+LED2	pira/hardware/brightpilib.py	/^LED2 = (2,)$/;"	v
+LED3	pira/hardware/brightpilib.py	/^LED3 = (3,)$/;"	v
+LED4	pira/hardware/brightpilib.py	/^LED4 = (4,)$/;"	v
+LED5	pira/hardware/brightpilib.py	/^LED5 = (5,)$/;"	v
+LED6	pira/hardware/brightpilib.py	/^LED6 = (6,)$/;"	v
+LED7	pira/hardware/brightpilib.py	/^LED7 = (7,)$/;"	v
+LED8	pira/hardware/brightpilib.py	/^LED8 = (8,)$/;"	v
+LED_ALL	pira/hardware/brightpilib.py	/^LED_ALL = (1, 2, 3, 4, 5, 6, 7, 8)$/;"	v
+LED_IR	pira/hardware/brightpilib.py	/^LED_IR = LED_ALL[4:8]$/;"	v
+LED_WHITE	pira/hardware/brightpilib.py	/^LED_WHITE = LED_ALL[0:4]$/;"	v
+LNA	pira/hardware/lora/SX127x/constants.py	/^        LNA                = 0x0C$/;"	v	class:REG.FSK
+LNA	pira/hardware/lora/SX127x/constants.py	/^        LNA                = 0x0C$/;"	v	class:REG.LORA
+LOG_DEPTH_ALTITUDE	pira/modules/depth.py	/^LOG_DEPTH_ALTITUDE = 'depth.altitude'$/;"	v
+LOG_DEPTH_DEPTH	pira/modules/depth.py	/^LOG_DEPTH_DEPTH = 'depth.depth'$/;"	v
+LOG_DEPTH_PRESSURE	pira/modules/depth.py	/^LOG_DEPTH_PRESSURE = 'depth.pressure'$/;"	v
+LOG_DEPTH_TEMPERATURE	pira/modules/depth.py	/^LOG_DEPTH_TEMPERATURE = 'depth.temperature'$/;"	v
+LOG_DEVICE_TEMPERATURE	pira/const.py	/^LOG_DEVICE_TEMPERATURE = 'device.temperature'$/;"	v
+LOG_DEVICE_VOLTAGE	pira/const.py	/^LOG_DEVICE_VOLTAGE = 'device.voltage'$/;"	v
+LOG_FILE	pira/log.py	/^LOG_FILE = '\/data\/pira-zero-log.db'$/;"	v
+LOG_PLANTOWER_PM1	pira/modules/plantower.py	/^LOG_PLANTOWER_PM1 = 'plantower.pm1'$/;"	v
+LOG_PLANTOWER_PM10	pira/modules/plantower.py	/^LOG_PLANTOWER_PM10 = 'plantower.pm10'$/;"	v
+LOG_PLANTOWER_PM25	pira/modules/plantower.py	/^LOG_PLANTOWER_PM25 = 'plantower.pm25'$/;"	v
+LOG_SYSTEM	pira/const.py	/^LOG_SYSTEM = 'system'$/;"	v
+LOG_ULTRASONIC_DISTANCE	pira/modules/ultrasonic.py	/^LOG_ULTRASONIC_DISTANCE = 'ultrasonic.distance'$/;"	v
+LORA	pira/hardware/lora/SX127x/constants.py	/^    class LORA:$/;"	c	class:REG
+LORAWAN_V1	pira/hardware/lora/LoRaWAN/MHDR.py	/^    LORAWAN_V1 = 0x00;$/;"	v	class:MHDR
+LoRa	pira/hardware/lora/SX127x/LoRa.py	/^class LoRa(object):$/;"	c
+LoRa	pira/modules/lora.py	/^class LoRa(lora.LoRa):$/;"	c
+LoRaArgumentParser	pira/hardware/lora/SX127x/LoRaArgumentParser.py	/^class LoRaArgumentParser(argparse.ArgumentParser):$/;"	c
+Log	pira/log.py	/^class Log(object):$/;"	c
+MASK	pira/hardware/lora/SX127x/constants.py	/^class MASK:$/;"	c
+MAX_PAYLOAD_LENGTH	pira/hardware/lora/SX127x/constants.py	/^        MAX_PAYLOAD_LENGTH = 0x23$/;"	v	class:REG.LORA
+MB7092XL	pira/hardware/ultrasonic.py	/^class MB7092XL(object):$/;"	c
+MCP2515	pira/hardware/mcp2515.py	/^class MCP2515():$/;"	c
+MEASUREMENT_DEPTH_ALTITUDE	pira/modules/depth.py	/^MEASUREMENT_DEPTH_ALTITUDE = MeasurementConfig(LOG_DEPTH_ALTITUDE, int)$/;"	v
+MEASUREMENT_DEPTH_DEPTH	pira/modules/depth.py	/^MEASUREMENT_DEPTH_DEPTH = MeasurementConfig(LOG_DEPTH_DEPTH, int)$/;"	v
+MEASUREMENT_DEPTH_PRESSURE	pira/modules/depth.py	/^MEASUREMENT_DEPTH_PRESSURE = MeasurementConfig(LOG_DEPTH_PRESSURE, int)$/;"	v
+MEASUREMENT_DEPTH_TEMPERATURE	pira/modules/depth.py	/^MEASUREMENT_DEPTH_TEMPERATURE = MeasurementConfig(LOG_DEPTH_TEMPERATURE, int)$/;"	v
+MEASUREMENT_DEVICE_TEMPERATURE	pira/const.py	/^MEASUREMENT_DEVICE_TEMPERATURE = MeasurementConfig(LOG_DEVICE_TEMPERATURE, lambda value: int(value + 128))$/;"	v
+MEASUREMENT_DEVICE_VOLTAGE	pira/const.py	/^MEASUREMENT_DEVICE_VOLTAGE = MeasurementConfig(LOG_DEVICE_VOLTAGE, lambda value: int(value * 1000))$/;"	v
+MEASUREMENT_PLANTOWER_PM1	pira/modules/plantower.py	/^MEASUREMENT_PLANTOWER_PM1 = MeasurementConfig(LOG_PLANTOWER_PM1, int)$/;"	v
+MEASUREMENT_PLANTOWER_PM10	pira/modules/plantower.py	/^MEASUREMENT_PLANTOWER_PM10 = MeasurementConfig(LOG_PLANTOWER_PM10, int)$/;"	v
+MEASUREMENT_PLANTOWER_PM25	pira/modules/plantower.py	/^MEASUREMENT_PLANTOWER_PM25 = MeasurementConfig(LOG_PLANTOWER_PM25, int)$/;"	v
+MEASUREMENT_ULTRASONIC_DISTANCE	pira/modules/ultrasonic.py	/^MEASUREMENT_ULTRASONIC_DISTANCE = MeasurementConfig(LOG_ULTRASONIC_DISTANCE, int)$/;"	v
+MHDR	pira/hardware/lora/LoRaWAN/MHDR.py	/^class MHDR:$/;"	c
+MHDR_MAJOR	pira/hardware/lora/LoRaWAN/MHDR.py	/^    MHDR_MAJOR = 0x03;$/;"	v	class:MHDR
+MHDR_RFU	pira/hardware/lora/LoRaWAN/MHDR.py	/^    MHDR_RFU = 0x1C;$/;"	v	class:MHDR
+MHDR_TYPE	pira/hardware/lora/LoRaWAN/MHDR.py	/^    MHDR_TYPE = 0xE0;$/;"	v	class:MHDR
+MODE	pira/hardware/lora/SX127x/constants.py	/^class MODE:$/;"	c
+MODEL_02BA	pira/hardware/ms5837.py	/^MODEL_02BA = 0$/;"	v
+MODEL_30BA	pira/hardware/ms5837.py	/^MODEL_30BA = 1$/;"	v
+MODEM_CONFIG_1	pira/hardware/lora/SX127x/constants.py	/^        MODEM_CONFIG_1     = 0x1D$/;"	v	class:REG.LORA
+MODEM_CONFIG_2	pira/hardware/lora/SX127x/constants.py	/^        MODEM_CONFIG_2     = 0x1E$/;"	v	class:REG.LORA
+MODEM_CONFIG_3	pira/hardware/lora/SX127x/constants.py	/^        MODEM_CONFIG_3     = 0x26$/;"	v	class:REG.LORA
+MODEM_STAT	pira/hardware/lora/SX127x/constants.py	/^        MODEM_STAT         = 0x18$/;"	v	class:REG.LORA
+MS5837	pira/hardware/ms5837.py	/^class MS5837(object):$/;"	c
+MS5837_02BA	pira/hardware/ms5837.py	/^class MS5837_02BA(MS5837):$/;"	c
+MS5837_30BA	pira/hardware/ms5837.py	/^class MS5837_30BA(MS5837):$/;"	c
+MacPayload	pira/hardware/lora/LoRaWAN/MacPayload.py	/^class MacPayload:$/;"	c
+MalformedPacketException	pira/hardware/lora/LoRaWAN/MalformedPacketException.py	/^class MalformedPacketException(Exception):$/;"	c
+MeasurementConfig	pira/messages.py	/^MeasurementConfig = collections.namedtuple('MeasurementConfig', ['log_type', 'conversion'])$/;"	v
+Module	pira/modules/azure_images.py	/^class Module(object):$/;"	c
+Module	pira/modules/azure_sync.py	/^class Module(object):$/;"	c
+Module	pira/modules/camera.py	/^class Module(object):$/;"	c
+Module	pira/modules/can.py	/^class Module(object):$/;"	c
+Module	pira/modules/debug.py	/^class Module(object):$/;"	c
+Module	pira/modules/depth.py	/^class Module(object):$/;"	c
+Module	pira/modules/lora.py	/^class Module(object):$/;"	c
+Module	pira/modules/m2x_plat.py	/^class Module(object):$/;"	c
+Module	pira/modules/nodewatcher.py	/^class Module(object):$/;"	c
+Module	pira/modules/plantower.py	/^class Module(object):$/;"	c
+Module	pira/modules/processing.py	/^class Module(object):$/;"	c
+Module	pira/modules/rockblock.py	/^class Module(object):$/;"	c
+Module	pira/modules/scheduler.py	/^class Module(object):$/;"	c
+Module	pira/modules/ultrasonic.py	/^class Module(object):$/;"	c
+Module	pira/modules/webserver.py	/^class Module(object):$/;"	c
+NOT_USED	pira/hardware/lora/SX127x/constants.py	/^    NOT_USED = 0b000$/;"	v	class:GAIN
+OCP	pira/hardware/lora/SX127x/constants.py	/^        OCP                = 0x0B$/;"	v	class:REG.LORA
+OFF	pira/hardware/brightpilib.py	/^OFF = 0$/;"	v
+ON	pira/hardware/brightpilib.py	/^ON = 1$/;"	v
+OP_MODE	pira/hardware/lora/SX127x/constants.py	/^        OP_MODE            = 0x01$/;"	v	class:REG.LORA
+OSC	pira/hardware/lora/SX127x/constants.py	/^        OSC                = 0x24$/;"	v	class:REG.FSK
+OSR_1024	pira/hardware/ms5837.py	/^OSR_1024 = 2$/;"	v
+OSR_2048	pira/hardware/ms5837.py	/^OSR_2048 = 3$/;"	v
+OSR_256	pira/hardware/ms5837.py	/^OSR_256  = 0$/;"	v
+OSR_4096	pira/hardware/ms5837.py	/^OSR_4096 = 4$/;"	v
+OSR_512	pira/hardware/ms5837.py	/^OSR_512  = 1$/;"	v
+OSR_8192	pira/hardware/ms5837.py	/^OSR_8192 = 5$/;"	v
+PACKET_CONFIG_1	pira/hardware/lora/SX127x/constants.py	/^        PACKET_CONFIG_1    = 0x30$/;"	v	class:REG.FSK
+PAYLOAD_LENGTH	pira/hardware/lora/SX127x/constants.py	/^        PAYLOAD_LENGTH     = 0x22$/;"	v	class:REG.LORA
+PA_BOOST	pira/hardware/lora/SX127x/constants.py	/^    PA_BOOST = 1$/;"	v	class:PA_SELECT
+PA_CONFIG	pira/hardware/lora/SX127x/constants.py	/^        PA_CONFIG          = 0x09$/;"	v	class:REG.LORA
+PA_DAC	pira/hardware/lora/SX127x/constants.py	/^        PA_DAC             = 0x4D$/;"	v	class:REG.LORA
+PA_RAMP	pira/hardware/lora/SX127x/constants.py	/^        PA_RAMP            = 0x0A$/;"	v	class:REG.LORA
+PA_RAMP	pira/hardware/lora/SX127x/constants.py	/^class PA_RAMP:$/;"	c
+PA_SELECT	pira/hardware/lora/SX127x/constants.py	/^class PA_SELECT:$/;"	c
+PIRASMARTUART	pira/hardware/pirasmartuart.py	/^class PIRASMARTUART(object):$/;"	c
+PIRASMART_UART	pira/hardware/devices.py	/^PIRASMART_UART = '\/dev\/ttyAMA0' # if pi3-miniuart-bt overlay$/;"	v
+PKT_RSSI_VALUE	pira/hardware/lora/SX127x/constants.py	/^        PKT_RSSI_VALUE     = 0x1A$/;"	v	class:REG.LORA
+PKT_SNR_VALUE	pira/hardware/lora/SX127x/constants.py	/^        PKT_SNR_VALUE      = 0x19$/;"	v	class:REG.LORA
+PLANTOWER	pira/hardware/plantower.py	/^class PLANTOWER(object):$/;"	c
+PLL	pira/hardware/lora/SX127x/constants.py	/^        PLL                = 0x70$/;"	v	class:REG.LORA
+PPM_CORRECTION	pira/hardware/lora/SX127x/constants.py	/^        PPM_CORRECTION     = 0x27$/;"	v	class:REG.LORA
+PREAMBLE_DETECT	pira/hardware/lora/SX127x/constants.py	/^        PREAMBLE_DETECT    = 0x1F$/;"	v	class:REG.FSK
+PREAMBLE_MSB	pira/hardware/lora/SX127x/constants.py	/^        PREAMBLE_MSB       = 0x20$/;"	v	class:REG.LORA
+PROPRIETARY	pira/hardware/lora/LoRaWAN/MHDR.py	/^    PROPRIETARY = 0xE0$/;"	v	class:MHDR
+PayloadCrcError	pira/hardware/lora/SX127x/constants.py	/^        PayloadCrcError     = 5$/;"	v	class:MASK.IRQ_FLAGS
+PhyPayload	pira/hardware/lora/LoRaWAN/PhyPayload.py	/^class PhyPayload:$/;"	c
+RAMP_100_us	pira/hardware/lora/SX127x/constants.py	/^    RAMP_100_us = 6$/;"	v	class:PA_RAMP
+RAMP_10_us	pira/hardware/lora/SX127x/constants.py	/^    RAMP_10_us  = 15$/;"	v	class:PA_RAMP
+RAMP_125_us	pira/hardware/lora/SX127x/constants.py	/^    RAMP_125_us = 5$/;"	v	class:PA_RAMP
+RAMP_12_us	pira/hardware/lora/SX127x/constants.py	/^    RAMP_12_us  = 14$/;"	v	class:PA_RAMP
+RAMP_15_us	pira/hardware/lora/SX127x/constants.py	/^    RAMP_15_us  = 13$/;"	v	class:PA_RAMP
+RAMP_1_ms	pira/hardware/lora/SX127x/constants.py	/^    RAMP_1_ms   = 2$/;"	v	class:PA_RAMP
+RAMP_20_us	pira/hardware/lora/SX127x/constants.py	/^    RAMP_20_us  = 12$/;"	v	class:PA_RAMP
+RAMP_250_us	pira/hardware/lora/SX127x/constants.py	/^    RAMP_250_us = 4$/;"	v	class:PA_RAMP
+RAMP_25_us	pira/hardware/lora/SX127x/constants.py	/^    RAMP_25_us  = 11$/;"	v	class:PA_RAMP
+RAMP_2_ms	pira/hardware/lora/SX127x/constants.py	/^    RAMP_2_ms   = 1$/;"	v	class:PA_RAMP
+RAMP_31_us	pira/hardware/lora/SX127x/constants.py	/^    RAMP_31_us  = 10$/;"	v	class:PA_RAMP
+RAMP_3_4_ms	pira/hardware/lora/SX127x/constants.py	/^    RAMP_3_4_ms = 0$/;"	v	class:PA_RAMP
+RAMP_40_us	pira/hardware/lora/SX127x/constants.py	/^    RAMP_40_us  = 9$/;"	v	class:PA_RAMP
+RAMP_500_us	pira/hardware/lora/SX127x/constants.py	/^    RAMP_500_us = 3$/;"	v	class:PA_RAMP
+RAMP_50_us	pira/hardware/lora/SX127x/constants.py	/^    RAMP_50_us  = 8$/;"	v	class:PA_RAMP
+RAMP_62_us	pira/hardware/lora/SX127x/constants.py	/^    RAMP_62_us  = 7$/;"	v	class:PA_RAMP
+RAW_DATA_STORAGE_PATH	pira/modules/can.py	/^RAW_DATA_STORAGE_PATH = '\/data\/raw'$/;"	v
+RAW_DATA_STORAGE_PATH	pira/modules/processing.py	/^RAW_DATA_STORAGE_PATH = '\/data\/raw'$/;"	v
+REG	pira/hardware/lora/SX127x/constants.py	/^class REG:$/;"	c
+RESIN_ENABLED	pira/boot.py	/^RESIN_ENABLED = False$/;"	v
+RESIN_ENABLED	pira/boot_stripped.py	/^RESIN_ENABLED = False$/;"	v
+RFO	pira/hardware/lora/SX127x/constants.py	/^    RFO      = 0$/;"	v	class:PA_SELECT
+RFU	pira/hardware/lora/LoRaWAN/MHDR.py	/^    RFU = 0xC0 # rejoin for roaming$/;"	v	class:MHDR
+ROT_CCW	pira/hardware/brightpilib.py	/^ROT_CCW = 1$/;"	v
+ROT_CW	pira/hardware/brightpilib.py	/^ROT_CW = 0$/;"	v
+RSSI_CONFIG	pira/hardware/lora/SX127x/constants.py	/^        RSSI_CONFIG        = 0x0E$/;"	v	class:REG.FSK
+RSSI_VALUE	pira/hardware/lora/SX127x/constants.py	/^        RSSI_VALUE         = 0x1B$/;"	v	class:REG.LORA
+RXCONT	pira/hardware/lora/SX127x/constants.py	/^    RXCONT   = 0x85$/;"	v	class:MODE
+RXSINGLE	pira/hardware/lora/SX127x/constants.py	/^    RXSINGLE = 0x86$/;"	v	class:MODE
+RX_CONFIG	pira/hardware/lora/SX127x/constants.py	/^        RX_CONFIG          = 0x0D$/;"	v	class:REG.FSK
+RX_HEADER_CNT_MSB	pira/hardware/lora/SX127x/constants.py	/^        RX_HEADER_CNT_MSB  = 0x14$/;"	v	class:REG.LORA
+RX_NB_BYTES	pira/hardware/lora/SX127x/constants.py	/^        RX_NB_BYTES        = 0x13$/;"	v	class:REG.LORA
+RX_PACKET_CNT_MSB	pira/hardware/lora/SX127x/constants.py	/^        RX_PACKET_CNT_MSB  = 0x16$/;"	v	class:REG.LORA
+RxDone	pira/hardware/lora/SX127x/constants.py	/^        RxDone              = 6$/;"	v	class:MASK.IRQ_FLAGS
+RxTimeout	pira/hardware/lora/SX127x/constants.py	/^        RxTimeout           = 7$/;"	v	class:MASK.IRQ_FLAGS
+SLEEP	pira/hardware/lora/SX127x/constants.py	/^    SLEEP    = 0x80$/;"	v	class:MODE
+STATE_FILE	pira/state.py	/^STATE_FILE = '\/data\/pira-zero-state.pkl'$/;"	v
+STATE_FRAME_COUNTER	pira/modules/lora.py	/^STATE_FRAME_COUNTER = 'lora.frame_counter'$/;"	v
+STATE_POWERED_ON_TIME	pira/modules/rockblock.py	/^STATE_POWERED_ON_TIME = 'rockblock.powered_on_time'$/;"	v
+STATE_RETRIES	pira/modules/rockblock.py	/^STATE_RETRIES = 'rockblock.retries'$/;"	v
+STDBY	pira/hardware/lora/SX127x/constants.py	/^    STDBY    = 0x81$/;"	v	class:MODE
+SYMB_TIMEOUT_LSB	pira/hardware/lora/SX127x/constants.py	/^        SYMB_TIMEOUT_LSB   = 0x1F$/;"	v	class:REG.LORA
+SYNC_CONFIG	pira/hardware/lora/SX127x/constants.py	/^        SYNC_CONFIG        = 0x27$/;"	v	class:REG.FSK
+SYNC_VALUE_1	pira/hardware/lora/SX127x/constants.py	/^        SYNC_VALUE_1       = 0x28$/;"	v	class:REG.FSK
+SYNC_VALUE_2	pira/hardware/lora/SX127x/constants.py	/^        SYNC_VALUE_2       = 0x29$/;"	v	class:REG.FSK
+SYNC_VALUE_3	pira/hardware/lora/SX127x/constants.py	/^        SYNC_VALUE_3       = 0x2A$/;"	v	class:REG.FSK
+SYNC_VALUE_4	pira/hardware/lora/SX127x/constants.py	/^        SYNC_VALUE_4       = 0x2B$/;"	v	class:REG.FSK
+SYNC_VALUE_5	pira/hardware/lora/SX127x/constants.py	/^        SYNC_VALUE_5       = 0x2C$/;"	v	class:REG.FSK
+SYNC_VALUE_6	pira/hardware/lora/SX127x/constants.py	/^        SYNC_VALUE_6       = 0x2D$/;"	v	class:REG.FSK
+SYNC_VALUE_7	pira/hardware/lora/SX127x/constants.py	/^        SYNC_VALUE_7       = 0x2E$/;"	v	class:REG.FSK
+SYNC_VALUE_8	pira/hardware/lora/SX127x/constants.py	/^        SYNC_VALUE_8       = 0x2F$/;"	v	class:REG.FSK
+SYNC_WORD	pira/hardware/lora/SX127x/constants.py	/^        SYNC_WORD          = 0X39$/;"	v	class:REG.LORA
+SpiDev	pira/hardware/lora/SX127x/board_config.py	/^    def SpiDev(spi_bus=0, spi_cs=0):$/;"	m	class:BOARD
+State	pira/state.py	/^class State(object):$/;"	c
+TCXO	pira/hardware/lora/SX127x/constants.py	/^        TCXO               = 0x4B$/;"	v	class:REG.LORA
+TX	pira/hardware/lora/SX127x/constants.py	/^    TX       = 0x83$/;"	v	class:MODE
+TxDone	pira/hardware/lora/SX127x/constants.py	/^        TxDone              = 3$/;"	v	class:MASK.IRQ_FLAGS
+UNCONF_DATA_DOWN	pira/hardware/lora/LoRaWAN/MHDR.py	/^    UNCONF_DATA_DOWN = 0x60$/;"	v	class:MHDR
+UNCONF_DATA_UP	pira/hardware/lora/LoRaWAN/MHDR.py	/^    UNCONF_DATA_UP = 0x40$/;"	v	class:MHDR
+UNITS_Centigrade	pira/hardware/ms5837.py	/^UNITS_Centigrade = 1$/;"	v
+UNITS_Farenheit	pira/hardware/ms5837.py	/^UNITS_Farenheit  = 2$/;"	v
+UNITS_Kelvin	pira/hardware/ms5837.py	/^UNITS_Kelvin     = 3$/;"	v
+UNITS_Pa	pira/hardware/ms5837.py	/^UNITS_Pa     = 100.0$/;"	v
+UNITS_Torr	pira/hardware/ms5837.py	/^UNITS_Torr   = 0.750062$/;"	v
+UNITS_atm	pira/hardware/ms5837.py	/^UNITS_atm    = 0.000986923$/;"	v
+UNITS_bar	pira/hardware/ms5837.py	/^UNITS_bar    = 0.001$/;"	v
+UNITS_hPa	pira/hardware/ms5837.py	/^UNITS_hPa    = 1.0$/;"	v
+UNITS_kPa	pira/hardware/ms5837.py	/^UNITS_kPa    = 0.1$/;"	v
+UNITS_mbar	pira/hardware/ms5837.py	/^UNITS_mbar   = 1.0$/;"	v
+UNITS_psi	pira/hardware/ms5837.py	/^UNITS_psi    = 0.014503773773022$/;"	v
+UP	pira/hardware/lora/LoRaWAN/Direction.py	/^    UP = 0x00$/;"	v	class:Direction
+VERSION	pira/hardware/lora/SX127x/constants.py	/^        VERSION            = 0x42$/;"	v	class:REG.LORA
+ValidHeader	pira/hardware/lora/SX127x/constants.py	/^        ValidHeader         = 4$/;"	v	class:MASK.IRQ_FLAGS
+WEBSERVER_DIRECTORY	pira/modules/webserver.py	/^WEBSERVER_DIRECTORY = '\/data'$/;"	v
+WEBSERVER_PORT	pira/modules/webserver.py	/^WEBSERVER_PORT = 80$/;"	v
+_MS5837_ADC_READ	pira/hardware/ms5837.py	/^    _MS5837_ADC_READ         = 0x00$/;"	v	class:MS5837
+_MS5837_ADDR	pira/hardware/ms5837.py	/^    _MS5837_ADDR             = 0x76$/;"	v	class:MS5837
+_MS5837_CONVERT_D1_256	pira/hardware/ms5837.py	/^    _MS5837_CONVERT_D1_256   = 0x40$/;"	v	class:MS5837
+_MS5837_CONVERT_D2_256	pira/hardware/ms5837.py	/^    _MS5837_CONVERT_D2_256   = 0x50$/;"	v	class:MS5837
+_MS5837_PROM_READ	pira/hardware/ms5837.py	/^    _MS5837_PROM_READ        = 0xA0$/;"	v	class:MS5837
+_MS5837_RESET	pira/hardware/ms5837.py	/^    _MS5837_RESET            = 0x1E$/;"	v	class:MS5837
+__all__	pira/hardware/lora/SX127x/__init__.py	/^__all__ = ['SX127x']$/;"	v
+__del__	pira/hardware/lora/SX127x/LoRa.py	/^    def __del__(self):$/;"	m	class:LoRa	file:
+__getitem__	pira/state.py	/^    def __getitem__(self, name):$/;"	m	class:State	file:
+__init__	pira/boot.py	/^    def __init__(self):$/;"	m	class:Boot
+__init__	pira/boot_stripped.py	/^    def __init__(self):$/;"	m	class:Boot
+__init__	pira/hardware/brightpilib.py	/^    def __init__(self):$/;"	m	class:BrightPi
+__init__	pira/hardware/brightpilib.py	/^    def __init__(self):$/;"	m	class:BrightPiSpecialEffects
+__init__	pira/hardware/lora/LoRaWAN/Direction.py	/^    def __init__(self, mhdr):$/;"	m	class:Direction
+__init__	pira/hardware/lora/LoRaWAN/MHDR.py	/^    def __init__(self, mhdr):$/;"	m	class:MHDR
+__init__	pira/hardware/lora/LoRaWAN/MalformedPacketException.py	/^    def __init__(self, msg = ""):$/;"	m	class:MalformedPacketException
+__init__	pira/hardware/lora/LoRaWAN/PhyPayload.py	/^    def __init__(self, nwkey, appkey):$/;"	m	class:PhyPayload
+__init__	pira/hardware/lora/SX127x/LoRa.py	/^    def __init__(self, verbose=True, do_calibration=True, calibration_freq=868):$/;"	m	class:LoRa
+__init__	pira/hardware/lora/SX127x/LoRaArgumentParser.py	/^    def __init__(self, description):$/;"	m	class:LoRaArgumentParser
+__init__	pira/hardware/mcp2515.py	/^    def __init__(self):$/;"	m	class:MCP2515
+__init__	pira/hardware/ms5837.py	/^    def __init__(self, bus=1):$/;"	m	class:MS5837_02BA
+__init__	pira/hardware/ms5837.py	/^    def __init__(self, bus=1):$/;"	m	class:MS5837_30BA
+__init__	pira/hardware/ms5837.py	/^    def __init__(self, model=MODEL_30BA, bus=1):$/;"	m	class:MS5837
+__init__	pira/hardware/pirasmartuart.py	/^    def __init__(self, portId):$/;"	m	class:PIRASMARTUART
+__init__	pira/hardware/plantower.py	/^    def __init__(self, portId):$/;"	m	class:PLANTOWER
+__init__	pira/hardware/rockblock.py	/^    def __init__(self, portId, callback):$/;"	m	class:rockBlock
+__init__	pira/hardware/ultrasonic.py	/^    def __init__(self, gpio, pin):$/;"	m	class:MB7092XL
+__init__	pira/log.py	/^    def __init__(self):$/;"	m	class:Log
+__init__	pira/modules/azure_images.py	/^    def __init__(self, boot):$/;"	m	class:Module
+__init__	pira/modules/azure_sync.py	/^    def __init__(self, boot):$/;"	m	class:Module
+__init__	pira/modules/camera.py	/^    def __init__(self, boot):$/;"	m	class:Module
+__init__	pira/modules/can.py	/^    def __init__(self, boot):$/;"	m	class:Module
+__init__	pira/modules/debug.py	/^    def __init__(self, boot):$/;"	m	class:Module
+__init__	pira/modules/depth.py	/^    def __init__(self, boot):$/;"	m	class:Module
+__init__	pira/modules/lora.py	/^    def __init__(self, boot):$/;"	m	class:Module
+__init__	pira/modules/m2x_plat.py	/^    def __init__(self, boot):$/;"	m	class:Module
+__init__	pira/modules/nodewatcher.py	/^    def __init__(self, boot):$/;"	m	class:Module
+__init__	pira/modules/plantower.py	/^    def __init__(self, boot):$/;"	m	class:Module
+__init__	pira/modules/processing.py	/^    def __init__(self, boot):$/;"	m	class:Module
+__init__	pira/modules/rockblock.py	/^    def __init__(self, boot):$/;"	m	class:Module
+__init__	pira/modules/scheduler.py	/^    def __init__(self, boot):$/;"	m	class:Module
+__init__	pira/modules/ultrasonic.py	/^    def __init__(self, boot):$/;"	m	class:Module
+__init__	pira/modules/webserver.py	/^    def __init__(self, boot):$/;"	m	class:Module
+__init__	pira/state.py	/^    def __init__(self):$/;"	m	class:State
+__setitem__	pira/state.py	/^    def __setitem__(self, name, value):$/;"	m	class:State	file:
+__str__	pira/hardware/brightpilib.py	/^    def __str__(self):$/;"	m	class:BrightPi	file:
+__str__	pira/hardware/brightpilib.py	/^    def __str__(self):$/;"	m	class:BrightPiSpecialEffects	file:
+__str__	pira/hardware/lora/SX127x/LoRa.py	/^    def __str__(self):$/;"	m	class:LoRa	file:
+__version__	pira/hardware/brightpilib.py	/^__version__ = "1.0"$/;"	v
+_attemptConnection	pira/hardware/rockblock.py	/^    def _attemptConnection(self):$/;"	m	class:rockBlock
+_attemptSession	pira/hardware/rockblock.py	/^    def _attemptSession(self):$/;"	m	class:rockBlock
+_calculate	pira/hardware/ms5837.py	/^    def _calculate(self):$/;"	m	class:MS5837
+_check_light_conditions	pira/modules/camera.py	/^    def _check_light_conditions(self):$/;"	m	class:Module
+_clearMoBuffer	pira/hardware/rockblock.py	/^    def _clearMoBuffer(self):$/;"	m	class:rockBlock
+_configurePort	pira/hardware/rockblock.py	/^    def _configurePort(self):$/;"	m	class:rockBlock
+_convert_timestamp	pira/log.py	/^    def _convert_timestamp(self, timestamp):$/;"	m	class:Log
+_crc4	pira/hardware/ms5837.py	/^    def _crc4(self, n_prom):$/;"	m	class:MS5837
+_decode_hex	pira/modules/lora.py	/^    def _decode_hex(self, name, length):$/;"	m	class:Module
+_default_gain	pira/hardware/brightpilib.py	/^    _default_gain = 0b1000$/;"	v	class:BrightPi
+_device_address	pira/hardware/brightpilib.py	/^    _device_address = 0x70$/;"	v	class:BrightPi
+_dio0	pira/hardware/lora/SX127x/LoRa.py	/^    def _dio0(self, channel):$/;"	m	class:LoRa
+_dio1	pira/hardware/lora/SX127x/LoRa.py	/^    def _dio1(self, channel):$/;"	m	class:LoRa
+_dio2	pira/hardware/lora/SX127x/LoRa.py	/^    def _dio2(self, channel):$/;"	m	class:LoRa
+_dio3	pira/hardware/lora/SX127x/LoRa.py	/^    def _dio3(self, channel):$/;"	m	class:LoRa
+_dio4	pira/hardware/lora/SX127x/LoRa.py	/^    def _dio4(self, channel):$/;"	m	class:LoRa
+_dio5	pira/hardware/lora/SX127x/LoRa.py	/^    def _dio5(self, channel):$/;"	m	class:LoRa
+_disableFlowControl	pira/hardware/rockblock.py	/^    def _disableFlowControl(self):$/;"	m	class:rockBlock
+_disableRingAlerts	pira/hardware/rockblock.py	/^    def _disableRingAlerts(self):$/;"	m	class:rockBlock
+_enableEcho	pira/hardware/rockblock.py	/^    def _enableEcho(self):$/;"	m	class:rockBlock
+_ensureConnectionStatus	pira/hardware/rockblock.py	/^    def _ensureConnectionStatus(self):$/;"	m	class:rockBlock
+_gain_register	pira/hardware/brightpilib.py	/^    _gain_register = 0x09$/;"	v	class:BrightPi
+_initialize_lora_module	pira/modules/lora.py	/^    def _initialize_lora_module(self):$/;"	m	class:Module
+_isNetworkTimeValid	pira/hardware/rockblock.py	/^    def _isNetworkTimeValid(self):$/;"	m	class:rockBlock
+_led_hex	pira/hardware/brightpilib.py	/^    _led_hex = (0x02, 0x08, 0x10, 0x40, 0x01, 0x04, 0x20, 0x80)$/;"	v	class:BrightPi
+_led_status_register	pira/hardware/brightpilib.py	/^    _led_status_register = 0x00$/;"	v	class:BrightPi
+_max_dim	pira/hardware/brightpilib.py	/^    _max_dim = 0x32$/;"	v	class:BrightPi
+_max_gain	pira/hardware/brightpilib.py	/^    _max_gain = 0b1111$/;"	v	class:BrightPi
+_parse_duration	pira/modules/scheduler.py	/^    def _parse_duration(self, duration):$/;"	m	class:Module
+_parse_time	pira/modules/scheduler.py	/^    def _parse_time(self, time):$/;"	m	class:Module
+_perform_shutdown	pira/boot.py	/^    def _perform_shutdown(self):$/;"	m	class:Boot
+_perform_shutdown	pira/boot_stripped.py	/^    def _perform_shutdown(self):$/;"	m	class:Boot
+_processMtMessage	pira/hardware/rockblock.py	/^    def _processMtMessage(self, mtMsn):$/;"	m	class:rockBlock
+_queueMessage	pira/hardware/rockblock.py	/^    def _queueMessage(self, msg):$/;"	m	class:rockBlock
+_server	pira/modules/webserver.py	/^    def _server(self):$/;"	m	class:Module
+_snapshot	pira/modules/camera.py	/^    def _snapshot(self):$/;"	m	class:Module
+_update_charging	pira/boot.py	/^    def _update_charging(self):$/;"	m	class:Boot
+a	utils/rockblock-decoder.py	/^  a = hex2float(s)$/;"	v
+add_event_detect	pira/hardware/lora/SX127x/board_config.py	/^    def add_event_detect(dio_number, callback):$/;"	m	class:BOARD
+add_events	pira/hardware/lora/SX127x/board_config.py	/^    def add_events(cb_dio0, cb_dio1, cb_dio2, cb_dio3, cb_dio4, cb_dio5, switch_cb=None):$/;"	m	class:BOARD
+add_lookup	pira/hardware/lora/SX127x/constants.py	/^def add_lookup(cls):$/;"	f
+alt_flash	pira/hardware/brightpilib.py	/^    def alt_flash(self, repetitions, interval, orientation ='v'):$/;"	m	class:BrightPiSpecialEffects
+altitude	pira/hardware/ms5837.py	/^    def altitude(self):$/;"	m	class:MS5837
+append_to_csv_file	pira/modules/processing.py	/^    def append_to_csv_file(self, newest_csv_timestamp):$/;"	m	class:Module
+backup_registers	pira/hardware/lora/SX127x/LoRa.py	/^    backup_registers = []$/;"	v	class:LoRa
+bcd2dec	scripts/utilities.sh	/^bcd2dec()$/;"	f
+beacon	pira/hardware/brightpilib.py	/^    def beacon(self, repetitions, speed):$/;"	m	class:BrightPiSpecialEffects
+boot	pira/boot.py	/^    def boot(self):$/;"	m	class:Boot
+boot	pira/boot_stripped.py	/^    def boot(self):$/;"	m	class:Boot
+boot	pira/main.py	/^    boot = Boot()$/;"	v
+bw_lookup	pira/hardware/lora/SX127x/LoRaArgumentParser.py	/^    bw_lookup = dict(BW7_8=0, BW10_4=1, BW15_6=2, BW20_8=3, BW31_25=4, BW41_7=5, BW62_5=6, BW125=7, BW250=8, BW500=9)$/;"	v	class:LoRaArgumentParser
+calculate_gdd	pira/modules/processing.py	/^    def calculate_gdd(self, day_list, day_timestamp):$/;"	m	class:Module
+calculate_lux	pira/modules/processing.py	/^    def calculate_lux(self, ch0, ch1):$/;"	m	class:Module
+calculated_data_folder_path	pira/modules/azure_sync.py	/^calculated_data_folder_path = "calculated\/"$/;"	v
+camera_fail_shutdown	pira/modules/camera.py	/^    def camera_fail_shutdown(self):$/;"	m	class:Module
+camera_folder_path	pira/modules/azure_sync.py	/^camera_folder_path = "camera\/"$/;"	v
+chunks	utils/rockblock-decoder.py	/^def chunks(s, n):$/;"	f
+clear_alarm_flags	scripts/utilities.sh	/^clear_alarm_flags()$/;"	f
+clear_irq_flags	pira/hardware/lora/SX127x/LoRa.py	/^    def clear_irq_flags(self,$/;"	m	class:LoRa
+clear_shutdown_time	scripts/utilities.sh	/^clear_shutdown_time()$/;"	f
+clear_startup_time	scripts/utilities.sh	/^clear_startup_time()$/;"	f
+close	pira/hardware/pirasmartuart.py	/^    def close(self):$/;"	m	class:PIRASMARTUART
+close	pira/hardware/plantower.py	/^    def close(self):$/;"	m	class:PLANTOWER
+close	pira/hardware/rockblock.py	/^    def close(self):$/;"	m	class:rockBlock
+close	pira/hardware/ultrasonic.py	/^    def close(self):$/;"	m	class:MB7092XL
+close	pira/log.py	/^    def close(self):$/;"	m	class:Log
+compute_mic	pira/hardware/lora/LoRaWAN/DataPayload.py	/^    def compute_mic(self, key, direction, mhdr):$/;"	m	class:DataPayload
+compute_mic	pira/hardware/lora/LoRaWAN/JoinAcceptPayload.py	/^    def compute_mic(self, key, direction, mhdr):$/;"	m	class:JoinAcceptPayload
+compute_mic	pira/hardware/lora/LoRaWAN/JoinRequestPayload.py	/^    def compute_mic(self, key, direction, mhdr):$/;"	m	class:JoinRequestPayload
+compute_mic	pira/hardware/lora/LoRaWAN/PhyPayload.py	/^    def compute_mic(self):$/;"	m	class:PhyPayload
+cr_lookup	pira/hardware/lora/SX127x/LoRaArgumentParser.py	/^    cr_lookup = dict(CR4_5=1, CR4_6=2,CR4_7=3,CR4_8=4)$/;"	v	class:LoRaArgumentParser
+create	pira/hardware/lora/LoRaWAN/DataPayload.py	/^    def create(self, mac_payload, key, args):$/;"	m	class:DataPayload
+create	pira/hardware/lora/LoRaWAN/FHDR.py	/^    def create(self, mtype, args):$/;"	m	class:FHDR
+create	pira/hardware/lora/LoRaWAN/JoinAcceptPayload.py	/^    def create(self, args):$/;"	m	class:JoinAcceptPayload
+create	pira/hardware/lora/LoRaWAN/JoinRequestPayload.py	/^    def create(self, args):$/;"	m	class:JoinRequestPayload
+create	pira/hardware/lora/LoRaWAN/MacPayload.py	/^    def create(self, mtype, key, args):$/;"	m	class:MacPayload
+create	pira/hardware/lora/LoRaWAN/PhyPayload.py	/^    def create(self, mhdr, args):$/;"	m	class:PhyPayload
+create_container	pira/modules/azure_images.py	/^    def create_container(self):$/;"	m	class:Module
+create_container	pira/modules/azure_sync.py	/^    def create_container(self):$/;"	m	class:Module
+create_measurements_message	pira/messages.py	/^def create_measurements_message(boot, timestamp, measurements):$/;"	f
+current_timestamp	scripts/utilities.sh	/^current_timestamp()$/;"	f
+dec2bcd	scripts/utilities.sh	/^dec2bcd()$/;"	f
+dec2hex	scripts/utilities.sh	/^dec2hex()$/;"	f
+decorator	pira/hardware/lora/SX127x/LoRa.py	/^    def decorator(func):$/;"	f	function:getter
+decorator	pira/hardware/lora/SX127x/LoRa.py	/^    def decorator(func):$/;"	f	function:setter
+decrypt_payload	pira/hardware/lora/LoRaWAN/DataPayload.py	/^    def decrypt_payload(self, key, direction, mic):$/;"	m	class:DataPayload
+decrypt_payload	pira/hardware/lora/LoRaWAN/JoinAcceptPayload.py	/^    def decrypt_payload(self, key, direction, mic):$/;"	m	class:JoinAcceptPayload
+decrypt_payload	pira/hardware/lora/LoRaWAN/JoinRequestPayload.py	/^    def decrypt_payload(self, key, direction, mic):$/;"	m	class:JoinRequestPayload
+delete_via_container	pira/modules/azure_images.py	/^    def delete_via_container(self, _container_name):$/;"	m	class:Module
+delete_via_container	pira/modules/azure_sync.py	/^    def delete_via_container(self, _container_name):$/;"	m	class:Module
+depth	pira/hardware/ms5837.py	/^    def depth(self):$/;"	m	class:MS5837
+derive_appskey	pira/hardware/lora/LoRaWAN/JoinAcceptPayload.py	/^    def derive_appskey(self, key, devnonce):$/;"	m	class:JoinAcceptPayload
+derive_appskey	pira/hardware/lora/LoRaWAN/PhyPayload.py	/^    def derive_appskey(self, devnonce):$/;"	m	class:PhyPayload
+derive_nwskey	pira/hardware/lora/LoRaWAN/JoinAcceptPayload.py	/^    def derive_nwskey(self, key, devnonce):$/;"	m	class:JoinAcceptPayload
+derive_nwskey	pira/hardware/lora/LoRaWAN/PhyPayload.py	/^    def derive_nwskey(self, devnonce):$/;"	m	class:PhyPayload
+dimmer	pira/hardware/brightpilib.py	/^    def dimmer(self, repetitions, speed):$/;"	m	class:BrightPiSpecialEffects
+dio_mapping	pira/hardware/lora/SX127x/LoRa.py	/^    dio_mapping = [None] * 6          # store the dio mapping here$/;"	v	class:LoRa
+dio_mapping	pira/modules/lora.py	/^    dio_mapping = [0, 0, 0, 0, 0, 0]$/;"	v	class:LoRa
+distance	pira/modules/ultrasonic.py	/^    distance = None$/;"	v	class:Module
+do_shutdown	scripts/utilities.sh	/^do_shutdown()$/;"	f
+down_update_via_path	pira/modules/azure_sync.py	/^    def down_update_via_path(self, _filename, _path):$/;"	m	class:Module
+download_via_path	pira/modules/azure_sync.py	/^    def download_via_path(self, _filename, _path):$/;"	m	class:Module
+dump_registers	pira/hardware/lora/SX127x/LoRa.py	/^    def dump_registers(self):$/;"	m	class:LoRa
+enabled_modules	pira/boot.py	/^    enabled_modules = [$/;"	v	class:Boot
+enabled_modules	pira/boot_stripped.py	/^    enabled_modules = [$/;"	v	class:Boot
+encode	pira/hardware/lora/LoRaWAN/AES_CMAC.py	/^    def encode(self, K, M):$/;"	m	class:AES_CMAC
+encrypt_payload	pira/hardware/lora/LoRaWAN/DataPayload.py	/^    def encrypt_payload(self, key, direction, data):$/;"	m	class:DataPayload
+encrypt_payload	pira/hardware/lora/LoRaWAN/JoinAcceptPayload.py	/^    def encrypt_payload(self, key, direction, mhdr):$/;"	m	class:JoinAcceptPayload
+env_status_pin	pira/hardware/devices.py	/^env_status_pin = os.environ.get('PIRA_SMART_STATUS_PIN', '17')$/;"	v
+flash	pira/hardware/brightpilib.py	/^    def flash(self, repetitions, interval):$/;"	m	class:BrightPiSpecialEffects
+flush_buffer	pira/hardware/mcp2515.py	/^    def flush_buffer(self):$/;"	m	class:MCP2515
+force_ntp_update	scripts/utilities.sh	/^force_ntp_update()$/;"	f
+format_data_dlc	pira/hardware/mcp2515.py	/^    def format_data_dlc(self, msg):$/;"	m	class:MCP2515
+format_data_id	pira/hardware/mcp2515.py	/^    def format_data_id(self, msg):$/;"	m	class:MCP2515
+format_data_timestamp	pira/hardware/mcp2515.py	/^    def format_data_timestamp(self, msg):$/;"	m	class:MCP2515
+full_path_to_file	pira/modules/azure_images.py	/^full_path_to_file = "\/usr\/src\/app\/docs\/logo-irnas.png"$/;"	v
+gen_subkey	pira/hardware/lora/LoRaWAN/AES_CMAC.py	/^    def gen_subkey(self, K):$/;"	m	class:AES_CMAC
+generate_streams	pira/modules/m2x_plat.py	/^    def generate_streams(self, stream_list):$/;"	m	class:Module
+get	pira/hardware/lora/LoRaWAN/Direction.py	/^    def get(self):$/;"	m	class:Direction
+getSerialIdentifier	pira/hardware/rockblock.py	/^    def getSerialIdentifier(self):$/;"	m	class:rockBlock
+get_agc_auto_on	pira/hardware/lora/SX127x/LoRa.py	/^    def get_agc_auto_on(self):$/;"	m	class:LoRa
+get_all_gdd	pira/modules/processing.py	/^    def get_all_gdd(self):$/;"	m	class:Module
+get_all_registers	pira/hardware/lora/SX127x/LoRa.py	/^    def get_all_registers(self):$/;"	m	class:LoRa
+get_appeui	pira/hardware/lora/LoRaWAN/JoinRequestPayload.py	/^    def get_appeui(self):$/;"	m	class:JoinRequestPayload
+get_appnonce	pira/hardware/lora/LoRaWAN/JoinAcceptPayload.py	/^    def get_appnonce(self):$/;"	m	class:JoinAcceptPayload
+get_cflist	pira/hardware/lora/LoRaWAN/JoinAcceptPayload.py	/^    def get_cflist(self):$/;"	m	class:JoinAcceptPayload
+get_data	pira/hardware/mcp2515.py	/^    def get_data(self):$/;"	m	class:MCP2515
+get_data_json	pira/modules/can.py	/^    def get_data_json(self, sensor_ID):$/;"	m	class:Module
+get_detect_optimize	pira/hardware/lora/SX127x/LoRa.py	/^    def get_detect_optimize(self, val):$/;"	m	class:LoRa
+get_detection_threshold	pira/hardware/lora/SX127x/LoRa.py	/^    def get_detection_threshold(self, val):$/;"	m	class:LoRa
+get_devaddr	pira/hardware/lora/LoRaWAN/FHDR.py	/^    def get_devaddr(self):$/;"	m	class:FHDR
+get_devaddr	pira/hardware/lora/LoRaWAN/JoinAcceptPayload.py	/^    def get_devaddr(self):$/;"	m	class:JoinAcceptPayload
+get_devaddr	pira/hardware/lora/LoRaWAN/PhyPayload.py	/^    def get_devaddr(self):$/;"	m	class:PhyPayload
+get_deveui	pira/hardware/lora/LoRaWAN/JoinRequestPayload.py	/^    def get_deveui(self):$/;"	m	class:JoinRequestPayload
+get_devnonce	pira/hardware/lora/LoRaWAN/JoinRequestPayload.py	/^    def get_devnonce(self):$/;"	m	class:JoinRequestPayload
+get_dio_mapping	pira/hardware/lora/SX127x/LoRa.py	/^    def get_dio_mapping(self):$/;"	m	class:LoRa
+get_dio_mapping_1	pira/hardware/lora/SX127x/LoRa.py	/^    def get_dio_mapping_1(self, mapping):$/;"	m	class:LoRa
+get_dio_mapping_2	pira/hardware/lora/SX127x/LoRa.py	/^    def get_dio_mapping_2(self, mapping):$/;"	m	class:LoRa
+get_direction	pira/hardware/lora/LoRaWAN/PhyPayload.py	/^    def get_direction(self):$/;"	m	class:PhyPayload
+get_dlsettings	pira/hardware/lora/LoRaWAN/JoinAcceptPayload.py	/^    def get_dlsettings(self):$/;"	m	class:JoinAcceptPayload
+get_enabled	pira/hardware/mcp2515.py	/^    def get_enabled(self):$/;"	m	class:MCP2515
+get_fcnt	pira/hardware/lora/LoRaWAN/FHDR.py	/^    def get_fcnt(self):$/;"	m	class:FHDR
+get_fctrl	pira/hardware/lora/LoRaWAN/FHDR.py	/^    def get_fctrl(self):$/;"	m	class:FHDR
+get_fei	pira/hardware/lora/SX127x/LoRa.py	/^    def get_fei(self):$/;"	m	class:LoRa
+get_fhdr	pira/hardware/lora/LoRaWAN/MacPayload.py	/^    def get_fhdr(self):$/;"	m	class:MacPayload
+get_fifo_addr_ptr	pira/hardware/lora/SX127x/LoRa.py	/^    def get_fifo_addr_ptr(self):$/;"	m	class:LoRa
+get_fifo_rx_base_addr	pira/hardware/lora/SX127x/LoRa.py	/^    def get_fifo_rx_base_addr(self):$/;"	m	class:LoRa
+get_fifo_rx_byte_addr	pira/hardware/lora/SX127x/LoRa.py	/^    def get_fifo_rx_byte_addr(self):$/;"	m	class:LoRa
+get_fifo_rx_current_addr	pira/hardware/lora/SX127x/LoRa.py	/^    def get_fifo_rx_current_addr(self):$/;"	m	class:LoRa
+get_fifo_tx_base_addr	pira/hardware/lora/SX127x/LoRa.py	/^    def get_fifo_tx_base_addr(self):$/;"	m	class:LoRa
+get_fopts	pira/hardware/lora/LoRaWAN/FHDR.py	/^    def get_fopts(self):$/;"	m	class:FHDR
+get_fport	pira/hardware/lora/LoRaWAN/MacPayload.py	/^    def get_fport(self):$/;"	m	class:MacPayload
+get_freq	pira/hardware/lora/SX127x/LoRa.py	/^    def get_freq(self):$/;"	m	class:LoRa
+get_frm_payload	pira/hardware/lora/LoRaWAN/MacPayload.py	/^    def get_frm_payload(self):$/;"	m	class:MacPayload
+get_gain	pira/hardware/brightpilib.py	/^    def get_gain(self):$/;"	m	class:BrightPi
+get_hop_channel	pira/hardware/lora/SX127x/LoRa.py	/^    def get_hop_channel(self):$/;"	m	class:LoRa
+get_hop_period	pira/hardware/lora/SX127x/LoRa.py	/^    def get_hop_period(self, val):$/;"	m	class:LoRa
+get_invert_iq	pira/hardware/lora/SX127x/LoRa.py	/^    def get_invert_iq(self, val):$/;"	m	class:LoRa
+get_irq_flags	pira/hardware/lora/SX127x/LoRa.py	/^    def get_irq_flags(self):$/;"	m	class:LoRa
+get_irq_flags_mask	pira/hardware/lora/SX127x/LoRa.py	/^    def get_irq_flags_mask(self):$/;"	m	class:LoRa
+get_led_dim	pira/hardware/brightpilib.py	/^    def get_led_dim(self):$/;"	m	class:BrightPi
+get_led_on_off	pira/hardware/brightpilib.py	/^    def get_led_on_off(self, leds):$/;"	m	class:BrightPi
+get_lna	pira/hardware/lora/SX127x/LoRa.py	/^    def get_lna(self):$/;"	m	class:LoRa
+get_local_date_time	scripts/utilities.sh	/^get_local_date_time()$/;"	f
+get_low_data_rate_optim	pira/hardware/lora/SX127x/LoRa.py	/^    def get_low_data_rate_optim(self):$/;"	m	class:LoRa
+get_mac_payload	pira/hardware/lora/LoRaWAN/PhyPayload.py	/^    def get_mac_payload(self):$/;"	m	class:PhyPayload
+get_max_payload_length	pira/hardware/lora/SX127x/LoRa.py	/^    def get_max_payload_length(self, val):$/;"	m	class:LoRa
+get_mhdr	pira/hardware/lora/LoRaWAN/PhyPayload.py	/^    def get_mhdr(self):$/;"	m	class:PhyPayload
+get_mic	pira/hardware/lora/LoRaWAN/PhyPayload.py	/^    def get_mic(self):$/;"	m	class:PhyPayload
+get_mode	pira/hardware/lora/SX127x/LoRa.py	/^    def get_mode(self):$/;"	m	class:LoRa
+get_modem_config_1	pira/hardware/lora/SX127x/LoRa.py	/^    def get_modem_config_1(self):$/;"	m	class:LoRa
+get_modem_config_2	pira/hardware/lora/SX127x/LoRa.py	/^    def get_modem_config_2(self, include_symb_timout_lsb=False):$/;"	m	class:LoRa
+get_modem_config_3	pira/hardware/lora/SX127x/LoRa.py	/^    def get_modem_config_3(self):$/;"	m	class:LoRa
+get_modem_status	pira/hardware/lora/SX127x/LoRa.py	/^    def get_modem_status(self):$/;"	m	class:LoRa
+get_mtype	pira/hardware/lora/LoRaWAN/MHDR.py	/^    def get_mtype(self):$/;"	m	class:MHDR
+get_mversion	pira/hardware/lora/LoRaWAN/MHDR.py	/^    def get_mversion(self):$/;"	m	class:MHDR
+get_netid	pira/hardware/lora/LoRaWAN/JoinAcceptPayload.py	/^    def get_netid(self):$/;"	m	class:JoinAcceptPayload
+get_new_gdd	pira/modules/processing.py	/^    def get_new_gdd(self):$/;"	m	class:Module
+get_ocp	pira/hardware/lora/SX127x/LoRa.py	/^    def get_ocp(self, convert_mA=False):$/;"	m	class:LoRa
+get_pa_config	pira/hardware/lora/SX127x/LoRa.py	/^    def get_pa_config(self, convert_dBm=False):$/;"	m	class:LoRa
+get_pa_dac	pira/hardware/lora/SX127x/LoRa.py	/^    def get_pa_dac(self, pa_dac):$/;"	m	class:LoRa
+get_pa_ramp	pira/hardware/lora/SX127x/LoRa.py	/^    def get_pa_ramp(self, val):$/;"	m	class:LoRa
+get_payload	pira/hardware/lora/LoRaWAN/PhyPayload.py	/^    def get_payload(self):$/;"	m	class:PhyPayload
+get_payload_length	pira/hardware/lora/SX127x/LoRa.py	/^    def get_payload_length(self, val):$/;"	m	class:LoRa
+get_pira_on_timer	pira/boot.py	/^    def get_pira_on_timer(self):    # p variable$/;"	m	class:Boot
+get_pira_on_timer	pira/boot_stripped.py	/^    def get_pira_on_timer(self):    # p variable$/;"	m	class:Boot
+get_pira_on_timer_set	pira/boot.py	/^    def get_pira_on_timer_set(self):    # o variable$/;"	m	class:Boot
+get_pira_on_timer_set	pira/boot_stripped.py	/^    def get_pira_on_timer_set(self):    # o variable$/;"	m	class:Boot
+get_pira_reboot_timer	pira/boot.py	/^    def get_pira_reboot_timer(self):    # r variable$/;"	m	class:Boot
+get_pira_reboot_timer	pira/boot_stripped.py	/^    def get_pira_reboot_timer(self):    # r variable$/;"	m	class:Boot
+get_pira_sleep_timer	pira/boot.py	/^    def get_pira_sleep_timer(self):  # s variable$/;"	m	class:Boot
+get_pira_sleep_timer	pira/boot_stripped.py	/^    def get_pira_sleep_timer(self):  # s variable$/;"	m	class:Boot
+get_pira_wakeup_timer	pira/boot.py	/^    def get_pira_wakeup_timer(self):    # w variable$/;"	m	class:Boot
+get_pira_wakeup_timer	pira/boot_stripped.py	/^    def get_pira_wakeup_timer(self):    # w variable$/;"	m	class:Boot
+get_pkt_rssi_value	pira/hardware/lora/SX127x/LoRa.py	/^    def get_pkt_rssi_value(self):$/;"	m	class:LoRa
+get_pkt_snr_value	pira/hardware/lora/SX127x/LoRa.py	/^    def get_pkt_snr_value(self):$/;"	m	class:LoRa
+get_preamble	pira/hardware/lora/SX127x/LoRa.py	/^    def get_preamble(self):$/;"	m	class:LoRa
+get_raw_data	pira/hardware/mcp2515.py	/^    def get_raw_data(self):$/;"	m	class:MCP2515
+get_register	pira/hardware/lora/SX127x/LoRa.py	/^    def get_register(self, register_address):$/;"	m	class:LoRa
+get_rssi_value	pira/hardware/lora/SX127x/LoRa.py	/^    def get_rssi_value(self):$/;"	m	class:LoRa
+get_rtc_time	scripts/utilities.sh	/^get_rtc_time()$/;"	f
+get_rtc_timestamp	scripts/utilities.sh	/^get_rtc_timestamp()$/;"	f
+get_rx_header_cnt	pira/hardware/lora/SX127x/LoRa.py	/^    def get_rx_header_cnt(self):$/;"	m	class:LoRa
+get_rx_nb_bytes	pira/hardware/lora/SX127x/LoRa.py	/^    def get_rx_nb_bytes(self):$/;"	m	class:LoRa
+get_rx_packet_cnt	pira/hardware/lora/SX127x/LoRa.py	/^    def get_rx_packet_cnt(self):$/;"	m	class:LoRa
+get_rxdelay	pira/hardware/lora/LoRaWAN/JoinAcceptPayload.py	/^    def get_rxdelay(self):$/;"	m	class:JoinAcceptPayload
+get_shutdown_time	scripts/utilities.sh	/^get_shutdown_time()$/;"	f
+get_startup_time	scripts/utilities.sh	/^get_startup_time()$/;"	f
+get_symb_timeout	pira/hardware/lora/SX127x/LoRa.py	/^    def get_symb_timeout(self):$/;"	m	class:LoRa
+get_sync_word	pira/hardware/lora/SX127x/LoRa.py	/^    def get_sync_word(self, sync_word):$/;"	m	class:LoRa
+get_sys_time	scripts/utilities.sh	/^get_sys_time()$/;"	f
+get_tcxo	pira/hardware/lora/SX127x/LoRa.py	/^    def get_tcxo(self, tcxo):$/;"	m	class:LoRa
+get_temperature	pira/boot.py	/^    def get_temperature(self):$/;"	m	class:Boot
+get_temperature	pira/boot_stripped.py	/^    def get_temperature(self):$/;"	m	class:Boot
+get_temperature	scripts/utilities.sh	/^get_temperature()$/;"	f
+get_time	pira/boot.py	/^    def get_time(self):  # t variable$/;"	m	class:Boot
+get_time	pira/boot_stripped.py	/^    def get_time(self):  # t variable$/;"	m	class:Boot
+get_timestamp	pira/modules/m2x_plat.py	/^    def get_timestamp(self):$/;"	m	class:Module
+get_utc_date_time	scripts/utilities.sh	/^get_utc_date_time()$/;"	f
+get_version	pira/hardware/lora/SX127x/LoRa.py	/^    def get_version(self, version):$/;"	m	class:LoRa
+get_voltage	pira/boot.py	/^    def get_voltage(self):  # b variable$/;"	m	class:Boot
+get_voltage	pira/boot_stripped.py	/^    def get_voltage(self):  # b variable$/;"	m	class:Boot
+getter	pira/hardware/lora/SX127x/LoRa.py	/^def getter(register_address):$/;"	f
+has_internet	scripts/utilities.sh	/^has_internet()$/;"	f
+hex2float	utils/rockblock-decoder.py	/^def hex2float(s):$/;"	f
+i2c_read	scripts/utilities.sh	/^i2c_read()$/;"	f
+i2c_write	scripts/utilities.sh	/^i2c_write()$/;"	f
+images_path	pira/modules/azure_images.py	/^images_path = "\/data\/camera\/"$/;"	v
+init	pira/hardware/ms5837.py	/^    def init(self):$/;"	m	class:MS5837
+insert	pira/log.py	/^    def insert(self, key, value, timestamp=None):$/;"	m	class:Log
+is_charging	pira/boot.py	/^    def is_charging(self):$/;"	m	class:Boot
+is_charging	pira/boot_stripped.py	/^    def is_charging(self):$/;"	m	class:Boot
+is_debug_enabled	pira/boot.py	/^    def is_debug_enabled(self):$/;"	m	class:Boot
+is_debug_enabled	pira/boot_stripped.py	/^    def is_debug_enabled(self):$/;"	m	class:Boot
+is_rtc_connected	scripts/utilities.sh	/^is_rtc_connected()$/;"	f
+is_wifi_enabled	pira/boot.py	/^    def is_wifi_enabled(self):$/;"	m	class:Boot
+is_wifi_enabled	pira/boot_stripped.py	/^    def is_wifi_enabled(self):$/;"	m	class:Boot
+length	pira/hardware/lora/LoRaWAN/DataPayload.py	/^    def length(self):$/;"	m	class:DataPayload
+length	pira/hardware/lora/LoRaWAN/FHDR.py	/^    def length(self):$/;"	m	class:FHDR
+length	pira/hardware/lora/LoRaWAN/JoinAcceptPayload.py	/^    def length(self):$/;"	m	class:JoinAcceptPayload
+length	pira/hardware/lora/LoRaWAN/JoinRequestPayload.py	/^    def length(self):$/;"	m	class:JoinRequestPayload
+length	pira/hardware/lora/LoRaWAN/MacPayload.py	/^    def length(self):$/;"	m	class:MacPayload
+length	pira/hardware/lora/LoRaWAN/PhyPayload.py	/^    def length(self):$/;"	m	class:PhyPayload
+listPorts	pira/hardware/rockblock.py	/^    def listPorts():$/;"	m	class:rockBlock
+load	pira/state.py	/^    def load(self):$/;"	m	class:State
+load_rtc	scripts/utilities.sh	/^load_rtc()$/;"	f
+log	scripts/utilities.sh	/^log()$/;"	f
+log2file	scripts/utilities.sh	/^log2file()$/;"	f
+measurements	utils/rockblock-decoder.py	/^measurements = []$/;"	v
+message	utils/rockblock-decoder.py	/^message = "0000001d41e434f7419e0000420900000000001c4062a503405947ae40647ae10000001d42326996414f23c942bb7f49"$/;"	v
+messageCheck	pira/hardware/rockblock.py	/^    def messageCheck(self):$/;"	m	class:rockBlock
+mode	pira/hardware/lora/SX127x/LoRa.py	/^    mode = None                       # the mode is backed up here$/;"	v	class:LoRa
+networkTime	pira/hardware/rockblock.py	/^    def networkTime(self):$/;"	m	class:rockBlock
+new	pira/hardware/lora/LoRaWAN/__init__.py	/^def new(nwkey = [], appkey = []):$/;"	f
+night_rider	pira/hardware/brightpilib.py	/^    def night_rider(self, repetitions, delay, rotation = ROT_CW):$/;"	m	class:BrightPiSpecialEffects
+on_cad_done	pira/hardware/lora/SX127x/LoRa.py	/^    def on_cad_done(self):$/;"	m	class:LoRa
+on_fhss_change_channel	pira/hardware/lora/SX127x/LoRa.py	/^    def on_fhss_change_channel(self):$/;"	m	class:LoRa
+on_payload_crc_error	pira/hardware/lora/SX127x/LoRa.py	/^    def on_payload_crc_error(self):$/;"	m	class:LoRa
+on_rx_done	pira/hardware/lora/SX127x/LoRa.py	/^    def on_rx_done(self):$/;"	m	class:LoRa
+on_rx_timeout	pira/hardware/lora/SX127x/LoRa.py	/^    def on_rx_timeout(self):$/;"	m	class:LoRa
+on_tx_done	pira/hardware/lora/SX127x/LoRa.py	/^    def on_tx_done(self):$/;"	m	class:LoRa
+on_valid_header	pira/hardware/lora/SX127x/LoRa.py	/^    def on_valid_header(self):$/;"	m	class:LoRa
+pad	pira/hardware/lora/LoRaWAN/AES_CMAC.py	/^    def pad(self, N):$/;"	m	class:AES_CMAC
+parse	scripts/copy_env.py	/^def parse(filename):$/;"	f
+parse_args	pira/hardware/lora/SX127x/LoRaArgumentParser.py	/^    def parse_args(self, lora):$/;"	m	class:LoRaArgumentParser
+parse_environ	pira/boot.py	/^    def parse_environ(self, env):$/;"	m	class:Boot
+parse_environ	pira/boot_stripped.py	/^    def parse_environ(self, env):$/;"	m	class:Boot
+parse_reset_num	pira/hardware/pirasmartuart.py	/^    def parse_reset_num(self, number):$/;"	m	class:PIRASMARTUART
+ping	pira/hardware/rockblock.py	/^    def ping(self):$/;"	m	class:rockBlock
+pingception	pira/hardware/rockblock.py	/^    def pingception(self):$/;"	m	class:rockBlock
+pira_on_timer	pira/hardware/pirasmartuart.py	/^    pira_on_timer = None$/;"	v	class:PIRASMARTUART
+pira_time	pira/hardware/pirasmartuart.py	/^    pira_time = None$/;"	v	class:PIRASMARTUART
+pira_voltage	pira/hardware/pirasmartuart.py	/^    pira_voltage = None$/;"	v	class:PIRASMARTUART
+power_off_modem	pira/modules/rockblock.py	/^    def power_off_modem(self):$/;"	m	class:Module
+power_on_modem	pira/modules/rockblock.py	/^    def power_on_modem(self):$/;"	m	class:Module
+pressure	pira/hardware/ms5837.py	/^    def pressure(self, conversion=UNITS_mbar):$/;"	m	class:MS5837
+process	pira/boot.py	/^    def process(self):$/;"	m	class:Boot
+process	pira/boot_stripped.py	/^    def process(self):$/;"	m	class:Boot
+process	pira/modules/azure_images.py	/^    def process(self, modules):$/;"	m	class:Module
+process	pira/modules/azure_sync.py	/^    def process(self, modules):$/;"	m	class:Module
+process	pira/modules/camera.py	/^    def process(self, modules):$/;"	m	class:Module
+process	pira/modules/can.py	/^    def process(self, modules):$/;"	m	class:Module
+process	pira/modules/debug.py	/^    def process(self, modules):$/;"	m	class:Module
+process	pira/modules/depth.py	/^    def process(self, modules):$/;"	m	class:Module
+process	pira/modules/lora.py	/^    def process(self, modules):$/;"	m	class:Module
+process	pira/modules/m2x_plat.py	/^    def process(self, modules):$/;"	m	class:Module
+process	pira/modules/nodewatcher.py	/^    def process(self, modules):$/;"	m	class:Module
+process	pira/modules/plantower.py	/^    def process(self, modules):$/;"	m	class:Module
+process	pira/modules/processing.py	/^    def process(self, modules):$/;"	m	class:Module
+process	pira/modules/rockblock.py	/^    def process(self, modules):$/;"	m	class:Module
+process	pira/modules/scheduler.py	/^    def process(self, modules):$/;"	m	class:Module
+process	pira/modules/ultrasonic.py	/^    def process(self, modules):$/;"	m	class:Module
+process	pira/modules/webserver.py	/^    def process(self, modules):$/;"	m	class:Module
+process_data	pira/modules/processing.py	/^    def process_data(self):$/;"	m	class:Module
+process_hourly_data	pira/modules/processing.py	/^    def process_hourly_data(self, value_name, data, timestamp):$/;"	m	class:Module
+process_json	pira/modules/m2x_plat.py	/^    def process_json(self, can_data):$/;"	m	class:Module
+query	pira/log.py	/^    def query(self, start_ts, key, include_ts=False, only_numeric=False):$/;"	m	class:Log
+raw_data_folder_path	pira/modules/azure_sync.py	/^raw_data_folder_path = "raw\/"$/;"	v
+read	pira/hardware/lora/LoRaWAN/DataPayload.py	/^    def read(self, mac_payload, payload):$/;"	m	class:DataPayload
+read	pira/hardware/lora/LoRaWAN/FHDR.py	/^    def read(self, mac_payload):$/;"	m	class:FHDR
+read	pira/hardware/lora/LoRaWAN/JoinAcceptPayload.py	/^    def read(self, payload):$/;"	m	class:JoinAcceptPayload
+read	pira/hardware/lora/LoRaWAN/JoinRequestPayload.py	/^    def read(self, payload):$/;"	m	class:JoinRequestPayload
+read	pira/hardware/lora/LoRaWAN/MacPayload.py	/^    def read(self, mtype, mac_payload):$/;"	m	class:MacPayload
+read	pira/hardware/lora/LoRaWAN/PhyPayload.py	/^    def read(self, packet):$/;"	m	class:PhyPayload
+read	pira/hardware/ms5837.py	/^    def read(self, oversampling=OSR_8192):$/;"	m	class:MS5837
+read	pira/hardware/pirasmartuart.py	/^    def read(self, timeout=5, preamble="t:"):$/;"	m	class:PIRASMARTUART
+read	pira/hardware/plantower.py	/^    def read(self, timeout=10):$/;"	m	class:PLANTOWER
+read	pira/hardware/ultrasonic.py	/^    def read(self, timeout=10):$/;"	m	class:MB7092XL
+read_csv_file	pira/modules/processing.py	/^    def read_csv_file(self):$/;"	m	class:Module
+read_payload	pira/hardware/lora/SX127x/LoRa.py	/^    def read_payload(self , nocheck = False):$/;"	m	class:LoRa
+requestSignalStrength	pira/hardware/rockblock.py	/^    def requestSignalStrength(self):$/;"	m	class:rockBlock
+reset	pira/hardware/brightpilib.py	/^    def reset(self):$/;"	m	class:BrightPi
+reset_interval	pira/modules/rockblock.py	/^    def reset_interval(self):$/;"	m	class:Module
+reset_ptr_rx	pira/hardware/lora/SX127x/LoRa.py	/^    def reset_ptr_rx(self):$/;"	m	class:LoRa
+return_json_data	pira/modules/can.py	/^    def return_json_data(self):$/;"	m	class:Module
+ro_mode	scripts/copy_env.py	/^def ro_mode():$/;"	f
+rockBlock	pira/hardware/rockblock.py	/^class rockBlock(object):$/;"	c
+rockBlockConnected	pira/hardware/rockblock.py	/^    def rockBlockConnected(self):pass$/;"	m	class:rockBlockProtocol
+rockBlockDisconnected	pira/hardware/rockblock.py	/^    def rockBlockDisconnected(self):pass$/;"	m	class:rockBlockProtocol
+rockBlockException	pira/hardware/rockblock.py	/^class rockBlockException(Exception):$/;"	c
+rockBlockProtocol	pira/hardware/rockblock.py	/^class rockBlockProtocol(object):$/;"	c
+rockBlockRxFailed	pira/hardware/rockblock.py	/^    def rockBlockRxFailed(self):pass$/;"	m	class:rockBlockProtocol
+rockBlockRxMessageQueue	pira/hardware/rockblock.py	/^    def rockBlockRxMessageQueue(self,count):pass$/;"	m	class:rockBlockProtocol
+rockBlockRxReceived	pira/hardware/rockblock.py	/^    def rockBlockRxReceived(self,mtmsn,data):pass$/;"	m	class:rockBlockProtocol
+rockBlockRxStarted	pira/hardware/rockblock.py	/^    def rockBlockRxStarted(self):pass$/;"	m	class:rockBlockProtocol
+rockBlockSignalFail	pira/hardware/rockblock.py	/^    def rockBlockSignalFail(self):pass$/;"	m	class:rockBlockProtocol
+rockBlockSignalPass	pira/hardware/rockblock.py	/^    def rockBlockSignalPass(self):pass$/;"	m	class:rockBlockProtocol
+rockBlockSignalUpdate	pira/hardware/rockblock.py	/^    def rockBlockSignalUpdate(self,signal):pass$/;"	m	class:rockBlockProtocol
+rockBlockTxFailed	pira/hardware/rockblock.py	/^    def rockBlockTxFailed(self):pass$/;"	m	class:rockBlockProtocol
+rockBlockTxStarted	pira/hardware/rockblock.py	/^    def rockBlockTxStarted(self):pass$/;"	m	class:rockBlockProtocol
+rockBlockTxSuccess	pira/hardware/rockblock.py	/^    def rockBlockTxSuccess(self,momsn):pass$/;"	m	class:rockBlockProtocol
+rtc_to_system	scripts/utilities.sh	/^rtc_to_system()$/;"	f
+rw_mode	scripts/copy_env.py	/^def rw_mode():$/;"	f
+rx_chain_calibration	pira/hardware/lora/SX127x/LoRa.py	/^    def rx_chain_calibration(self, freq=868.):$/;"	m	class:LoRa
+rx_is_good	pira/hardware/lora/SX127x/LoRa.py	/^    def rx_is_good(self):$/;"	m	class:LoRa
+save	pira/state.py	/^    def save(self):$/;"	m	class:State
+scan_for_sensors	pira/modules/can.py	/^    def scan_for_sensors(self, address):$/;"	m	class:Module
+schedule_script_interrupted	scripts/utilities.sh	/^schedule_script_interrupted()$/;"	f
+sendMessage	pira/hardware/rockblock.py	/^    def sendMessage(self, msg):$/;"	m	class:rockBlock
+send_command	pira/hardware/pirasmartuart.py	/^    def send_command(self, command):    # TO DO$/;"	m	class:PIRASMARTUART
+send_data	pira/hardware/mcp2515.py	/^    def send_data(self, ID, DATA, EXTID):$/;"	m	class:MCP2515
+send_free_space	pira/hardware/pirasmartuart.py	/^    def send_free_space(self, space):$/;"	m	class:PIRASMARTUART
+send_pictures_taken	pira/hardware/pirasmartuart.py	/^    def send_pictures_taken(self, number_of_pictures):$/;"	m	class:PIRASMARTUART
+set	pira/hardware/lora/LoRaWAN/Direction.py	/^    def set(self, mhdr):$/;"	m	class:Direction
+setFluidDensity	pira/hardware/ms5837.py	/^    def setFluidDensity(self, denisty):$/;"	m	class:MS5837
+set_agc_auto_on	pira/hardware/lora/SX127x/LoRa.py	/^    def set_agc_auto_on(self, agc_auto_on):$/;"	m	class:LoRa
+set_bash_prompt	scripts/read-only-setup.sh	/^set_bash_prompt() {$/;"	f
+set_bit	pira/hardware/lora/SX127x/LoRa.py	/^def set_bit(value, index, new_bit):$/;"	f
+set_bw	pira/hardware/lora/SX127x/LoRa.py	/^    def set_bw(self, bw):$/;"	m	class:LoRa
+set_coding_rate	pira/hardware/lora/SX127x/LoRa.py	/^    def set_coding_rate(self, coding_rate):$/;"	m	class:LoRa
+set_detect_optimize	pira/hardware/lora/SX127x/LoRa.py	/^    def set_detect_optimize(self, detect_optimize):$/;"	m	class:LoRa
+set_detection_threshold	pira/hardware/lora/SX127x/LoRa.py	/^    def set_detection_threshold(self, detect_threshold):$/;"	m	class:LoRa
+set_devaddr	pira/hardware/lora/LoRaWAN/FHDR.py	/^    def set_devaddr(self, devaddr):$/;"	m	class:FHDR
+set_dio_mapping	pira/hardware/lora/SX127x/LoRa.py	/^    def set_dio_mapping(self, mapping):$/;"	m	class:LoRa
+set_dio_mapping_1	pira/hardware/lora/SX127x/LoRa.py	/^    def set_dio_mapping_1(self, mapping):$/;"	m	class:LoRa
+set_dio_mapping_2	pira/hardware/lora/SX127x/LoRa.py	/^    def set_dio_mapping_2(self, mapping):$/;"	m	class:LoRa
+set_direction	pira/hardware/lora/LoRaWAN/PhyPayload.py	/^    def set_direction(self):$/;"	m	class:PhyPayload
+set_fcnt	pira/hardware/lora/LoRaWAN/FHDR.py	/^    def set_fcnt(self, fcnt):$/;"	m	class:FHDR
+set_fctrl	pira/hardware/lora/LoRaWAN/FHDR.py	/^    def set_fctrl(self, fctrl):$/;"	m	class:FHDR
+set_fhdr	pira/hardware/lora/LoRaWAN/MacPayload.py	/^    def set_fhdr(self, fhdr):$/;"	m	class:MacPayload
+set_fifo_addr_ptr	pira/hardware/lora/SX127x/LoRa.py	/^    def set_fifo_addr_ptr(self, ptr):$/;"	m	class:LoRa
+set_fifo_rx_base_addr	pira/hardware/lora/SX127x/LoRa.py	/^    def set_fifo_rx_base_addr(self, ptr):$/;"	m	class:LoRa
+set_fifo_tx_base_addr	pira/hardware/lora/SX127x/LoRa.py	/^    def set_fifo_tx_base_addr(self, ptr):$/;"	m	class:LoRa
+set_fopts	pira/hardware/lora/LoRaWAN/FHDR.py	/^    def set_fopts(self, fopts):$/;"	m	class:FHDR
+set_fport	pira/hardware/lora/LoRaWAN/MacPayload.py	/^    def set_fport(self, fport):$/;"	m	class:MacPayload
+set_freq	pira/hardware/lora/SX127x/LoRa.py	/^    def set_freq(self, f):$/;"	m	class:LoRa
+set_frm_payload	pira/hardware/lora/LoRaWAN/MacPayload.py	/^    def set_frm_payload(self, frm_payload):$/;"	m	class:MacPayload
+set_gain	pira/hardware/brightpilib.py	/^    def set_gain(self, gain):$/;"	m	class:BrightPi
+set_hop_period	pira/hardware/lora/SX127x/LoRa.py	/^    def set_hop_period(self, hop_period):$/;"	m	class:LoRa
+set_implicit_header_mode	pira/hardware/lora/SX127x/LoRa.py	/^    def set_implicit_header_mode(self, implicit_header_mode):$/;"	m	class:LoRa
+set_invert_iq	pira/hardware/lora/SX127x/LoRa.py	/^    def set_invert_iq(self, invert):$/;"	m	class:LoRa
+set_irq_flags	pira/hardware/lora/SX127x/LoRa.py	/^    def set_irq_flags(self,$/;"	m	class:LoRa
+set_irq_flags_mask	pira/hardware/lora/SX127x/LoRa.py	/^    def set_irq_flags_mask(self,$/;"	m	class:LoRa
+set_led_dim	pira/hardware/brightpilib.py	/^    def set_led_dim(self, leds, dim):$/;"	m	class:BrightPi
+set_led_on_off	pira/hardware/brightpilib.py	/^    def set_led_on_off(self, leds, state):$/;"	m	class:BrightPi
+set_lna	pira/hardware/lora/SX127x/LoRa.py	/^    def set_lna(self, lna_gain=None, lna_boost_lf=None, lna_boost_hf=None):$/;"	m	class:LoRa
+set_lna_gain	pira/hardware/lora/SX127x/LoRa.py	/^    def set_lna_gain(self, lna_gain):$/;"	m	class:LoRa
+set_low_data_rate_optim	pira/hardware/lora/SX127x/LoRa.py	/^    def set_low_data_rate_optim(self, low_data_rate_optim):$/;"	m	class:LoRa
+set_mac_payload	pira/hardware/lora/LoRaWAN/PhyPayload.py	/^    def set_mac_payload(self, mac_payload):$/;"	m	class:PhyPayload
+set_max_payload_length	pira/hardware/lora/SX127x/LoRa.py	/^    def set_max_payload_length(self, max_payload_length):$/;"	m	class:LoRa
+set_mhdr	pira/hardware/lora/LoRaWAN/PhyPayload.py	/^    def set_mhdr(self, mhdr):$/;"	m	class:PhyPayload
+set_mic	pira/hardware/lora/LoRaWAN/PhyPayload.py	/^    def set_mic(self, mic):$/;"	m	class:PhyPayload
+set_mode	pira/hardware/lora/SX127x/LoRa.py	/^    def set_mode(self, mode):$/;"	m	class:LoRa
+set_modem_config_1	pira/hardware/lora/SX127x/LoRa.py	/^    def set_modem_config_1(self, bw=None, coding_rate=None, implicit_header_mode=None):$/;"	m	class:LoRa
+set_modem_config_2	pira/hardware/lora/SX127x/LoRa.py	/^    def set_modem_config_2(self, spreading_factor=None, tx_cont_mode=None, rx_crc=None):$/;"	m	class:LoRa
+set_modem_config_3	pira/hardware/lora/SX127x/LoRa.py	/^    def set_modem_config_3(self, low_data_rate_optim=None, agc_auto_on=None):$/;"	m	class:LoRa
+set_ocp_trim	pira/hardware/lora/SX127x/LoRa.py	/^    def set_ocp_trim(self, I_mA):$/;"	m	class:LoRa
+set_off_time	pira/hardware/pirasmartuart.py	/^    def set_off_time(self, time_seconds):$/;"	m	class:PIRASMARTUART
+set_on_time	pira/hardware/pirasmartuart.py	/^    def set_on_time(self, time_seconds):$/;"	m	class:PIRASMARTUART
+set_pa_config	pira/hardware/lora/SX127x/LoRa.py	/^    def set_pa_config(self, pa_select=None, max_power=None, output_power=None):$/;"	m	class:LoRa
+set_pa_dac	pira/hardware/lora/SX127x/LoRa.py	/^    def set_pa_dac(self, pa_dac):$/;"	m	class:LoRa
+set_pa_ramp	pira/hardware/lora/SX127x/LoRa.py	/^    def set_pa_ramp(self, val):$/;"	m	class:LoRa
+set_payload	pira/hardware/lora/LoRaWAN/DataPayload.py	/^    def set_payload(self, key, direction, data):$/;"	m	class:DataPayload
+set_payload_length	pira/hardware/lora/SX127x/LoRa.py	/^    def set_payload_length(self, payload_length):$/;"	m	class:LoRa
+set_preamble	pira/hardware/lora/SX127x/LoRa.py	/^    def set_preamble(self, preamble):$/;"	m	class:LoRa
+set_reboot_time	pira/hardware/pirasmartuart.py	/^    def set_reboot_time(self, time_seconds):$/;"	m	class:PIRASMARTUART
+set_register	pira/hardware/lora/SX127x/LoRa.py	/^    def set_register(self, register_address, val):$/;"	m	class:LoRa
+set_rtc_time	scripts/utilities.sh	/^set_rtc_time()$/;"	f
+set_rx_crc	pira/hardware/lora/SX127x/LoRa.py	/^    def set_rx_crc(self, rx_crc):$/;"	m	class:LoRa
+set_shutdown_time	scripts/utilities.sh	/^set_shutdown_time()$/;"	f
+set_spreading_factor	pira/hardware/lora/SX127x/LoRa.py	/^    def set_spreading_factor(self, spreading_factor):$/;"	m	class:LoRa
+set_startup_time	scripts/utilities.sh	/^set_startup_time()$/;"	f
+set_symb_timeout	pira/hardware/lora/SX127x/LoRa.py	/^    def set_symb_timeout(self, timeout):$/;"	m	class:LoRa
+set_sync_word	pira/hardware/lora/SX127x/LoRa.py	/^    def set_sync_word(self, sync_word):$/;"	m	class:LoRa
+set_tcxo	pira/hardware/lora/SX127x/LoRa.py	/^    def set_tcxo(self, tcxo):$/;"	m	class:LoRa
+set_time	pira/hardware/pirasmartuart.py	/^    def set_time(self, new_time_epoch):$/;"	m	class:PIRASMARTUART
+set_wakeup_time	pira/hardware/pirasmartuart.py	/^    def set_wakeup_time(self, time_seconds):$/;"	m	class:PIRASMARTUART
+setter	pira/hardware/lora/SX127x/LoRa.py	/^def setter(register_address):$/;"	f
+setup	pira/hardware/lora/SX127x/board_config.py	/^    def setup():$/;"	m	class:BOARD
+setup	pira/hardware/rockblock.py	/^    def setup(self):$/;"	m	class:rockBlock
+setup_devices	pira/boot.py	/^    def setup_devices(self):$/;"	m	class:Boot
+setup_devices	pira/boot_stripped.py	/^    def setup_devices(self):$/;"	m	class:Boot
+setup_gpio	pira/boot.py	/^    def setup_gpio(self):$/;"	m	class:Boot
+setup_gpio	pira/boot_stripped.py	/^    def setup_gpio(self):$/;"	m	class:Boot
+setup_wifi	pira/boot.py	/^    def setup_wifi(self):$/;"	m	class:Boot
+setup_wifi	pira/boot_stripped.py	/^    def setup_wifi(self):$/;"	m	class:Boot
+should_sleep_when_charging	pira/modules/camera.py	/^    def should_sleep_when_charging(self):$/;"	m	class:Module
+shutdown	pira/boot.py	/^    def shutdown(self):$/;"	m	class:Boot
+shutdown	pira/boot_stripped.py	/^    def shutdown(self):$/;"	m	class:Boot
+shutdown	pira/hardware/mcp2515.py	/^    def shutdown(self):$/;"	m	class:MCP2515
+shutdown	pira/modules/azure_images.py	/^    def shutdown(self, modules):$/;"	m	class:Module
+shutdown	pira/modules/azure_sync.py	/^    def shutdown(self, modules):$/;"	m	class:Module
+shutdown	pira/modules/camera.py	/^    def shutdown(self, modules):$/;"	m	class:Module
+shutdown	pira/modules/can.py	/^    def shutdown(self, modules):$/;"	m	class:Module
+shutdown	pira/modules/debug.py	/^    def shutdown(self, modules):$/;"	m	class:Module
+shutdown	pira/modules/depth.py	/^    def shutdown(self, modules):$/;"	m	class:Module
+shutdown	pira/modules/lora.py	/^    def shutdown(self, modules):$/;"	m	class:Module
+shutdown	pira/modules/m2x_plat.py	/^    def shutdown(self, modules):$/;"	m	class:Module
+shutdown	pira/modules/nodewatcher.py	/^    def shutdown(self, modules):$/;"	m	class:Module
+shutdown	pira/modules/plantower.py	/^    def shutdown(self, modules):$/;"	m	class:Module
+shutdown	pira/modules/processing.py	/^    def shutdown(self, modules):$/;"	m	class:Module
+shutdown	pira/modules/rockblock.py	/^    def shutdown(self, modules):$/;"	m	class:Module
+shutdown	pira/modules/scheduler.py	/^    def shutdown(self, modules):$/;"	m	class:Module
+shutdown	pira/modules/ultrasonic.py	/^    def shutdown(self, modules):$/;"	m	class:Module
+shutdown	pira/modules/webserver.py	/^    def shutdown(self, modules):$/;"	m	class:Module
+spi	pira/hardware/lora/SX127x/LoRa.py	/^    spi = BOARD.SpiDev()              # init and get the baord's SPI$/;"	v	class:LoRa
+spi	pira/hardware/lora/SX127x/board_config.py	/^    spi = None$/;"	v	class:BOARD
+sync_folder_path	pira/modules/azure_sync.py	/^sync_folder_path = "\/data\/"$/;"	v
+sync_folder_path	pira/modules/processing.py	/^sync_folder_path = "\/data\/"$/;"	v
+system_to_rtc	scripts/utilities.sh	/^system_to_rtc()$/;"	f
+teardown	pira/hardware/lora/SX127x/board_config.py	/^    def teardown():$/;"	m	class:BOARD
+temperature	pira/hardware/ms5837.py	/^    def temperature(self, conversion=UNITS_Centigrade):$/;"	m	class:MS5837
+timestamp_text_format	pira/modules/processing.py	/^timestamp_text_format = 'Timestamp (mmddyyyy-hhmm)'$/;"	v
+to_bytes	pira/hardware/lora/LoRaWAN/FHDR.py	/^def to_bytes(n, length, endianess='big'):$/;"	f
+to_clear_raw	pira/hardware/lora/LoRaWAN/JoinAcceptPayload.py	/^    def to_clear_raw(self):$/;"	m	class:JoinAcceptPayload
+to_raw	pira/hardware/lora/LoRaWAN/DataPayload.py	/^    def to_raw(self):$/;"	m	class:DataPayload
+to_raw	pira/hardware/lora/LoRaWAN/FHDR.py	/^    def to_raw(self):$/;"	m	class:FHDR
+to_raw	pira/hardware/lora/LoRaWAN/JoinAcceptPayload.py	/^    def to_raw(self):$/;"	m	class:JoinAcceptPayload
+to_raw	pira/hardware/lora/LoRaWAN/JoinRequestPayload.py	/^    def to_raw(self):$/;"	m	class:JoinRequestPayload
+to_raw	pira/hardware/lora/LoRaWAN/MHDR.py	/^    def to_raw(self):$/;"	m	class:MHDR
+to_raw	pira/hardware/lora/LoRaWAN/MacPayload.py	/^    def to_raw(self):$/;"	m	class:MacPayload
+to_raw	pira/hardware/lora/LoRaWAN/PhyPayload.py	/^    def to_raw(self):$/;"	m	class:PhyPayload
+trim	scripts/utilities.sh	/^trim()$/;"	f
+unload_rtc	scripts/utilities.sh	/^unload_rtc()$/;"	f
+up_update_via_path	pira/modules/azure_sync.py	/^    def up_update_via_path(self, _filename, _path):$/;"	m	class:Module
+upload_data	pira/modules/m2x_plat.py	/^    def upload_data(self, value_name, time, value_data):$/;"	m	class:Module
+upload_only_folder	pira/modules/azure_sync.py	/^    def upload_only_folder(self, _path):$/;"	m	class:Module
+upload_via_path	pira/modules/azure_images.py	/^    def upload_via_path(self,_path):$/;"	m	class:Module
+upload_via_path	pira/modules/azure_sync.py	/^    def upload_via_path(self, _path, _subfolder):$/;"	m	class:Module
+valid_mic	pira/hardware/lora/LoRaWAN/PhyPayload.py	/^    def valid_mic(self):$/;"	m	class:PhyPayload
+verbose	pira/hardware/lora/SX127x/LoRa.py	/^    verbose = True$/;"	v	class:LoRa
+wrapper	pira/hardware/lora/SX127x/LoRa.py	/^        def wrapper(self):$/;"	f	function:getter.decorator
+wrapper	pira/hardware/lora/SX127x/LoRa.py	/^        def wrapper(self, val):$/;"	f	function:setter.decorator
+write_payload	pira/hardware/lora/SX127x/LoRa.py	/^    def write_payload(self, payload):$/;"	m	class:LoRa
+xor_128	pira/hardware/lora/LoRaWAN/AES_CMAC.py	/^    def xor_128(self, N1, N2):$/;"	m	class:AES_CMAC
