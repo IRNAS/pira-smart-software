@@ -30,7 +30,7 @@ sudo apt install dnsmasq -y
 sudo apt install wireless-tools -y
 sudo apt install indent -y
 sudo apt install build-essential -y
-sudo apt install libsl-dev -y
+sudo apt install libssl-dev -y
 sudo apt install libffi-dev -y
 sudo apt install python-dev -y
 
@@ -50,7 +50,7 @@ sudo mkdir /data/
 echo "Registering services"
 work_dir=$( cd "$( dirname "${BASH_SOURCE[0]}" )/.." && pwd )
 sudo cp ${work_dir}/scripts/pira.service /lib/systemd/system/pira.service
-sudo systemctl reenable pira.service
+# sudo systemctl reenable pira.service
 
 
 # Optimize boot time by disabling some services.
@@ -93,7 +93,7 @@ sudo systemctl disable systemd-journald
 # raspi-config.service (this is essential, can not access shell without this)
 
 
-sudo systemctl --system daemon-reload
+#sudo systemctl --system daemon-reload
 
 echo "Adding quiet mode to /boot/cmdline.txt"
 sudo sed -i -r "$ s/(.*)/\1 quiet/" /boot/cmdline.txt
