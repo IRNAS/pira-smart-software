@@ -142,16 +142,34 @@ The following environment variables can be used to configure the firmware:
 
  To use on a standard Raspbian Lite image complete the following steps:
 
-* Install Raspbian Lite
-* Install git and clone this repo
-* Execute /scripts/raspbian_install.sh (with sudo) and follow the instructions at the end
-* Configure environmental variables by adding them to the end of `/etc/environment` file, for example `SLEEP_WHEN_CHARGING="1"`
-* Run the start script by (-E is required to read environment variables correctly):
+* Install Raspbian Lite image on sd card, download link can be found [here](https://www.raspberrypi.org/downloads/raspberry-pi-os/), enable ssh by creating ssh file in boot directory.
+* Connect Raspberry pi with PC over usb cable and ssh into it.
+* Install git, clone this repo and switch to `install-update` branch: `sudo apt install git && git clone https://github.com/IRNAS/pira-smart-software.git && cd pira-smart-software && git checkout install-update`
+* Run `cd scripts && sudo ./raspbian_install.sh`. This will install all necessary packages with apt and python modules in requirements.txt file. It will also take a while, grab a coffee.
+* **IMPORTANT**: follow instructions at the end of the script
+* Configure environmental variables by adding them to the end of `/etc/environment` file, for example this is used with Arribada PMP setup:
 
-```bash
-cd pira-smart-software
-sudo -E ./start.sh
 ```
+MODULES="pira.modules.scheduler,pira.modules.camera"
+SCHEDULE_T_ON="0"
+SCHEDULE_T_OFF="1"
+LOOP_DELAY="10"
+PIRA_SMART_STATUS_PIN="5"
+SLEEP_ENABLE_MODE="sleep"
+WIFI_ENABLE_MODE="on"
+WIFI_SSID="irnas"
+WIFI_PASSWORD="koruza2016"
+PIRA_POWER="60"
+PIRA_SLEEP="60"
+PIRA_REBOOT="60"
+PIRA_WAKEUP="60"
+SHUTDOWN_VOLTAGE="-1.0"
+```
+* Run read-only script mentioned above with: `./read-only-setup.sh`
+
+Above steps are enough for RPI to be working properly with irnas-lorawan-base software. You only need to plug in camera and flash drive and connect Murata based board. 
+
+If you want to make sure that everything is setup okay, you can run `sudo -E ./start.sh` in main directory (-E is required to read environment variables correctly).
 
 ### Using it with Resin.io Local Mode
 
