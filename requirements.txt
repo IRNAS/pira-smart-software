@@ -9,7 +9,7 @@ numpy==1.13.3
 pycrypto==2.6.1
 requests==2.9.1
 paramiko==2.4.2
-PyYAML==3.12
+PyYAML==5.4
 tailer
 statistics
 python-can
