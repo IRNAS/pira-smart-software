@@ -3,8 +3,6 @@ Software for PiRa Smart board implementing hardware interface functions.
 
 www.irnas.eu
 
-UNDER ACTIVE DEVELOPMENT!
-
 ## Software support for hardware features
  * USB charger BQ24296 I2c
  * Display SSD1306 I2C
@@ -13,9 +11,6 @@ UNDER ACTIVE DEVELOPMENT!
 ## Board support package
  * GPIO for power scheduling
  * GPIO for power output
-
-### Power scheduling
-TODO
 
 ### Application specific features
  1. Capture camera image and check for daylight/minimal light in image (maybe https://github.com/pageauc/pi-timolo)
